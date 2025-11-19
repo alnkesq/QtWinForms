@@ -9,7 +9,7 @@ namespace System.Windows.Forms
 
         public Control()
         {
-            // Widget creation deferred until EnsureCreated() is called
+            Application.InitializeQt();
             Controls = new ControlCollection(this);
         }
 

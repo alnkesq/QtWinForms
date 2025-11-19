@@ -10,9 +10,6 @@ namespace TestApp
         {
             try
             {
-                Application.InitializeQt();
-                Console.WriteLine("Starting TestApp...");
-                
                 var form = new Form();
                 form.Text = "Hello Qt from C#";
                 
