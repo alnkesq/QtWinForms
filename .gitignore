@@ -2,3 +2,4 @@ src/QtBackend/build
 bin/
 obj/
 test_build/
+.vs/
