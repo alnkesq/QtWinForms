@@ -32,8 +32,14 @@ namespace TestApp
                     Console.WriteLine("Button2 clicked!");
                 };
                 
-                form.Controls.Add(button);
-                form.Controls.Add(button2);
+                var panel = new Panel();
+                panel.Location = new Point(500, 90);
+                panel.Size = new Size(200, 100);
+
+                panel.Controls.Add(button);
+                panel.Controls.Add(button2);
+                
+                form.Controls.Add(panel);
                 
                 Application.Run(form);
                 Console.WriteLine("TestApp Exiting...");
