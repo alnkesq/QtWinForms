@@ -1,0 +1,25 @@
+using System;
+using System.Runtime.InteropServices;
+
+namespace System.Windows.Forms
+{
+    internal static class NativeMethods
+    {
+        private const string LibName = "QtBackend";
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QApplication_Create();
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QApplication_Run();
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QWidget_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_Show(IntPtr widget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetTitle(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string title);
+    }
+}
