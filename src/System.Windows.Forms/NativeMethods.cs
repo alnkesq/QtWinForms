@@ -39,5 +39,8 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QPushButton_ConnectClicked(IntPtr button, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetBackColor(IntPtr widget, byte r, byte g, byte b, byte a);
     }
 }

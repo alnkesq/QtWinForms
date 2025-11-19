@@ -36,6 +36,7 @@ namespace TestApp
                 panel.Location = new Point(500, 90);
                 panel.Size = new Size(200, 100);
 
+                panel.BackColor = Color.Red;
                 panel.Controls.Add(button);
                 panel.Controls.Add(button2);
                 

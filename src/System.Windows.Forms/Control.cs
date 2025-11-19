@@ -25,9 +25,12 @@ namespace System.Windows.Forms
 
         protected virtual void CreateHandle()
         {
-            Console.WriteLine("Creating QWidget...");
             Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
-            Console.WriteLine("QWidget created!");
+            
+            if (_backColor != Color.Empty)
+            {
+                NativeMethods.QWidget_SetBackColor(Handle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
+            }
         }
 
         public string Text
@@ -108,6 +111,20 @@ namespace System.Windows.Forms
             get => Size.Height;
             set => Size = new Size(Size.Width, value);
         }
+
+        public Color BackColor
+        {
+            get => _backColor;
+            set
+            {
+                _backColor = value;
+                if (Handle != IntPtr.Zero)
+                {
+                    NativeMethods.QWidget_SetBackColor(Handle, value.R, value.G, value.B, value.A);
+                }
+            }
+        }
+        private Color _backColor = Color.Empty;
 
         public void Dispose()
         {

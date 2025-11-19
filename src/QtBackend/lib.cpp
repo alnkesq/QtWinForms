@@ -60,4 +60,18 @@ extern "C" {
             });
         }
     }
+    
+    EXPORT void QWidget_SetBackColor(void* widget, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+        if (widget) {
+            QWidget* w = (QWidget*)widget;
+            // If alpha is 0 (Color.Empty), don't set background to preserve Qt's native look
+            if (a == 0) {
+                return;
+            }
+            QPalette palette = w->palette();
+            palette.setColor(QPalette::Window, QColor(r, g, b, a));
+            w->setAutoFillBackground(true);
+            w->setPalette(palette);
+        }
+    }
 }
