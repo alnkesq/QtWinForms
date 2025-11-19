@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -54,6 +55,58 @@ namespace System.Windows.Forms
         {
             EnsureCreated();
             NativeMethods.QWidget_Show(Handle);
+        }
+
+        public Point Location
+        {
+            get => _location;
+            set
+            {
+                _location = value;
+                if (Handle != IntPtr.Zero)
+                {
+                    NativeMethods.QWidget_Move(Handle, value.X, value.Y);
+                }
+            }
+        }
+        private Point _location;
+
+        public Size Size
+        {
+            get => _size;
+            set
+            {
+                _size = value;
+                if (Handle != IntPtr.Zero)
+                {
+                    NativeMethods.QWidget_Resize(Handle, value.Width, value.Height);
+                }
+            }
+        }
+        private Size _size = new Size(100, 30); // Default button size
+
+        public int Left
+        {
+            get => Location.X;
+            set => Location = new Point(value, Location.Y);
+        }
+
+        public int Top
+        {
+            get => Location.Y;
+            set => Location = new Point(Location.X, value);
+        }
+
+        public int Width
+        {
+            get => Size.Width;
+            set => Size = new Size(value, Size.Height);
+        }
+
+        public int Height
+        {
+            get => Size.Height;
+            set => Size = new Size(Size.Width, value);
         }
 
         public void Dispose()

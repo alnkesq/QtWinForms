@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace TestApp
@@ -17,11 +18,22 @@ namespace TestApp
                 
                 var button = new Button();
                 button.Text = "Click Me!";
+                button.Location = new Point(10, 10);
+                button.Size = new Size(120, 30);
                 button.Click += (s, e) => {
                     Console.WriteLine("Button clicked!");
                 };
                 
+                var button2 = new Button();
+                button2.Text = "button2";
+                button2.Location = new Point(10, 50);
+                button2.Size = new Size(120, 30);
+                button2.Click += (s, e) => {
+                    Console.WriteLine("Button2 clicked!");
+                };
+                
                 form.Controls.Add(button);
+                form.Controls.Add(button2);
                 
                 Application.Run(form);
                 Console.WriteLine("TestApp Exiting...");

@@ -31,6 +31,14 @@ extern "C" {
         if (widget) ((QWidget*)widget)->setParent((QWidget*)parent);
     }
     
+    EXPORT void QWidget_Move(void* widget, int x, int y) {
+        if (widget) ((QWidget*)widget)->move(x, y);
+    }
+    
+    EXPORT void QWidget_Resize(void* widget, int width, int height) {
+        if (widget) ((QWidget*)widget)->resize(width, height);
+    }
+    
     EXPORT void QWidget_SetTitle(void* widget, const char* title) {
         if (widget) ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
     }

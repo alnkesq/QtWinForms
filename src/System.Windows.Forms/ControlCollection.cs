@@ -22,6 +22,11 @@ namespace System.Windows.Forms
             
             // Set parent relationship in Qt
             NativeMethods.QWidget_SetParent(item.Handle, _owner.Handle);
+            
+            // Apply position and size (Qt needs this after setParent)
+            NativeMethods.QWidget_Move(item.Handle, item.Location.X, item.Location.Y);
+            NativeMethods.QWidget_Resize(item.Handle, item.Size.Width, item.Size.Height);
+            
             item.Show();
         }
 
