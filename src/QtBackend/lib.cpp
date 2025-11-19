@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QWidget>
+#include <QPushButton>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -26,7 +27,29 @@ extern "C" {
         if (widget) ((QWidget*)widget)->show();
     }
     
+    EXPORT void QWidget_SetParent(void* widget, void* parent) {
+        if (widget) ((QWidget*)widget)->setParent((QWidget*)parent);
+    }
+    
     EXPORT void QWidget_SetTitle(void* widget, const char* title) {
         if (widget) ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
+    }
+    
+    EXPORT void* QPushButton_Create(void* parent, const char* text) {
+        QPushButton* btn = new QPushButton(QString::fromUtf8(text), (QWidget*)parent);
+        return btn;
+    }
+    
+    EXPORT void QPushButton_SetText(void* button, const char* text) {
+        if (button) ((QPushButton*)button)->setText(QString::fromUtf8(text));
+    }
+    
+    EXPORT void QPushButton_ConnectClicked(void* button, void (*callback)(void*), void* userData) {
+        if (button) {
+            QPushButton* btn = (QPushButton*)button;
+            QObject::connect(btn, &QPushButton::clicked, [callback, userData]() {
+                callback(userData);
+            });
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 
 namespace TestApp
@@ -11,8 +11,18 @@ namespace TestApp
             {
                 Application.InitializeQt();
                 Console.WriteLine("Starting TestApp...");
+                
                 var form = new Form();
                 form.Text = "Hello Qt from C#";
+                
+                var button = new Button();
+                button.Text = "Click Me!";
+                button.Click += (s, e) => {
+                    Console.WriteLine("Button clicked!");
+                };
+                
+                form.Controls.Add(button);
+                
                 Application.Run(form);
                 Console.WriteLine("TestApp Exiting...");
             }
