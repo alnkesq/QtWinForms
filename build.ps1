@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-# Build script for QtWinForms project
+param([switch] $Run)
 
 $ErrorActionPreference = "Stop"
 
@@ -25,15 +25,19 @@ Copy-Item src/QtBackend/build/Release/QtBackend.dll src/TestApp/bin/Debug/net10.
 Write-Host "✓ QtBackend.dll copied" -ForegroundColor Green
 
 # Build C# projects
-Write-Host "`n[3/3] Building C# projects..." -ForegroundColor Yellow
-dotnet build
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "ERROR: C# build failed!" -ForegroundColor Red
-    exit 1
-}
-Write-Host "✓ C# projects built successfully" -ForegroundColor Green
+if($Run){
+    dotnet run --project src/TestApp
+}else{
+    Write-Host "`n[3/3] Building C# projects..." -ForegroundColor Yellow
+    dotnet build
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: C# build failed!" -ForegroundColor Red
+        exit 1
+    }
+    Write-Host "✓ C# projects built successfully" -ForegroundColor Green
 
-Write-Host "`n✓ Build completed successfully!" -ForegroundColor Green
-Write-Host "`nTo run the test app:" -ForegroundColor Cyan
-Write-Host "  cd src/TestApp" -ForegroundColor Gray
-Write-Host "  dotnet run" -ForegroundColor Gray
+    Write-Host "`n✓ Build completed successfully!" -ForegroundColor Green
+    Write-Host "`nTo run the test app:" -ForegroundColor Cyan
+    Write-Host "  cd src/TestApp" -ForegroundColor Gray
+    Write-Host "  dotnet run" -ForegroundColor Gray
+}
