@@ -36,6 +36,12 @@ namespace TestApp
                 panel.BackColor = Color.Red;
                 panel.Controls.Add(button);
                 panel.Controls.Add(button2);
+
+                var lbl = new Label();
+                lbl.Text = "Label";
+                lbl.Location = new Point(10, 10);
+                lbl.Size = new Size(120, 30);
+                form.Controls.Add(lbl);
                 
                 form.Controls.Add(panel);
                 

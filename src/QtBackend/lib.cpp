@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QWidget>
 #include <QPushButton>
+#include <QLabel>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -24,23 +25,23 @@ extern "C" {
     }
     
     EXPORT void QWidget_Show(void* widget) {
-        if (widget) ((QWidget*)widget)->show();
+        ((QWidget*)widget)->show();
     }
     
     EXPORT void QWidget_SetParent(void* widget, void* parent) {
-        if (widget) ((QWidget*)widget)->setParent((QWidget*)parent);
+        ((QWidget*)widget)->setParent((QWidget*)parent);
     }
     
     EXPORT void QWidget_Move(void* widget, int x, int y) {
-        if (widget) ((QWidget*)widget)->move(x, y);
+        ((QWidget*)widget)->move(x, y);
     }
     
     EXPORT void QWidget_Resize(void* widget, int width, int height) {
-        if (widget) ((QWidget*)widget)->resize(width, height);
+        ((QWidget*)widget)->resize(width, height);
     }
     
     EXPORT void QWidget_SetTitle(void* widget, const char* title) {
-        if (widget) ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
+        ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
     }
     
     EXPORT void* QPushButton_Create(void* parent, const char* text) {
@@ -48,30 +49,35 @@ extern "C" {
         return btn;
     }
     
-    EXPORT void QPushButton_SetText(void* button, const char* text) {
-        if (button) ((QPushButton*)button)->setText(QString::fromUtf8(text));
+    EXPORT void QPushButton_SetText(void* widget, const char* text) {
+        ((QPushButton*)widget)->setText(QString::fromUtf8(text));
     }
     
-    EXPORT void QPushButton_ConnectClicked(void* button, void (*callback)(void*), void* userData) {
-        if (button) {
-            QPushButton* btn = (QPushButton*)button;
-            QObject::connect(btn, &QPushButton::clicked, [callback, userData]() {
-                callback(userData);
-            });
-        }
+    EXPORT void QPushButton_ConnectClicked(void* widget, void (*callback)(void*), void* userData) {
+        QPushButton* btn = (QPushButton*)widget;
+        QObject::connect(btn, &QPushButton::clicked, [callback, userData]() {
+            callback(userData);
+        });
+    }
+    
+    EXPORT void* QLabel_Create(void* parent, const char* text) {
+        QLabel* label = new QLabel(QString::fromUtf8(text), (QWidget*)parent);
+        return label;
+    }
+    
+    EXPORT void QLabel_SetText(void* widget, const char* text) {
+        ((QLabel*)widget)->setText(QString::fromUtf8(text));
     }
     
     EXPORT void QWidget_SetBackColor(void* widget, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
-        if (widget) {
-            QWidget* w = (QWidget*)widget;
-            // If alpha is 0 (Color.Empty), don't set background to preserve Qt's native look
-            if (a == 0) {
-                return;
-            }
-            QPalette palette = w->palette();
-            palette.setColor(QPalette::Window, QColor(r, g, b, a));
-            w->setAutoFillBackground(true);
-            w->setPalette(palette);
+        QWidget* w = (QWidget*)widget;
+        // If alpha is 0 (Color.Empty), don't set background to preserve Qt's native look
+        if (a == 0) {
+            return;
         }
+        QPalette palette = w->palette();
+        palette.setColor(QPalette::Window, QColor(r, g, b, a));
+        w->setAutoFillBackground(true);
+        w->setPalette(palette);
     }
 }
