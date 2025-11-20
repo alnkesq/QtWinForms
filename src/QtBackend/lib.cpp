@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
+#include <QCheckBox>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -45,8 +46,8 @@ extern "C" {
     }
     
     EXPORT void* QPushButton_Create(void* parent, const char* text) {
-        QPushButton* btn = new QPushButton(QString::fromUtf8(text), (QWidget*)parent);
-        return btn;
+        QPushButton* widget = new QPushButton(QString::fromUtf8(text), (QWidget*)parent);
+        return widget;
     }
     
     EXPORT void QPushButton_SetText(void* widget, const char* text) {
@@ -54,19 +55,37 @@ extern "C" {
     }
     
     EXPORT void QPushButton_ConnectClicked(void* widget, void (*callback)(void*), void* userData) {
-        QPushButton* btn = (QPushButton*)widget;
-        QObject::connect(btn, &QPushButton::clicked, [callback, userData]() {
+        QObject::connect((QPushButton*)widget, &QPushButton::clicked, [callback, userData]() {
             callback(userData);
         });
     }
     
     EXPORT void* QLabel_Create(void* parent, const char* text) {
-        QLabel* label = new QLabel(QString::fromUtf8(text), (QWidget*)parent);
-        return label;
+        QLabel* widget = new QLabel(QString::fromUtf8(text), (QWidget*)parent);
+        return widget;
     }
     
-    EXPORT void QLabel_SetText(void* widget, const char* text) {
-        ((QLabel*)widget)->setText(QString::fromUtf8(text));
+    EXPORT void QLabel_SetText(void* label, const char* text) {
+        ((QLabel*)label)->setText(QString::fromUtf8(text));
+    }
+    
+    EXPORT void* QCheckBox_Create(void* parent, const char* text) {
+        QCheckBox* widget = new QCheckBox(QString::fromUtf8(text), (QWidget*)parent);
+        return widget;
+    }
+    
+    EXPORT void QCheckBox_SetText(void* widget, const char* text) {
+        ((QCheckBox*)widget)->setText(QString::fromUtf8(text));
+    }
+    
+    EXPORT void QCheckBox_SetChecked(void* widget, bool isChecked) {
+        ((QCheckBox*)widget)->setChecked(isChecked);
+    }
+    
+    EXPORT void QCheckBox_ConnectStateChanged(void* widget, void (*callback)(void*, int), void* userData) {
+        QObject::connect((QCheckBox*)widget, &QCheckBox::stateChanged, [callback, userData](int state) {
+            callback(userData, state);
+        });
     }
     
     EXPORT void QWidget_SetBackColor(void* widget, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {

@@ -35,16 +35,28 @@ namespace System.Windows.Forms
         public static extern IntPtr QPushButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QPushButton_SetText(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QPushButton_SetText(IntPtr button, [MarshalAs(UnmanagedType.LPStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QPushButton_ConnectClicked(IntPtr widget, IntPtr callback, IntPtr userData);
+        public static extern void QPushButton_ConnectClicked(IntPtr button, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QLabel_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QLabel_SetText(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QLabel_SetText(IntPtr label, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QCheckBox_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QCheckBox_SetText(IntPtr checkBox, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QCheckBox_SetChecked(IntPtr checkBox, bool isChecked);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QCheckBox_ConnectStateChanged(IntPtr checkBox, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetBackColor(IntPtr widget, byte r, byte g, byte b, byte a);

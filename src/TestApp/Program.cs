@@ -43,6 +43,16 @@ namespace TestApp
                 lbl.Size = new Size(120, 30);
                 form.Controls.Add(lbl);
                 
+                var checkBox = new CheckBox();
+                checkBox.Text = "Enable Feature";
+                checkBox.Location = new Point(10, 50);
+                checkBox.Size = new Size(150, 30);
+                checkBox.Checked = true;
+                checkBox.CheckedChanged += (s, e) => {
+                    lbl.Text = $"CheckBox: {checkBox.Checked}";
+                };
+                form.Controls.Add(checkBox);
+                
                 form.Controls.Add(panel);
                 
                 Application.Run(form);
