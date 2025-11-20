@@ -14,5 +14,7 @@ namespace System.Windows.Forms
             base.CreateHandle();
             NativeMethods.QWidget_Resize(Handle, Size.Width, Size.Height);
         }
+
+        [Obsolete(NotImplementedWarning)] public Size ClientSize { get; set; }
     }
 }

@@ -151,7 +151,25 @@ namespace System.Windows.Forms
 
         public void Dispose()
         {
-            // TODO: Implement proper disposal
+            Dispose(true);
+        }
+
+        public void SuspendLayout() { }
+        public void ResumeLayout(bool performLayout) { }
+        public void PerformLayout() { }
+
+        public string? Name { get; set; }
+        public object? Tag { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool UseVisualStyleBackColor { get; set; } = true;
+        [Obsolete(NotImplementedWarning)] public int TabIndex { get; set; } = 0;
+        [Obsolete(NotImplementedWarning)] public AutoScaleMode AutoScaleMode { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool AutoSize { get; set; }
+        [Obsolete(NotImplementedWarning)] public SizeF AutoScaleDimensions { get; set; }
+
+        protected const string NotImplementedWarning = "Not implemented, NOP";
+
+        protected virtual void Dispose(bool disposing)
+        { 
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WinFormsApp1;
 
 namespace TestApp
 {
@@ -55,8 +56,11 @@ namespace TestApp
                 form.Controls.Add(checkBox);
                 
                 form.Controls.Add(panel);
-                
-                Application.Run(form);
+
+                form.Visible = true;
+                var f2 = new Form1();
+                f2.Visible = true;
+                Application.Run();
                 Console.WriteLine("TestApp Exiting...");
             }
             catch (Exception ex)

@@ -17,9 +17,12 @@ namespace System.Windows.Forms
         }
         public static void Run(Form mainForm)
         {
-
-            
             mainForm.Visible = true;
+            Run();
+        }
+
+        public static void Run()
+        {
             NativeMethods.QApplication_Run();
         }
     }
