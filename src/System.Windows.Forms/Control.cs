@@ -31,6 +31,11 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetBackColor(Handle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
             }
+
+            if (!_enabled)
+            {
+                NativeMethods.QWidget_SetEnabled(Handle, _enabled);
+            }
         }
 
         public string Text
@@ -125,6 +130,20 @@ namespace System.Windows.Forms
             }
         }
         private Color _backColor = Color.Empty;
+
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                _enabled = value;
+                if (Handle != IntPtr.Zero)
+                {
+                    NativeMethods.QWidget_SetEnabled(Handle, value);
+                }
+            }
+        }
+        private bool _enabled = true;
 
         public void Dispose()
         {

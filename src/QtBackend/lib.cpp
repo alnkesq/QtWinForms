@@ -99,4 +99,8 @@ extern "C" {
         w->setAutoFillBackground(true);
         w->setPalette(palette);
     }
+
+    EXPORT void QWidget_SetEnabled(void* widget, bool enabled) {
+        ((QWidget*)widget)->setEnabled(enabled);
+    }
 }

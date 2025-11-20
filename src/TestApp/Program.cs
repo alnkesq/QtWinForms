@@ -50,6 +50,7 @@ namespace TestApp
                 checkBox.Checked = true;
                 checkBox.CheckedChanged += (s, e) => {
                     lbl.Text = $"CheckBox: {checkBox.Checked}";
+                    button.Enabled = checkBox.Checked;
                 };
                 form.Controls.Add(checkBox);
                 

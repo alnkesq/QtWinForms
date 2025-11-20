@@ -60,5 +60,8 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetBackColor(IntPtr widget, byte r, byte g, byte b, byte a);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetEnabled(IntPtr widget, bool enabled);
     }
 }
