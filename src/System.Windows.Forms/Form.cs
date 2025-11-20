@@ -15,6 +15,10 @@ namespace System.Windows.Forms
             NativeMethods.QWidget_Resize(Handle, Size.Width, Size.Height);
         }
 
-        [Obsolete(NotImplementedWarning)] public Size ClientSize { get; set; }
+        public Size ClientSize
+        {
+            get => Size;
+            set => Size = value;
+        }
     }
 }

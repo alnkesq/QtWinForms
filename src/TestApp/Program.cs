@@ -57,9 +57,9 @@ namespace TestApp
                 
                 form.Controls.Add(panel);
 
-                form.Visible = true;
                 var f2 = new Form1();
                 f2.Visible = true;
+                form.Visible = true;
                 Application.Run();
                 Console.WriteLine("TestApp Exiting...");
             }
