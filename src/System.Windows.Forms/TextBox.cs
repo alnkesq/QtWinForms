@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -16,13 +17,27 @@ namespace System.Windows.Forms
             }
         }
 
-        public string Text
+        public unsafe override string Text
         {
-            get => _text;
+            get
+            {
+                if (!IsHandleCreated) return _text;
+                using var box = new GCHandle<string>(string.Empty);
+
+                [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+                static void Callback(void* utf16, int length, void* userData)
+                {
+                    var box = GCHandle<string?>.FromIntPtr((nint)userData);
+                    string s = Marshal.PtrToStringUni((nint)utf16, length);
+                    box.Target = s;
+                }
+                NativeMethods.QLineEdit_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                return box.Target;
+            }
             set
             {
                 _text = value ?? "";
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QLineEdit_SetText(Handle, _text);
                 }

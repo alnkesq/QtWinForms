@@ -12,6 +12,7 @@ namespace TestApp
             try
             {
                 var form = new Form();
+                var textBox = new TextBox();
                 form.Text = "Hello Qt from C#";
                 
                 var button = new Button();
@@ -26,7 +27,9 @@ namespace TestApp
                 button2.Text = "button2";
                 button2.Location = new Point(10, 50);
                 button2.Size = new Size(120, 30);
-                button2.Click += (s, e) => {
+                button2.Click += (s, e) => 
+                {
+                    Console.WriteLine("Textbox: " + textBox.Text);
                     Console.WriteLine("Button2 clicked!");
                 };
                 
@@ -55,7 +58,6 @@ namespace TestApp
                 };
                 form.Controls.Add(checkBox);
                 
-                var textBox = new TextBox();
                 textBox.Text = "Enter text here...";
                 textBox.Location = new Point(10, 90);
                 textBox.Size = new Size(200, 30);

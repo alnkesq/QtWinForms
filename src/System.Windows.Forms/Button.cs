@@ -33,7 +33,7 @@ namespace System.Windows.Forms
             set
             {
                 _text = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QPushButton_SetText(Handle, value);
                 }
@@ -45,7 +45,7 @@ namespace System.Windows.Forms
         {
             add
             {
-                if (_clickHandler == null && Handle != IntPtr.Zero)
+                if (_clickHandler == null && IsHandleCreated)
                 {
                     ConnectClickEvent();
                 }

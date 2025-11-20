@@ -13,11 +13,13 @@ namespace System.Windows.Forms
             Controls = new ControlCollection(this);
         }
 
+        public bool IsHandleCreated => Handle != default;
+
         public ControlCollection Controls { get; }
 
         internal void EnsureCreated()
         {
-            if (Handle == IntPtr.Zero)
+            if (!IsHandleCreated)
             {
                 CreateHandle();
             }
@@ -42,13 +44,10 @@ namespace System.Windows.Forms
             }
         }
 
-        public string Text
+        public virtual string Text
         {
-            set
-            {
-                EnsureCreated();
-                NativeMethods.QWidget_SetTitle(Handle, value);
-            }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         public bool Visible
@@ -75,7 +74,7 @@ namespace System.Windows.Forms
             set
             {
                 _location = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QWidget_Move(Handle, value.X, value.Y);
                 }
@@ -89,7 +88,7 @@ namespace System.Windows.Forms
             set
             {
                 _size = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QWidget_Resize(Handle, value.Width, value.Height);
                 }
@@ -127,7 +126,7 @@ namespace System.Windows.Forms
             set
             {
                 _backColor = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QWidget_SetBackColor(Handle, value.R, value.G, value.B, value.A);
                 }
@@ -141,7 +140,7 @@ namespace System.Windows.Forms
             set
             {
                 _enabled = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QWidget_SetEnabled(Handle, value);
                 }

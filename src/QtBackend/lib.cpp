@@ -12,6 +12,9 @@
 #endif
 
 extern "C" {
+
+    typedef void (*ReadQStringCallback)(const void* dataUtf16, int length, void* userData);
+
     EXPORT void* QApplication_Create() {
         static int argc = 1;
         static char* argv[] = { (char*)"TestApp", nullptr };
@@ -112,5 +115,10 @@ extern "C" {
     
     EXPORT void QLineEdit_SetText(void* lineEdit, const char* text) {
         ((QLineEdit*)lineEdit)->setText(QString::fromUtf8(text));
+    }
+
+    EXPORT void QLineEdit_GetText_Invoke(void* label, ReadQStringCallback cb, void* userData) {
+        QString s = ((QLineEdit*)label)->text();
+        cb((const void*)s.constData(), s.size(), userData);
     }
 }
