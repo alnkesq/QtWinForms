@@ -17,6 +17,7 @@ namespace System.Windows.Forms
             if (Handle == IntPtr.Zero)
             {
                 Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text ?? "");
+                SetCommonProperties();
                 
                 // Connect click event if handler is already attached
                 if (_clickHandler != null)

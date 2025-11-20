@@ -12,6 +12,7 @@ namespace System.Windows.Forms
             if (Handle == IntPtr.Zero)
             {
                 Handle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
+                SetCommonProperties();
             }
         }
 

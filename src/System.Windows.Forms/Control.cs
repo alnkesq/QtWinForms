@@ -26,7 +26,11 @@ namespace System.Windows.Forms
         protected virtual void CreateHandle()
         {
             Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
-            
+            SetCommonProperties();
+        }
+
+        protected void SetCommonProperties()
+        {
             if (_backColor != Color.Empty)
             {
                 NativeMethods.QWidget_SetBackColor(Handle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);

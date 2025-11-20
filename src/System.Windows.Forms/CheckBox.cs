@@ -19,6 +19,7 @@ namespace System.Windows.Forms
             if (Handle == IntPtr.Zero)
             {
                 Handle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text ?? "");
+                SetCommonProperties();
                 
                 // Set initial checked state
                 if (_checked)
