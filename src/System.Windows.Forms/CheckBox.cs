@@ -9,25 +9,18 @@ namespace System.Windows.Forms
         private bool _checked;
         private EventHandler? _checkedChangedHandler;
 
-        public CheckBox()
-        {
-            // Deferred creation
-        }
-
         protected override void CreateHandle()
         {
-            if (Handle == IntPtr.Zero)
+            if (!IsHandleCreated)
             {
                 Handle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text ?? "");
                 SetCommonProperties();
                 
-                // Set initial checked state
                 if (_checked)
                 {
                     NativeMethods.QCheckBox_SetChecked(Handle, _checked);
                 }
                 
-                // Connect state changed event if handler is already attached
                 if (_checkedChangedHandler != null)
                 {
                     ConnectStateChangedEvent();
@@ -35,13 +28,13 @@ namespace System.Windows.Forms
             }
         }
 
-        public new string Text
+        public override string Text
         {
             get => _text ?? "";
             set
             {
                 _text = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QCheckBox_SetText(Handle, value);
                 }
@@ -54,7 +47,7 @@ namespace System.Windows.Forms
             set
             {
                 _checked = value;
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QCheckBox_SetChecked(Handle, value);
                 }
@@ -65,7 +58,7 @@ namespace System.Windows.Forms
         {
             add
             {
-                if (_checkedChangedHandler == null && Handle != IntPtr.Zero)
+                if (_checkedChangedHandler == null && IsHandleCreated)
                 {
                     ConnectStateChangedEvent();
                 }

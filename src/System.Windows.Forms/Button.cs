@@ -14,7 +14,7 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (Handle == IntPtr.Zero)
+            if (!IsHandleCreated)
             {
                 Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text ?? "");
                 SetCommonProperties();

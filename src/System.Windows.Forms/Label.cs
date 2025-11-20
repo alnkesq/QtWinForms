@@ -9,20 +9,20 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (Handle == IntPtr.Zero)
+            if (!IsHandleCreated)
             {
                 Handle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
             }
         }
 
-        public string Text
+        public override string Text
         {
             get => _text;
             set
             {
                 _text = value ?? "";
-                if (Handle != IntPtr.Zero)
+                if (IsHandleCreated)
                 {
                     NativeMethods.QLabel_SetText(Handle, _text);
                 }

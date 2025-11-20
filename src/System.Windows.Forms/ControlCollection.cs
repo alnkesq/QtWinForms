@@ -35,8 +35,7 @@ namespace System.Windows.Forms
             var item = this[index];
             base.RemoveItem(index);
             
-            // Remove parent relationship
-            if (item.Handle != IntPtr.Zero)
+            if (item.IsHandleCreated)
             {
                 NativeMethods.QWidget_SetParent(item.Handle, IntPtr.Zero);
             }
