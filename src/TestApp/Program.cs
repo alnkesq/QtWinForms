@@ -55,6 +55,12 @@ namespace TestApp
                 };
                 form.Controls.Add(checkBox);
                 
+                var textBox = new TextBox();
+                textBox.Text = "Enter text here...";
+                textBox.Location = new Point(10, 90);
+                textBox.Size = new Size(200, 30);
+                form.Controls.Add(textBox);
+                
                 form.Controls.Add(panel);
 
                 var f2 = new Form1();

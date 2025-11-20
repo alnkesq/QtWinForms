@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QCheckBox>
+#include <QLineEdit>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -102,5 +103,14 @@ extern "C" {
 
     EXPORT void QWidget_SetEnabled(void* widget, bool enabled) {
         ((QWidget*)widget)->setEnabled(enabled);
+    }
+    
+    EXPORT void* QLineEdit_Create(void* parent, const char* text) {
+        QLineEdit* widget = new QLineEdit(QString::fromUtf8(text), (QWidget*)parent);
+        return widget;
+    }
+    
+    EXPORT void QLineEdit_SetText(void* lineEdit, const char* text) {
+        ((QLineEdit*)lineEdit)->setText(QString::fromUtf8(text));
     }
 }
