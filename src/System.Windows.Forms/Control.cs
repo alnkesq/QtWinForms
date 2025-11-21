@@ -12,6 +12,22 @@ namespace System.Windows.Forms
         internal IntPtr GCHandlePtr => GCHandle<Control>.ToIntPtr((gcHandle ??= new GCHandle<Control>(this)));
         internal static T ObjectFromGCHandle<T>(IntPtr gcHandle) where T : class => GCHandle<T>.FromIntPtr(gcHandle).Target;
 
+        public bool InvokeRequired => _managedThreadId != 0 && Environment.CurrentManagedThreadId != _managedThreadId;
+        private int _managedThreadId = -1;
+
+        public void Invoke(Action action)
+        {
+            if (InvokeRequired) throw new NotImplementedException();
+            action();
+        }
+
+        public object? Invoke(Delegate d, params object?[]? args)
+        {
+            object? result = null;
+            Invoke(() => result = d.DynamicInvoke());
+            return result;
+        }
+
         public Control()
         {
             Application.InitializeQt();
@@ -40,6 +56,8 @@ namespace System.Windows.Forms
 
         protected void SetCommonProperties()
         {
+            _managedThreadId = Environment.CurrentManagedThreadId;
+
             if (_backColor != Color.Empty)
             {
                 NativeMethods.QWidget_SetBackColor(Handle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
@@ -452,5 +470,13 @@ namespace System.Windows.Forms
                 gcHandle = null;
             }
         }
+
+        [Obsolete(NotImplementedWarning)] public Font Font { get; set; }
+        [Obsolete(NotImplementedWarning)] public ContentAlignment TextAlign { get; set; }
+        [Obsolete(NotImplementedWarning)] public event PreviewKeyDownEventHandler? PreviewKeyDown;
+
+        public virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
+
+
     }
 }

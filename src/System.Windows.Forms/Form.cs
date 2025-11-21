@@ -13,6 +13,19 @@ namespace System.Windows.Forms
             Size = new Size(800, 600);
         }
 
+
+        public event EventHandler? Load;
+        [Obsolete(NotImplementedWarning)] public event EventHandler<FormClosedEventArgs>? FormClosed;
+        [Obsolete(NotImplementedWarning)] public event EventHandler<FormClosingEventArgs>? FormClosing;
+
+        protected virtual void OnLoad(EventArgs e) => Load?.Invoke(this, e);
+
+        [Obsolete(NotImplementedWarning)]
+        protected virtual void OnFormClosed(FormClosedEventArgs e) => FormClosed?.Invoke(this, e);
+
+        [Obsolete(NotImplementedWarning)]
+        protected virtual void OnFormClosing(FormClosingEventArgs e) => FormClosing?.Invoke(this, e);
+
         protected override void CreateHandle()
         {
             base.CreateHandle();
@@ -25,6 +38,7 @@ namespace System.Windows.Forms
             
             // Connect resize and move events
             ConnectResizeEvent();
+            OnLoad(EventArgs.Empty);
         }
 
         private void ConnectResizeEvent()
@@ -95,5 +109,9 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        [Obsolete(NotImplementedWarning)] public FormBorderStyle FormBorderStyle { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool MaximizeBox { get; set; }
+        [Obsolete(NotImplementedWarning)] public Icon Icon { get; set; }
     }
 }
