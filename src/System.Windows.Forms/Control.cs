@@ -227,15 +227,18 @@ namespace System.Windows.Forms
 
         internal void SetBoundsCore(int x, int y, int width, int height)
         {
-            bool sizeChanged = (_size.Width != width || _size.Height != height);
+            bool sizeChanged = _size.Width != width || _size.Height != height;
+            var positionChanged = _location.X != x || _location.Y != y;
             
             _location = new Point(x, y);
             _size = new Size(width, height);
             
             if (IsHandleCreated)
             {
-                NativeMethods.QWidget_Move(Handle, x, y);
-                NativeMethods.QWidget_Resize(Handle, width, height);
+                if (positionChanged)
+                    NativeMethods.QWidget_Move(Handle, x, y);
+                if (sizeChanged)
+                    NativeMethods.QWidget_Resize(Handle, width, height);
             }
             
             if (sizeChanged)

@@ -6,7 +6,9 @@
 #include <QLineEdit>
 #include <QEvent>
 #include <QResizeEvent>
-
+#include <QMoveEvent>
+#include <iostream>
+using namespace std;
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
 #else
@@ -124,31 +126,34 @@ extern "C" {
         cb((const void*)s.constData(), s.size(), userData);
     }
 
-    // Resize event support
-    typedef void (*ResizeCallback)(void*, int, int);
-
+    // Resize and Move event support
     class ResizeEventFilter : public QObject {
+    private:
+        void (*resizeCallback)(void*, int, int);
+        void (*moveCallback)(void*, int, int);
+        void* userData;
+
     public:
-        ResizeEventFilter(ResizeCallback cb, void* data) : callback(cb), userData(data) {}
+        ResizeEventFilter(void (*resizeCb)(void*, int, int), void (*moveCb)(void*, int, int), void* data)
+            : resizeCallback(resizeCb), moveCallback(moveCb), userData(data) {}
 
     protected:
         bool eventFilter(QObject* obj, QEvent* event) override {
-            if (event->type() == QEvent::Resize) {
+            if (event->type() == QEvent::Resize && resizeCallback) {
                 QResizeEvent* resizeEvent = static_cast<QResizeEvent*>(event);
-                QSize newSize = resizeEvent->size();
-                callback(userData, newSize.width(), newSize.height());
+                resizeCallback(userData, resizeEvent->size().width(), resizeEvent->size().height());
+            }
+            else if (event->type() == QEvent::Move && moveCallback) {
+                QMoveEvent* moveEvent = static_cast<QMoveEvent*>(event);
+                moveCallback(userData, moveEvent->pos().x(), moveEvent->pos().y());
             }
             return QObject::eventFilter(obj, event);
         }
-
-    private:
-        ResizeCallback callback;
-        void* userData;
     };
 
-    EXPORT void QWidget_ConnectResize(void* widget, void (*callback)(void*, int, int), void* userData) {
-        QWidget* w = (QWidget*)widget;
-        ResizeEventFilter* filter = new ResizeEventFilter(callback, userData);
+    EXPORT void QWidget_ConnectResize(void* widget, void (*resizeCallback)(void*, int, int), void (*moveCallback)(void*, int, int), void* userData) {
+        QWidget* w = static_cast<QWidget*>(widget);
+        ResizeEventFilter* filter = new ResizeEventFilter(resizeCallback, moveCallback, userData);
         w->installEventFilter(filter);
     }
 }

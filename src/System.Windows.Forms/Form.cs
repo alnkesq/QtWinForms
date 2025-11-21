@@ -18,14 +18,20 @@ namespace System.Windows.Forms
             NativeMethods.QWidget_Resize(Handle, Size.Width, Size.Height);
             NativeMethods.QWidget_SetTitle(Handle, _text);
             
-            // Connect resize event to trigger layout updates
+            // Connect resize and move events
             ConnectResizeEvent();
         }
 
-        private unsafe void ConnectResizeEvent()
+        private void ConnectResizeEvent()
         {
-            delegate* unmanaged[Cdecl]<nint, int, int, void> callback = &OnResizeCallback;
-            NativeMethods.QWidget_ConnectResize(Handle, (IntPtr)callback, (IntPtr)(nint)GCHandle.Alloc(this));
+            unsafe
+            {
+                var handle = GCHandle.Alloc(this);
+                GC.KeepAlive(handle);
+                var resizeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnResizeCallback;
+                var moveCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnMoveCallback;
+                NativeMethods.QWidget_ConnectResize(Handle, resizeCallbackPtr, moveCallbackPtr, GCHandle.ToIntPtr(handle));
+            }
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -36,6 +42,19 @@ namespace System.Windows.Forms
             {
                 // Update size and trigger layout using SetBoundsCore
                 form.SetBoundsCore(form.Location.X, form.Location.Y, width, height);
+            }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe void OnMoveCallback(nint userData, int x, int y)
+        {
+            var handle = GCHandle.FromIntPtr((IntPtr)userData);
+            if (handle.Target is Form form)
+            {
+                // Update location - use SetBoundsCore to update internal state
+                // Don't trigger resize event since size hasn't changed
+                var currentSize = form.Size;
+                form.SetBoundsCore(x, y, currentSize.Width, currentSize.Height);
             }
         }
 
