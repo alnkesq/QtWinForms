@@ -5,6 +5,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QGroupBox>
+#include <QTabWidget>
 #include <QEvent>
 #include <QResizeEvent>
 #include <QMoveEvent>
@@ -171,5 +172,31 @@ extern "C" {
 
     EXPORT void QGroupBox_SetTitle(void* groupBox, const char* title) {
         ((QGroupBox*)groupBox)->setTitle(QString::fromUtf8(title));
+    }
+
+    EXPORT void* QTabWidget_Create(void* parent) {
+        QTabWidget* widget = new QTabWidget((QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QTabWidget_AddTab(void* tabWidget, void* page, const char* label) {
+        QTabWidget* tw = (QTabWidget*)tabWidget;
+        QWidget* pageWidget = (QWidget*)page;
+        tw->addTab(pageWidget, QString::fromUtf8(label));
+    }
+
+    EXPORT void QTabWidget_RemoveTab(void* tabWidget, int index) {
+        QTabWidget* tw = (QTabWidget*)tabWidget;
+        tw->removeTab(index);
+    }
+
+    EXPORT int QTabWidget_GetCurrentIndex(void* tabWidget) {
+        QTabWidget* tw = (QTabWidget*)tabWidget;
+        return tw->currentIndex();
+    }
+
+    EXPORT void QTabWidget_SetCurrentIndex(void* tabWidget, int index) {
+        QTabWidget* tw = (QTabWidget*)tabWidget;
+        tw->setCurrentIndex(index);
     }
 }

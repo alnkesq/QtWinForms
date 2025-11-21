@@ -82,5 +82,20 @@ namespace System.Windows.Forms
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QGroupBox_SetTitle(IntPtr groupBox, [MarshalAs(UnmanagedType.LPStr)] string title);
 
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QTabWidget_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTabWidget_AddTab(IntPtr tabWidget, IntPtr page, [MarshalAs(UnmanagedType.LPStr)] string label);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTabWidget_RemoveTab(IntPtr tabWidget, int index);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QTabWidget_GetCurrentIndex(IntPtr tabWidget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTabWidget_SetCurrentIndex(IntPtr tabWidget, int index);
+
     }
 }
