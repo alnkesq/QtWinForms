@@ -205,6 +205,16 @@ namespace System.Windows.Forms
             PerformLayout();
         }
 
+        internal void InitializeAnchorBounds()
+        {
+            // Store initial bounds for anchor calculations
+            // This is called when a control is added to a parent
+            if (Parent != null && _anchorBounds.IsEmpty)
+            {
+                _anchorBounds = new Rectangle(Location, Size);
+            }
+        }
+
         internal void SetBoundsCore(int x, int y, int width, int height)
         {
             bool sizeChanged = (_size.Width != width || _size.Height != height);

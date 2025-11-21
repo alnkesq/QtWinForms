@@ -30,6 +30,9 @@ namespace System.Windows.Forms
             NativeMethods.QWidget_Move(item.Handle, item.Location.X, item.Location.Y);
             NativeMethods.QWidget_Resize(item.Handle, item.Size.Width, item.Size.Height);
             
+            // Initialize anchor bounds now that parent is set
+            item.InitializeAnchorBounds();
+            
             item.Show();
             
             // Trigger layout to handle docking/anchoring
