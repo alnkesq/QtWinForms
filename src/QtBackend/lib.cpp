@@ -144,8 +144,14 @@ extern "C" {
                 resizeCallback(userData, resizeEvent->size().width(), resizeEvent->size().height());
             }
             else if (event->type() == QEvent::Move && moveCallback) {
-                QMoveEvent* moveEvent = static_cast<QMoveEvent*>(event);
-                moveCallback(userData, moveEvent->pos().x(), moveEvent->pos().y());
+                // For top-level windows, QMoveEvent::pos() returns the client area position,
+                // but QWidget::move() expects the frame position (including title bar).
+                // Use frameGeometry() to get the correct position including the window frame.
+                QWidget* widget = qobject_cast<QWidget*>(obj);
+                if (widget) {
+                    QPoint framePos = widget->frameGeometry().topLeft();
+                    moveCallback(userData, framePos.x(), framePos.y());
+                }
             }
             return QObject::eventFilter(obj, event);
         }
