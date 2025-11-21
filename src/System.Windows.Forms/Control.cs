@@ -39,6 +39,10 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetBackColor(Handle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
             }
+            if (_foreColor != Color.Empty)
+            {
+                NativeMethods.QWidget_SetForeColor(Handle, _foreColor.R, _foreColor.G, _foreColor.B, _foreColor.A);
+            }
 
             if (!_enabled)
             {
@@ -131,6 +135,19 @@ namespace System.Windows.Forms
                 if (IsHandleCreated)
                 {
                     NativeMethods.QWidget_SetBackColor(Handle, value.R, value.G, value.B, value.A);
+                }
+            }
+        }
+        private Color _foreColor = Color.Empty;
+        public Color ForeColor
+        {
+            get => _foreColor;
+            set
+            {
+                _foreColor = value;
+                if (IsHandleCreated)
+                {
+                    NativeMethods.QWidget_SetForeColor(Handle, value.R, value.G, value.B, value.A);
                 }
             }
         }

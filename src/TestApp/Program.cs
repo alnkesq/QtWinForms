@@ -147,6 +147,7 @@ namespace TestApp
             
             form.Controls.Add(panel);
 
+            grp.ForeColor = Color.Blue;
             var f2 = new Form1();
             f2.Visible = true;
             
