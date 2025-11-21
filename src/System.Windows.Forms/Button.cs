@@ -60,17 +60,14 @@ namespace System.Windows.Forms
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
-            NativeMethods.QPushButton_ConnectClicked(Handle, (IntPtr)callback, (IntPtr)(nint)GCHandle.Alloc(this));
+            NativeMethods.QPushButton_ConnectClicked(Handle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         private static unsafe void OnClickedCallback(nint userData)
         {
-            var handle = GCHandle.FromIntPtr((IntPtr)userData);
-            if (handle.Target is Button button)
-            {
-                button._clickHandler?.Invoke(button, EventArgs.Empty);
-            }
+            var button = ObjectFromGCHandle<Button>(userData);
+            button._clickHandler?.Invoke(button, EventArgs.Empty);
         }
     }
 }

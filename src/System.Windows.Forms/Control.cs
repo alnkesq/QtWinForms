@@ -1,11 +1,16 @@
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
     public class Control : IWin32Window, IDisposable
     {
         public IntPtr Handle { get; protected set; }
+        internal GCHandle<Control>? gcHandle;
+
+        internal IntPtr GCHandlePtr => GCHandle<Control>.ToIntPtr((gcHandle ??= new GCHandle<Control>(this)));
+        internal static T ObjectFromGCHandle<T>(IntPtr gcHandle) where T : class => GCHandle<T>.FromIntPtr(gcHandle).Target;
 
         public Control()
         {

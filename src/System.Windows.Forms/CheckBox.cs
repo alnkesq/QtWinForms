@@ -73,18 +73,16 @@ namespace System.Windows.Forms
         private unsafe void ConnectStateChangedEvent()
         {
             delegate* unmanaged[Cdecl]<nint, int, void> callback = &OnStateChangedCallback;
-            NativeMethods.QCheckBox_ConnectStateChanged(Handle, (IntPtr)callback, (IntPtr)(nint)GCHandle.Alloc(this));
+            NativeMethods.QCheckBox_ConnectStateChanged(Handle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         private static unsafe void OnStateChangedCallback(nint userData, int state)
         {
-            var handle = GCHandle.FromIntPtr((IntPtr)userData);
-            if (handle.Target is CheckBox checkBox)
-            {
-                checkBox._checked = (state != 0);
-                checkBox._checkedChangedHandler?.Invoke(checkBox, EventArgs.Empty);
-            }
+            var checkBox = ObjectFromGCHandle<CheckBox>(userData);
+
+            checkBox._checked = (state != 0);
+            checkBox._checkedChangedHandler?.Invoke(checkBox, EventArgs.Empty);
         }
     }
 }

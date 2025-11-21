@@ -31,36 +31,27 @@ namespace System.Windows.Forms
         {
             unsafe
             {
-                var handle = GCHandle.Alloc(this);
-                GC.KeepAlive(handle);
                 var resizeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnResizeCallback;
                 var moveCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnMoveCallback;
-                NativeMethods.QWidget_ConnectResize(Handle, resizeCallbackPtr, moveCallbackPtr, GCHandle.ToIntPtr(handle));
+                NativeMethods.QWidget_ConnectResize(Handle, resizeCallbackPtr, moveCallbackPtr, GCHandlePtr);
             }
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         private static unsafe void OnResizeCallback(nint userData, int width, int height)
         {
-            var handle = GCHandle.FromIntPtr((IntPtr)userData);
-            if (handle.Target is Form form)
-            {
-                // Update size and trigger layout using SetBoundsCore
-                form.SetBoundsCore(form.Location.X, form.Location.Y, width, height);
-            }
+            var form = ObjectFromGCHandle<Form>(userData);
+            form.SetBoundsCore(form.Location.X, form.Location.Y, width, height);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         private static unsafe void OnMoveCallback(nint userData, int x, int y)
         {
-            var handle = GCHandle.FromIntPtr((IntPtr)userData);
-            if (handle.Target is Form form)
-            {
-                // Update location - use SetBoundsCore to update internal state
-                // Don't trigger resize event since size hasn't changed
-                var currentSize = form.Size;
-                form.SetBoundsCore(x, y, currentSize.Width, currentSize.Height);
-            }
+            var form = ObjectFromGCHandle<Form>(userData);
+            // Update location - use SetBoundsCore to update internal state
+            // Don't trigger resize event since size hasn't changed
+            var currentSize = form.Size;
+            form.SetBoundsCore(x, y, currentSize.Width, currentSize.Height);
         }
 
         public Size ClientSize

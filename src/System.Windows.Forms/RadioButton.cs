@@ -82,24 +82,22 @@ namespace System.Windows.Forms
         private unsafe void ConnectToggledEvent()
         {
             delegate* unmanaged[Cdecl]<nint, byte, void> callback = &OnToggledCallback;
-            NativeMethods.QRadioButton_ConnectToggled(Handle, (IntPtr)callback, (IntPtr)(nint)GCHandle.Alloc(this));
+            NativeMethods.QRadioButton_ConnectToggled(Handle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         private static unsafe void OnToggledCallback(nint userData, byte checkedState)
         {
-            var handle = GCHandle.FromIntPtr((IntPtr)userData);
-            if (handle.Target is RadioButton radioButton)
+            var radioButton = ObjectFromGCHandle<RadioButton>(userData);
+            bool isChecked = checkedState != 0;
+            // Only trigger if the state actually changed from what we think it is
+            // This prevents double events if the setter triggered the update
+            if (radioButton._checked != isChecked)
             {
-                bool isChecked = checkedState != 0;
-                // Only trigger if the state actually changed from what we think it is
-                // This prevents double events if the setter triggered the update
-                if (radioButton._checked != isChecked)
-                {
-                    radioButton._checked = isChecked;
-                    radioButton.OnCheckedChanged(EventArgs.Empty);
-                }
+                radioButton._checked = isChecked;
+                radioButton.OnCheckedChanged(EventArgs.Empty);
             }
+            
         }
     }
 }
