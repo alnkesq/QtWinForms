@@ -430,7 +430,27 @@ namespace System.Windows.Forms
         protected const string NotImplementedWarning = "Not implemented, NOP";
 
         protected virtual void Dispose(bool disposing)
-        { 
+        {
+            if (disposing)
+            {
+                // Dispose children
+                for (int i = Controls.Count - 1; i >= 0; i--)
+                {
+                    Controls[i].Dispose();
+                }
+            }
+
+            if (IsHandleCreated)
+            {
+                NativeMethods.QWidget_Destroy(Handle);
+                Handle = IntPtr.Zero;
+            }
+
+            if (disposing && gcHandle != null)
+            {
+                gcHandle.Value.Dispose();
+                gcHandle = null;
+            }
         }
     }
 }

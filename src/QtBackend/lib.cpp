@@ -37,6 +37,10 @@ extern "C" {
     EXPORT void* QWidget_Create(void* parent) {
         return new QWidget((QWidget*)parent);
     }
+
+    EXPORT void QWidget_Destroy(void* widget) {
+        delete (QWidget*)widget;
+    }
     
     EXPORT void QWidget_Show(void* widget) {
         ((QWidget*)widget)->show();

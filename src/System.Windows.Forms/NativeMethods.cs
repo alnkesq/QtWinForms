@@ -17,6 +17,9 @@ namespace System.Windows.Forms
         public static extern IntPtr QWidget_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_Destroy(IntPtr widget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_Show(IntPtr widget);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
