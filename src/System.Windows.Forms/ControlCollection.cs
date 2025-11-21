@@ -16,6 +16,9 @@ namespace System.Windows.Forms
         {
             base.InsertItem(index, item);
             
+            // Set parent relationship
+            item.Parent = _owner;
+            
             // Ensure both owner and child widgets are created
             _owner.EnsureCreated();
             item.EnsureCreated();
@@ -28,6 +31,9 @@ namespace System.Windows.Forms
             NativeMethods.QWidget_Resize(item.Handle, item.Size.Width, item.Size.Height);
             
             item.Show();
+            
+            // Trigger layout to handle docking/anchoring
+            _owner.PerformLayout();
         }
 
         protected override void RemoveItem(int index)
@@ -35,10 +41,16 @@ namespace System.Windows.Forms
             var item = this[index];
             base.RemoveItem(index);
             
+            // Clear parent relationship
+            item.Parent = null;
+            
             if (item.IsHandleCreated)
             {
                 NativeMethods.QWidget_SetParent(item.Handle, IntPtr.Zero);
             }
+            
+            // Trigger layout to reflow remaining controls
+            _owner.PerformLayout();
         }
     }
 }

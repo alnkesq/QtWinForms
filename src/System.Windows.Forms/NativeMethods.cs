@@ -73,5 +73,8 @@ namespace System.Windows.Forms
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QLineEdit_GetText_Invoke(IntPtr label, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
 
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_ConnectResize(IntPtr widget, IntPtr callback, IntPtr userData);
+
     }
 }

@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QEvent>
+#include <QResizeEvent>
 
 #ifdef _WIN32
 #define EXPORT __declspec(dllexport)
@@ -120,5 +122,33 @@ extern "C" {
     EXPORT void QLineEdit_GetText_Invoke(void* label, ReadQStringCallback cb, void* userData) {
         QString s = ((QLineEdit*)label)->text();
         cb((const void*)s.constData(), s.size(), userData);
+    }
+
+    // Resize event support
+    typedef void (*ResizeCallback)(void*, int, int);
+
+    class ResizeEventFilter : public QObject {
+    public:
+        ResizeEventFilter(ResizeCallback cb, void* data) : callback(cb), userData(data) {}
+
+    protected:
+        bool eventFilter(QObject* obj, QEvent* event) override {
+            if (event->type() == QEvent::Resize) {
+                QResizeEvent* resizeEvent = static_cast<QResizeEvent*>(event);
+                QSize newSize = resizeEvent->size();
+                callback(userData, newSize.width(), newSize.height());
+            }
+            return QObject::eventFilter(obj, event);
+        }
+
+    private:
+        ResizeCallback callback;
+        void* userData;
+    };
+
+    EXPORT void QWidget_ConnectResize(void* widget, void (*callback)(void*, int, int), void* userData) {
+        QWidget* w = (QWidget*)widget;
+        ResizeEventFilter* filter = new ResizeEventFilter(callback, userData);
+        w->installEventFilter(filter);
     }
 }

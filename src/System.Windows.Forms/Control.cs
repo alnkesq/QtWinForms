@@ -13,6 +13,8 @@ namespace System.Windows.Forms
             Controls = new ControlCollection(this);
         }
 
+        public Control? Parent { get; internal set; }
+
         public bool IsHandleCreated => Handle != default;
 
         public ControlCollection Controls { get; }
@@ -148,6 +150,80 @@ namespace System.Windows.Forms
         }
         private bool _enabled = true;
 
+        // Dock and Anchor properties
+        private DockStyle _dock = DockStyle.None;
+        private AnchorStyles _anchor = AnchorStyles.Top | AnchorStyles.Left;
+        private Rectangle _anchorBounds; // Stores initial bounds for anchor calculations
+
+        public DockStyle Dock
+        {
+            get => _dock;
+            set
+            {
+                if (_dock != value)
+                {
+                    _dock = value;
+                    // Setting Dock disables Anchor
+                    if (value != DockStyle.None)
+                    {
+                        _anchor = AnchorStyles.Top | AnchorStyles.Left;
+                    }
+                    Parent?.PerformLayout();
+                }
+            }
+        }
+
+        public AnchorStyles Anchor
+        {
+            get => _anchor;
+            set
+            {
+                if (_anchor != value)
+                {
+                    _anchor = value;
+                    // Setting Anchor disables Dock
+                    if (value != (AnchorStyles.Top | AnchorStyles.Left))
+                    {
+                        _dock = DockStyle.None;
+                    }
+                    // Store current bounds for anchor calculations
+                    if (Parent != null)
+                    {
+                        _anchorBounds = new Rectangle(Location, Size);
+                    }
+                }
+            }
+        }
+
+        // Resize event
+        public event EventHandler? Resize;
+
+        protected virtual void OnResize(EventArgs e)
+        {
+            Resize?.Invoke(this, e);
+            // When this control resizes, perform layout on children
+            PerformLayout();
+        }
+
+        internal void SetBoundsCore(int x, int y, int width, int height)
+        {
+            bool sizeChanged = (_size.Width != width || _size.Height != height);
+            
+            _location = new Point(x, y);
+            _size = new Size(width, height);
+            
+            if (IsHandleCreated)
+            {
+                NativeMethods.QWidget_Move(Handle, x, y);
+                NativeMethods.QWidget_Resize(Handle, width, height);
+            }
+            
+            if (sizeChanged)
+            {
+                OnResize(EventArgs.Empty);
+            }
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -155,7 +231,139 @@ namespace System.Windows.Forms
 
         public void SuspendLayout() { }
         public void ResumeLayout(bool performLayout) { }
-        public void PerformLayout() { }
+        
+        public void PerformLayout()
+        {
+            if (!IsHandleCreated) return;
+            
+            // Perform dock layout
+            PerformDockLayout();
+            
+            // Perform anchor layout (for controls that aren't docked)
+            foreach (Control child in Controls)
+            {
+                if (child.Dock == DockStyle.None && child.Anchor != (AnchorStyles.Top | AnchorStyles.Left))
+                {
+                    child.UpdateAnchorPosition();
+                }
+            }
+        }
+
+        private void PerformDockLayout()
+        {
+            if (!IsHandleCreated) return;
+
+            // Track remaining client area
+            Rectangle clientRect = new Rectangle(0, 0, Width, Height);
+
+            // Process docked controls in Z-order (order they were added)
+            // We need to process them in the order: Top, Bottom, Left, Right, Fill
+            // But respect the order they were added for controls with the same dock style
+            
+            var dockedControls = new System.Collections.Generic.List<Control>();
+            foreach (Control child in Controls)
+            {
+                if (child.Dock != DockStyle.None)
+                {
+                    dockedControls.Add(child);
+                }
+            }
+
+            // Process in dock priority order, but maintain add order within same dock style
+            ProcessDockedControls(dockedControls, DockStyle.Top, ref clientRect);
+            ProcessDockedControls(dockedControls, DockStyle.Bottom, ref clientRect);
+            ProcessDockedControls(dockedControls, DockStyle.Left, ref clientRect);
+            ProcessDockedControls(dockedControls, DockStyle.Right, ref clientRect);
+            ProcessDockedControls(dockedControls, DockStyle.Fill, ref clientRect);
+        }
+
+        private void ProcessDockedControls(System.Collections.Generic.List<Control> controls, DockStyle dockStyle, ref Rectangle clientRect)
+        {
+            foreach (Control child in controls)
+            {
+                if (child.Dock != dockStyle) continue;
+
+                switch (dockStyle)
+                {
+                    case DockStyle.Top:
+                        child.SetBoundsCore(clientRect.X, clientRect.Y, clientRect.Width, child.Height);
+                        clientRect.Y += child.Height;
+                        clientRect.Height -= child.Height;
+                        break;
+
+                    case DockStyle.Bottom:
+                        child.SetBoundsCore(clientRect.X, clientRect.Y + clientRect.Height - child.Height, clientRect.Width, child.Height);
+                        clientRect.Height -= child.Height;
+                        break;
+
+                    case DockStyle.Left:
+                        child.SetBoundsCore(clientRect.X, clientRect.Y, child.Width, clientRect.Height);
+                        clientRect.X += child.Width;
+                        clientRect.Width -= child.Width;
+                        break;
+
+                    case DockStyle.Right:
+                        child.SetBoundsCore(clientRect.X + clientRect.Width - child.Width, clientRect.Y, child.Width, clientRect.Height);
+                        clientRect.Width -= child.Width;
+                        break;
+
+                    case DockStyle.Fill:
+                        child.SetBoundsCore(clientRect.X, clientRect.Y, clientRect.Width, clientRect.Height);
+                        break;
+                }
+            }
+        }
+
+        private void UpdateAnchorPosition()
+        {
+            if (Parent == null || _anchorBounds.IsEmpty) return;
+
+            int newX = _anchorBounds.X;
+            int newY = _anchorBounds.Y;
+            int newWidth = _anchorBounds.Width;
+            int newHeight = _anchorBounds.Height;
+
+            // Calculate horizontal anchoring
+            bool anchorLeft = (_anchor & AnchorStyles.Left) == AnchorStyles.Left;
+            bool anchorRight = (_anchor & AnchorStyles.Right) == AnchorStyles.Right;
+
+            if (anchorLeft && anchorRight)
+            {
+                // Anchored to both sides - stretch horizontally
+                // Keep left position, adjust width
+                newWidth = Parent.Width - _anchorBounds.Right;
+                if (newWidth < 0) newWidth = 0;
+                newWidth += _anchorBounds.Width;
+            }
+            else if (anchorRight && !anchorLeft)
+            {
+                // Anchored to right only - move with right edge
+                int distanceFromRight = Parent.Width - _anchorBounds.Right;
+                newX = Parent.Width - distanceFromRight - _anchorBounds.Width;
+            }
+            // else: anchored to left only or neither - keep original X
+
+            // Calculate vertical anchoring
+            bool anchorTop = (_anchor & AnchorStyles.Top) == AnchorStyles.Top;
+            bool anchorBottom = (_anchor & AnchorStyles.Bottom) == AnchorStyles.Bottom;
+
+            if (anchorTop && anchorBottom)
+            {
+                // Anchored to both top and bottom - stretch vertically
+                newHeight = Parent.Height - _anchorBounds.Bottom;
+                if (newHeight < 0) newHeight = 0;
+                newHeight += _anchorBounds.Height;
+            }
+            else if (anchorBottom && !anchorTop)
+            {
+                // Anchored to bottom only - move with bottom edge
+                int distanceFromBottom = Parent.Height - _anchorBounds.Bottom;
+                newY = Parent.Height - distanceFromBottom - _anchorBounds.Height;
+            }
+            // else: anchored to top only or neither - keep original Y
+
+            SetBoundsCore(newX, newY, newWidth, newHeight);
+        }
 
         public string? Name { get; set; }
         public object? Tag { get; set; }

@@ -11,64 +11,43 @@ namespace TestApp
         {
             try
             {
-                var form = new Form();
-                var textBox = new TextBox();
-                form.Text = "Hello Qt from C#";
+                Console.WriteLine("Qt WinForms Test Application");
+                Console.WriteLine("Choose a test:");
+                Console.WriteLine("1. Dock Test");
+                Console.WriteLine("2. Anchor Test");
+                Console.WriteLine("3. Original Test");
+                Console.WriteLine();
+                Console.Write("Enter choice (1-3, default=1): ");
                 
-                var button = new Button();
-                button.Text = "Click Me!";
-                button.Location = new Point(10, 10);
-                button.Size = new Size(120, 30);
-                button.Click += (s, e) => {
-                    Console.WriteLine("Button clicked!");
-                };
+                string? choice = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(choice)) choice = "1";
+
+                Form testForm;
                 
-                var button2 = new Button();
-                button2.Text = "button2";
-                button2.Location = new Point(10, 50);
-                button2.Size = new Size(120, 30);
-                button2.Click += (s, e) => 
+                switch (choice.Trim())
                 {
-                    Console.WriteLine("Textbox: " + textBox.Text);
-                    Console.WriteLine("Button2 clicked!");
-                };
-                
-                var panel = new Panel();
-                panel.Location = new Point(500, 90);
-                panel.Size = new Size(200, 100);
+                    case "1":
+                        Console.WriteLine("Running Dock Test...");
+                        testForm = TestDock.CreateDockTestForm();
+                        break;
+                    
+                    case "2":
+                        Console.WriteLine("Running Anchor Test...");
+                        testForm = TestAnchor.CreateAnchorTestForm();
+                        break;
+                    
+                    case "3":
+                        Console.WriteLine("Running Original Test...");
+                        testForm = CreateOriginalTest();
+                        break;
+                    
+                    default:
+                        Console.WriteLine("Invalid choice, running Dock Test...");
+                        testForm = TestDock.CreateDockTestForm();
+                        break;
+                }
 
-                panel.BackColor = Color.Red;
-                panel.Controls.Add(button);
-                panel.Controls.Add(button2);
-
-                var lbl = new Label();
-                lbl.Text = "Label";
-                lbl.Location = new Point(10, 10);
-                lbl.Size = new Size(120, 30);
-                form.Controls.Add(lbl);
-                
-                var checkBox = new CheckBox();
-                checkBox.Text = "Enable Feature";
-                checkBox.Location = new Point(10, 50);
-                checkBox.Size = new Size(150, 30);
-                checkBox.Checked = true;
-                checkBox.CheckedChanged += (s, e) => {
-                    lbl.Text = $"CheckBox: {checkBox.Checked}";
-                    button.Enabled = checkBox.Checked;
-                };
-                form.Controls.Add(checkBox);
-                
-                textBox.Text = "Enter text here...";
-                textBox.Location = new Point(10, 90);
-                textBox.Size = new Size(200, 30);
-                form.Controls.Add(textBox);
-                
-                form.Controls.Add(panel);
-
-                var f2 = new Form1();
-                f2.Visible = true;
-                form.Visible = true;
-                Application.Run();
+                Application.Run(testForm);
                 Console.WriteLine("TestApp Exiting...");
             }
             catch (Exception ex)
@@ -80,6 +59,68 @@ namespace TestApp
                     Console.WriteLine($"Inner: {ex.InnerException.Message}");
                 }
             }
+        }
+
+        static Form CreateOriginalTest()
+        {
+            var form = new Form();
+            var textBox = new TextBox();
+            form.Text = "Hello Qt from C#";
+            
+            var button = new Button();
+            button.Text = "Click Me!";
+            button.Location = new Point(10, 10);
+            button.Size = new Size(120, 30);
+            button.Click += (s, e) => {
+                Console.WriteLine("Button clicked!");
+            };
+            
+            var button2 = new Button();
+            button2.Text = "button2";
+            button2.Location = new Point(10, 50);
+            button2.Size = new Size(120, 30);
+            button2.Click += (s, e) => 
+            {
+                Console.WriteLine("Textbox: " + textBox.Text);
+                Console.WriteLine("Button2 clicked!");
+            };
+            
+            var panel = new Panel();
+            panel.Location = new Point(500, 90);
+            panel.Size = new Size(200, 100);
+
+            panel.BackColor = Color.Red;
+            panel.Controls.Add(button);
+            panel.Controls.Add(button2);
+
+            var lbl = new Label();
+            lbl.Text = "Label";
+            lbl.Location = new Point(10, 10);
+            lbl.Size = new Size(120, 30);
+            form.Controls.Add(lbl);
+            
+            var checkBox = new CheckBox();
+            checkBox.Text = "Enable Feature";
+            checkBox.Location = new Point(10, 50);
+            checkBox.Size = new Size(150, 30);
+            checkBox.Checked = true;
+            checkBox.CheckedChanged += (s, e) => {
+                lbl.Text = $"CheckBox: {checkBox.Checked}";
+                button.Enabled = checkBox.Checked;
+            };
+            form.Controls.Add(checkBox);
+            
+            textBox.Text = "Enter text here...";
+            textBox.Location = new Point(10, 90);
+            textBox.Size = new Size(200, 30);
+            form.Controls.Add(textBox);
+            
+            form.Controls.Add(panel);
+
+            var f2 = new Form1();
+            f2.Visible = true;
+            
+            return form;
         }
     }
 }
