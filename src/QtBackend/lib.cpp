@@ -10,6 +10,7 @@
 #include <QEvent>
 #include <QResizeEvent>
 #include <QMoveEvent>
+#include <QProgressBar>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -347,6 +348,19 @@ extern "C" {
             return 2;
         }
         return 0;
+    }
+
+    EXPORT void* QProgressBar_Create(void* parent) {
+        QProgressBar* widget = new QProgressBar((QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QProgressBar_SetRange(void* progressBar, int min, int max) {
+        ((QProgressBar*)progressBar)->setRange(min, max);
+    }
+
+    EXPORT void QProgressBar_SetValue(void* progressBar, int value) {
+        ((QProgressBar*)progressBar)->setValue(value);
     }
 
 }

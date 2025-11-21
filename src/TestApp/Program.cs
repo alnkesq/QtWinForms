@@ -17,8 +17,9 @@ namespace TestApp
                 Console.WriteLine("2. Anchor Test");
                 Console.WriteLine("3. Original Test");
                 Console.WriteLine("4. TabControl Test");
+                Console.WriteLine("5. ProgressBar Test");
                 Console.WriteLine();
-                Console.Write("Enter choice (1-4, default=1): ");
+                Console.Write("Enter choice (1-5, default=1): ");
 
                 string? choice = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(choice)) choice = "1";
@@ -45,6 +46,11 @@ namespace TestApp
                     case "4":
                         Console.WriteLine("Running TabControl Test...");
                         testForm = CreateTabControlTest();
+                        break;
+
+                    case "5":
+                        Console.WriteLine("Running ProgressBar Test...");
+                        testForm = CreateProgressBarTest();
                         break;
                     
                     default:
@@ -256,6 +262,55 @@ namespace TestApp
             tabControl.TabPages.Add(tab3);
 
             form.Controls.Add(tabControl);
+
+            return form;
+        }
+
+        static Form CreateProgressBarTest()
+        {
+            var form = new Form();
+            form.Text = "ProgressBar Test";
+            form.Size = new Size(400, 300);
+
+            var progressBar = new ProgressBar();
+            progressBar.Location = new Point(20, 20);
+            progressBar.Size = new Size(300, 30);
+            progressBar.Minimum = 0;
+            progressBar.Maximum = 100;
+            progressBar.Value = 50;
+            form.Controls.Add(progressBar);
+
+            var btnIncrease = new Button();
+            btnIncrease.Text = "Increase";
+            btnIncrease.Location = new Point(20, 60);
+            btnIncrease.Size = new Size(100, 30);
+            btnIncrease.Click += (s, e) => {
+                if (progressBar.Value + 10 <= progressBar.Maximum)
+                    progressBar.Value += 10;
+            };
+            form.Controls.Add(btnIncrease);
+
+            var btnDecrease = new Button();
+            btnDecrease.Text = "Decrease";
+            btnDecrease.Location = new Point(130, 60);
+            btnDecrease.Size = new Size(100, 30);
+            btnDecrease.Click += (s, e) => {
+                if (progressBar.Value - 10 >= progressBar.Minimum)
+                    progressBar.Value -= 10;
+            };
+            form.Controls.Add(btnDecrease);
+
+            var btnMarquee = new Button();
+            btnMarquee.Text = "Toggle Marquee";
+            btnMarquee.Location = new Point(240, 60);
+            btnMarquee.Size = new Size(120, 30);
+            btnMarquee.Click += (s, e) => {
+                if (progressBar.Style == ProgressBarStyle.Blocks)
+                    progressBar.Style = ProgressBarStyle.Marquee;
+                else
+                    progressBar.Style = ProgressBarStyle.Blocks;
+            };
+            form.Controls.Add(btnMarquee);
 
             return form;
         }
