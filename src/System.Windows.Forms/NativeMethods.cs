@@ -104,5 +104,11 @@ namespace System.Windows.Forms
         public static extern int QMessageBox_Show(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text, [MarshalAs(UnmanagedType.LPStr)] string caption, int buttons, int icon, int defaultButton, int options);
 
 
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetWindowState(IntPtr widget, int state);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QWidget_GetWindowState(IntPtr widget);
     }
 }

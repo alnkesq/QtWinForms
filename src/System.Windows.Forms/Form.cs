@@ -6,6 +6,7 @@ namespace System.Windows.Forms
     public class Form : Control
     {
         private string _text = string.Empty;
+        private FormWindowState _windowState = FormWindowState.Normal;
 
         public Form() : base()
         {
@@ -17,6 +18,10 @@ namespace System.Windows.Forms
             base.CreateHandle();
             NativeMethods.QWidget_Resize(Handle, Size.Width, Size.Height);
             NativeMethods.QWidget_SetTitle(Handle, _text);
+            if (_windowState != FormWindowState.Normal)
+            {
+                NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
+            }
             
             // Connect resize and move events
             ConnectResizeEvent();
@@ -72,6 +77,30 @@ namespace System.Windows.Forms
                 if (IsHandleCreated)
                 {
                     NativeMethods.QWidget_SetTitle(Handle, _text);
+                }
+            }
+            }
+
+
+        public FormWindowState WindowState
+        {
+            get
+            {
+                if (IsHandleCreated)
+                {
+                    return (FormWindowState)NativeMethods.QWidget_GetWindowState(Handle);
+                }
+                return _windowState;
+            }
+            set
+            {
+                if (_windowState != value)
+                {
+                    _windowState = value;
+                    if (IsHandleCreated)
+                    {
+                        NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
+                    }
                 }
             }
         }

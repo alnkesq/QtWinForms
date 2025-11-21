@@ -22,6 +22,7 @@ namespace TestApp
             topLeftButton.Size = new Size(120, 30);
             topLeftButton.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             topLeftButton.BackColor = Color.FromArgb(255, 200, 200, 255);
+            topLeftButton.Click += (_, _) => form.WindowState = FormWindowState.Maximized;
             form.Controls.Add(topLeftButton);
 
             // Top-Right anchored - stays in top-right corner
@@ -31,6 +32,7 @@ namespace TestApp
             topRightButton.Size = new Size(120, 30);
             topRightButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             topRightButton.BackColor = Color.FromArgb(255, 255, 200, 200);
+            topRightButton.Click += (_, _) => form.WindowState = FormWindowState.Normal;
             form.Controls.Add(topRightButton);
 
             // Bottom-Left anchored - stays in bottom-left corner

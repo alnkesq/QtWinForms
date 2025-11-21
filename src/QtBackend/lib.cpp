@@ -327,4 +327,26 @@ extern "C" {
         }
     }
 
+    EXPORT void QWidget_SetWindowState(void* widget, int state) {
+        QWidget* w = (QWidget*)widget;
+        Qt::WindowStates qtState = Qt::WindowNoState;
+        if (state == 1) { // Minimized
+            qtState = Qt::WindowMinimized;
+        } else if (state == 2) { // Maximized
+            qtState = Qt::WindowMaximized;
+        }
+        w->setWindowState(qtState);
+    }
+
+    EXPORT int QWidget_GetWindowState(void* widget) {
+        QWidget* w = (QWidget*)widget;
+        Qt::WindowStates qtState = w->windowState();
+        if (qtState & Qt::WindowMinimized) {
+            return 1;
+        } else if (qtState & Qt::WindowMaximized) {
+            return 2;
+        }
+        return 0;
+    }
+
 }

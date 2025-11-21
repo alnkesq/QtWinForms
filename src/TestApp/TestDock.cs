@@ -14,7 +14,7 @@ namespace TestApp
             var form = new Form();
             form.Text = "Dock Test - Resize to see docking behavior";
             form.Size = new Size(800, 600);
-
+            form.WindowState = FormWindowState.Maximized;
             // Top docked panel
             var topPanel = new Panel();
             topPanel.BackColor = Color.FromArgb(255, 100, 150, 200);

@@ -20,7 +20,7 @@ namespace TestApp
                 Console.WriteLine();
                 Console.Write("Enter choice (1-4, default=1): ");
 
-                string? choice = "3"; // Console.ReadLine();
+                string? choice = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(choice)) choice = "1";
 
                 Form testForm;
@@ -145,6 +145,21 @@ namespace TestApp
 
             form.Controls.Add(textBox);
             
+            
+            var btnState = new Button();
+            btnState.Text = "Toggle State";
+            btnState.Location = new Point(10, 130);
+            btnState.Size = new Size(120, 30);
+            btnState.Click += (s, e) => {
+                if (form.WindowState == FormWindowState.Normal)
+                    form.WindowState = FormWindowState.Maximized;
+                else if (form.WindowState == FormWindowState.Maximized)
+                    form.WindowState = FormWindowState.Minimized;
+                else
+                    form.WindowState = FormWindowState.Normal;
+            };
+            form.Controls.Add(btnState);
+
             form.Controls.Add(panel);
 
             grp.ForeColor = Color.Blue;
