@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QGroupBox>
 #include <QEvent>
 #include <QResizeEvent>
 #include <QMoveEvent>
@@ -161,5 +162,14 @@ extern "C" {
         QWidget* w = static_cast<QWidget*>(widget);
         ResizeEventFilter* filter = new ResizeEventFilter(resizeCallback, moveCallback, userData);
         w->installEventFilter(filter);
+    }
+
+    EXPORT void* QGroupBox_Create(void* parent, const char* title) {
+        QGroupBox* widget = new QGroupBox(QString::fromUtf8(title), (QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QGroupBox_SetTitle(void* groupBox, const char* title) {
+        ((QGroupBox*)groupBox)->setTitle(QString::fromUtf8(title));
     }
 }

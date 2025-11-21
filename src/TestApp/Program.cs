@@ -65,6 +65,8 @@ namespace TestApp
         {
             var form = new Form();
             var textBox = new TextBox();
+
+            var lbl = new Label();
             form.Text = "Hello Qt from C#";
             
             var button = new Button();
@@ -93,11 +95,6 @@ namespace TestApp
             panel.Controls.Add(button);
             panel.Controls.Add(button2);
 
-            var lbl = new Label();
-            lbl.Text = "Label";
-            lbl.Location = new Point(10, 10);
-            lbl.Size = new Size(120, 30);
-            form.Controls.Add(lbl);
             
             var checkBox = new CheckBox();
             checkBox.Text = "Enable Feature";
@@ -113,6 +110,19 @@ namespace TestApp
             textBox.Text = "Enter text here...";
             textBox.Location = new Point(10, 90);
             textBox.Size = new Size(200, 30);
+
+            var grp = new GroupBox();
+            grp.Text = "Group box";
+            grp.Location = new Point(100, 300);
+            grp.Size = new Size(200, 100);
+            grp.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+            form.Controls.Add(grp);
+
+            lbl.Text = "Label";
+            lbl.Location = new Point(10, 10);
+            lbl.Size = new Size(120, 30);
+            grp.Controls.Add(lbl);
+
             form.Controls.Add(textBox);
             
             form.Controls.Add(panel);
