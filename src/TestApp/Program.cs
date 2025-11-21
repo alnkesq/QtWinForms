@@ -18,8 +18,9 @@ namespace TestApp
                 Console.WriteLine("3. Original Test");
                 Console.WriteLine("4. TabControl Test");
                 Console.WriteLine("5. ProgressBar Test");
+                Console.WriteLine("6. RadioButton Test");
                 Console.WriteLine();
-                Console.Write("Enter choice (1-5, default=1): ");
+                Console.Write("Enter choice (default=1): ");
 
                 string? choice = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(choice)) choice = "1";
@@ -51,6 +52,11 @@ namespace TestApp
                     case "5":
                         Console.WriteLine("Running ProgressBar Test...");
                         testForm = CreateProgressBarTest();
+                        break;
+
+                    case "6":
+                        Console.WriteLine("Running RadioButton Test...");
+                        testForm = CreateRadioButtonTest();
                         break;
                     
                     default:
@@ -172,6 +178,77 @@ namespace TestApp
             var f2 = new Form1();
             f2.Visible = true;
             
+            return form;
+        }
+
+        static Form CreateRadioButtonTest()
+        {
+            var form = new Form();
+            form.Text = "RadioButton Test";
+            form.Size = new Size(400, 300);
+
+            var group1 = new GroupBox();
+            group1.Text = "Group 1";
+            group1.Location = new Point(20, 20);
+            group1.Size = new Size(150, 150);
+            form.Controls.Add(group1);
+
+            var rb1 = new RadioButton();
+            rb1.Text = "Option 1";
+            rb1.Location = new Point(20, 30);
+            rb1.Size = new Size(100, 30);
+            rb1.Checked = true;
+            group1.Controls.Add(rb1);
+
+            var rb2 = new RadioButton();
+            rb2.Text = "Option 2";
+            rb2.Location = new Point(20, 70);
+            rb2.Size = new Size(100, 30);
+            group1.Controls.Add(rb2);
+
+            var rb3 = new RadioButton();
+            rb3.Text = "Option 3";
+            rb3.Location = new Point(20, 110);
+            rb3.Size = new Size(100, 30);
+            group1.Controls.Add(rb3);
+
+            var group2 = new GroupBox();
+            group2.Text = "Group 2";
+            group2.Location = new Point(200, 20);
+            group2.Size = new Size(150, 150);
+            form.Controls.Add(group2);
+
+            var rb4 = new RadioButton();
+            rb4.Text = "Choice A";
+            rb4.Location = new Point(20, 30);
+            rb4.Size = new Size(100, 30);
+            group2.Controls.Add(rb4);
+
+            var rb5 = new RadioButton();
+            rb5.Text = "Choice B";
+            rb5.Location = new Point(20, 70);
+            rb5.Size = new Size(100, 30);
+            rb5.Checked = true;
+            group2.Controls.Add(rb5);
+
+            var label = new Label();
+            label.Text = "Selection: Option 1, Choice B";
+            label.Location = new Point(20, 200);
+            label.Size = new Size(300, 30);
+            form.Controls.Add(label);
+
+            EventHandler updateLabel = (s, e) => {
+                string g1 = rb1.Checked ? "Option 1" : (rb2.Checked ? "Option 2" : "Option 3");
+                string g2 = rb4.Checked ? "Choice A" : "Choice B";
+                label.Text = $"Selection: {g1}, {g2}";
+            };
+
+            rb1.CheckedChanged += updateLabel;
+            rb2.CheckedChanged += updateLabel;
+            rb3.CheckedChanged += updateLabel;
+            rb4.CheckedChanged += updateLabel;
+            rb5.CheckedChanged += updateLabel;
+
             return form;
         }
 

@@ -59,6 +59,18 @@ namespace System.Windows.Forms
         public static extern void QCheckBox_ConnectStateChanged(IntPtr checkBox, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QRadioButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QRadioButton_SetText(IntPtr radioButton, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QRadioButton_SetChecked(IntPtr radioButton, bool isChecked);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QRadioButton_ConnectToggled(IntPtr radioButton, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetBackColor(IntPtr widget, byte r, byte g, byte b, byte a);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

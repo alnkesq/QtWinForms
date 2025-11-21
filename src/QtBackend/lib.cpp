@@ -11,6 +11,7 @@
 #include <QResizeEvent>
 #include <QMoveEvent>
 #include <QProgressBar>
+#include <QRadioButton>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -97,6 +98,25 @@ extern "C" {
     EXPORT void QCheckBox_ConnectStateChanged(void* widget, void (*callback)(void*, int), void* userData) {
         QObject::connect((QCheckBox*)widget, &QCheckBox::stateChanged, [callback, userData](int state) {
             callback(userData, state);
+        });
+    }
+
+    EXPORT void* QRadioButton_Create(void* parent, const char* text) {
+        QRadioButton* widget = new QRadioButton(QString::fromUtf8(text), (QWidget*)parent);
+        return widget;
+    }
+    
+    EXPORT void QRadioButton_SetText(void* widget, const char* text) {
+        ((QRadioButton*)widget)->setText(QString::fromUtf8(text));
+    }
+    
+    EXPORT void QRadioButton_SetChecked(void* widget, bool isChecked) {
+        ((QRadioButton*)widget)->setChecked(isChecked);
+    }
+    
+    EXPORT void QRadioButton_ConnectToggled(void* widget, void (*callback)(void*, bool), void* userData) {
+        QObject::connect((QRadioButton*)widget, &QRadioButton::toggled, [callback, userData](bool checked) {
+            callback(userData, checked);
         });
     }
     
