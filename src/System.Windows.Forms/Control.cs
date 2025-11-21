@@ -341,7 +341,7 @@ namespace System.Windows.Forms
             {
                 // Anchored to both sides - stretch horizontally
                 // Keep left position, adjust width
-                newWidth = Parent.Width - _anchorBounds.Right;
+                newWidth = Parent.Width - _anchorBounds.Right - _anchorBounds.Left;
                 if (newWidth < 0) newWidth = 0;
                 newWidth += _anchorBounds.Width;
             }
@@ -360,7 +360,7 @@ namespace System.Windows.Forms
             if (anchorTop && anchorBottom)
             {
                 // Anchored to both top and bottom - stretch vertically
-                newHeight = Parent.Height - _anchorBounds.Bottom;
+                newHeight = Parent.Height - _anchorBounds.Bottom - _anchorBounds.Top;
                 if (newHeight < 0) newHeight = 0;
                 newHeight += _anchorBounds.Height;
             }
