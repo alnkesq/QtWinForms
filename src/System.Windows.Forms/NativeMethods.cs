@@ -97,5 +97,9 @@ namespace System.Windows.Forms
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTabWidget_SetCurrentIndex(IntPtr tabWidget, int index);
 
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QMessageBox_Show(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text, [MarshalAs(UnmanagedType.LPStr)] string caption, int buttons, int icon, int defaultButton, int options);
+
+
     }
 }

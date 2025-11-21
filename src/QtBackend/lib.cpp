@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QGroupBox>
 #include <QTabWidget>
+#include <QMessageBox>
 #include <QEvent>
 #include <QResizeEvent>
 #include <QMoveEvent>
@@ -199,4 +200,118 @@ extern "C" {
         QTabWidget* tw = (QTabWidget*)tabWidget;
         tw->setCurrentIndex(index);
     }
+
+    EXPORT int QMessageBox_Show(void* parent, const char* text, const char* caption, int buttons, int icon, int defaultButton, int options) {
+        QWidget* parentWidget = (QWidget*)parent;
+        
+        // Create message box
+        QMessageBox msgBox(parentWidget);
+        msgBox.setText(QString::fromUtf8(text));
+        msgBox.setWindowTitle(QString::fromUtf8(caption));
+        
+        // Set icon based on MessageBoxIcon enum
+        // None=0, Error/Hand/Stop=16, Question=32, Exclamation/Warning=48, Information/Asterisk=64
+        switch (icon) {
+            case 16: // Error, Hand, Stop
+                msgBox.setIcon(QMessageBox::Critical);
+                break;
+            case 32: // Question
+                msgBox.setIcon(QMessageBox::Question);
+                break;
+            case 48: // Exclamation, Warning
+                msgBox.setIcon(QMessageBox::Warning);
+                break;
+            case 64: // Information, Asterisk
+                msgBox.setIcon(QMessageBox::Information);
+                break;
+            default: // None
+                msgBox.setIcon(QMessageBox::NoIcon);
+                break;
+        }
+        
+        // Set buttons based on MessageBoxButtons enum
+        // OK=0, OKCancel=1, AbortRetryIgnore=2, YesNoCancel=3, YesNo=4, RetryCancel=5
+        QMessageBox::StandardButtons standardButtons;
+        switch (buttons) {
+            case 0: // OK
+                standardButtons = QMessageBox::Ok;
+                break;
+            case 1: // OKCancel
+                standardButtons = QMessageBox::Ok | QMessageBox::Cancel;
+                break;
+            case 2: // AbortRetryIgnore
+                standardButtons = QMessageBox::Abort | QMessageBox::Retry | QMessageBox::Ignore;
+                break;
+            case 3: // YesNoCancel
+                standardButtons = QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel;
+                break;
+            case 4: // YesNo
+                standardButtons = QMessageBox::Yes | QMessageBox::No;
+                break;
+            case 5: // RetryCancel
+                standardButtons = QMessageBox::Retry | QMessageBox::Cancel;
+                break;
+            default:
+                standardButtons = QMessageBox::Ok;
+                break;
+        }
+        msgBox.setStandardButtons(standardButtons);
+        
+        // Set default button based on MessageBoxDefaultButton enum
+        // Button1=0, Button2=256, Button3=512
+        QMessageBox::StandardButton defButton = QMessageBox::NoButton;
+        if (defaultButton == 256) { // Button2
+            // Determine which button is the second one based on button configuration
+            switch (buttons) {
+                case 1: defButton = QMessageBox::Cancel; break; // OKCancel
+                case 2: defButton = QMessageBox::Retry; break; // AbortRetryIgnore
+                case 3: defButton = QMessageBox::No; break; // YesNoCancel
+                case 4: defButton = QMessageBox::No; break; // YesNo
+                case 5: defButton = QMessageBox::Cancel; break; // RetryCancel
+            }
+        } else if (defaultButton == 512) { // Button3
+            // Determine which button is the third one based on button configuration
+            switch (buttons) {
+                case 2: defButton = QMessageBox::Ignore; break; // AbortRetryIgnore
+                case 3: defButton = QMessageBox::Cancel; break; // YesNoCancel
+            }
+        } else { // Button1 (default)
+            switch (buttons) {
+                case 0: defButton = QMessageBox::Ok; break;
+                case 1: defButton = QMessageBox::Ok; break;
+                case 2: defButton = QMessageBox::Abort; break;
+                case 3: defButton = QMessageBox::Yes; break;
+                case 4: defButton = QMessageBox::Yes; break;
+                case 5: defButton = QMessageBox::Retry; break;
+            }
+        }
+        if (defButton != QMessageBox::NoButton) {
+            msgBox.setDefaultButton(defButton);
+        }
+        
+        // Show the message box and get result
+        int result = msgBox.exec();
+        
+        // Map Qt result to DialogResult enum
+        // None=0, OK=1, Cancel=2, Abort=3, Retry=4, Ignore=5, Yes=6, No=7
+        switch (result) {
+            case QMessageBox::Ok:
+                return 1; // DialogResult.OK
+            case QMessageBox::Cancel:
+                return 2; // DialogResult.Cancel
+            case QMessageBox::Abort:
+                return 3; // DialogResult.Abort
+            case QMessageBox::Retry:
+                return 4; // DialogResult.Retry
+            case QMessageBox::Ignore:
+                return 5; // DialogResult.Ignore
+            case QMessageBox::Yes:
+                return 6; // DialogResult.Yes
+            case QMessageBox::No:
+                return 7; // DialogResult.No
+            default:
+                return 0; // DialogResult.None
+        }
+    }
+
 }

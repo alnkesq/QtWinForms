@@ -20,7 +20,7 @@ namespace TestApp
                 Console.WriteLine();
                 Console.Write("Enter choice (1-4, default=1): ");
 
-                string? choice = "4"; // Console.ReadLine();
+                string? choice = "3"; // Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(choice)) choice = "1";
 
                 Form testForm;
@@ -81,16 +81,30 @@ namespace TestApp
             button.Size = new Size(120, 30);
             button.Click += (s, e) => {
                 Console.WriteLine("Button clicked!");
+                var result = MessageBox.Show(
+                    form,
+                    "This is a test message box!\nDo you want to continue?",
+                    "MessageBox Test",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1,
+                    0);
+                Console.WriteLine($"MessageBox result: {result}");
             };
             
             var button2 = new Button();
-            button2.Text = "button2";
+            button2.Text = "Show Info";
             button2.Location = new Point(10, 50);
             button2.Size = new Size(120, 30);
             button2.Click += (s, e) => 
             {
-                Console.WriteLine("Textbox: " + textBox.Text);
                 Console.WriteLine("Button2 clicked!");
+                var result = MessageBox.Show(
+                    "The text from the textbox is: " + textBox.Text,
+                    "Information",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Console.WriteLine($"MessageBox result: {result}");
             };
             
             var panel = new Panel();

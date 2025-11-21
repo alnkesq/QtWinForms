@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace System.Windows.Forms
 {
-    public class Control : IDisposable
+    public class Control : IWin32Window, IDisposable
     {
         public IntPtr Handle { get; protected set; }
 
