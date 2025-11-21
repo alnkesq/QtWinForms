@@ -209,6 +209,10 @@ extern "C" {
         msgBox.setText(QString::fromUtf8(text));
         msgBox.setWindowTitle(QString::fromUtf8(caption));
         
+        // Remove minimize button (unnecessary for message boxes)
+        // Use explicit flags: Dialog with title bar and close button only
+        //msgBox.setWindowFlags(Qt::Dialog | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
+        
         // Set icon based on MessageBoxIcon enum
         // None=0, Error/Hand/Stop=16, Question=32, Exclamation/Warning=48, Information/Asterisk=64
         switch (icon) {
@@ -288,7 +292,13 @@ extern "C" {
         if (defButton != QMessageBox::NoButton) {
             msgBox.setDefaultButton(defButton);
         }
-        
+        msgBox.setWindowModality(Qt::ApplicationModal);
+        msgBox.setWindowFlags(
+            Qt::Dialog |
+            Qt::CustomizeWindowHint |
+            Qt::MSWindowsFixedSizeDialogHint |
+            Qt::WindowCloseButtonHint
+        );
         // Show the message box and get result
         int result = msgBox.exec();
         
