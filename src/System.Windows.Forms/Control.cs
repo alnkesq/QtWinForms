@@ -154,6 +154,10 @@ namespace System.Windows.Forms
         private DockStyle _dock = DockStyle.None;
         private AnchorStyles _anchor = AnchorStyles.Top | AnchorStyles.Left;
         private Rectangle _anchorBounds; // Stores initial bounds for anchor calculations
+        private int _anchorDistLeft;   // Distance from left edge when anchored
+        private int _anchorDistTop;    // Distance from top edge when anchored
+        private int _anchorDistRight;  // Distance from right edge when anchored
+        private int _anchorDistBottom; // Distance from bottom edge when anchored
 
         public DockStyle Dock
         {
@@ -212,6 +216,12 @@ namespace System.Windows.Forms
             if (Parent != null && _anchorBounds.IsEmpty)
             {
                 _anchorBounds = new Rectangle(Location, Size);
+                
+                // Calculate and store distances from parent edges
+                _anchorDistLeft = Location.X;
+                _anchorDistTop = Location.Y;
+                _anchorDistRight = Parent.Width - (Location.X + Size.Width);
+                _anchorDistBottom = Parent.Height - (Location.Y + Size.Height);
             }
         }
 
@@ -340,18 +350,22 @@ namespace System.Windows.Forms
             if (anchorLeft && anchorRight)
             {
                 // Anchored to both sides - stretch horizontally
-                // Keep left position, adjust width
-                newWidth = Parent.Width - _anchorBounds.Right - _anchorBounds.Left;
+                // Maintain distance from both left and right edges
+                newX = _anchorDistLeft;
+                newWidth = Parent.Width - _anchorDistLeft - _anchorDistRight;
                 if (newWidth < 0) newWidth = 0;
-                newWidth += _anchorBounds.Width;
             }
             else if (anchorRight && !anchorLeft)
             {
-                // Anchored to right only - move with right edge
-                int distanceFromRight = Parent.Width - _anchorBounds.Right;
-                newX = Parent.Width - distanceFromRight - _anchorBounds.Width;
+                // Anchored to right only - maintain distance from right edge
+                newX = Parent.Width - _anchorDistRight - _anchorBounds.Width;
             }
-            // else: anchored to left only or neither - keep original X
+            else if (anchorLeft)
+            {
+                // Anchored to left only - maintain distance from left edge
+                newX = _anchorDistLeft;
+            }
+            // else: not anchored horizontally - keep original X
 
             // Calculate vertical anchoring
             bool anchorTop = (_anchor & AnchorStyles.Top) == AnchorStyles.Top;
@@ -360,17 +374,22 @@ namespace System.Windows.Forms
             if (anchorTop && anchorBottom)
             {
                 // Anchored to both top and bottom - stretch vertically
-                newHeight = Parent.Height - _anchorBounds.Bottom - _anchorBounds.Top;
+                // Maintain distance from both top and bottom edges
+                newY = _anchorDistTop;
+                newHeight = Parent.Height - _anchorDistTop - _anchorDistBottom;
                 if (newHeight < 0) newHeight = 0;
-                newHeight += _anchorBounds.Height;
             }
             else if (anchorBottom && !anchorTop)
             {
-                // Anchored to bottom only - move with bottom edge
-                int distanceFromBottom = Parent.Height - _anchorBounds.Bottom;
-                newY = Parent.Height - distanceFromBottom - _anchorBounds.Height;
+                // Anchored to bottom only - maintain distance from bottom edge
+                newY = Parent.Height - _anchorDistBottom - _anchorBounds.Height;
             }
-            // else: anchored to top only or neither - keep original Y
+            else if (anchorTop)
+            {
+                // Anchored to top only - maintain distance from top edge
+                newY = _anchorDistTop;
+            }
+            // else: not anchored vertically - keep original Y
 
             SetBoundsCore(newX, newY, newWidth, newHeight);
         }
