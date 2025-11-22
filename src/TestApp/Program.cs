@@ -7,6 +7,8 @@ namespace TestApp
 {
     class Program
     {
+
+        [STAThread]
         static void Main(string[] args)
         {
             try
@@ -22,6 +24,7 @@ namespace TestApp
                 Console.WriteLine("7. FormClosing Test");
                 Console.WriteLine("8. MenuStrip Test");
                 Console.WriteLine("9. ComboBox Test");
+                Console.WriteLine("10. FolderBrowserDialog Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -75,6 +78,11 @@ namespace TestApp
                     case "9":
                         Console.WriteLine("Running ComboBox Test...");
                         testForm = CreateComboBoxTest();
+                        break;
+
+                    case "10":
+                        Console.WriteLine("Running FolderBrowserDialog Test...");
+                        testForm = CreateFolderBrowserDialogTest();
                         break;
                     
                     default:
@@ -682,6 +690,42 @@ namespace TestApp
             {
                 textLabel.Text = $"Text: {comboBox.Text}";
             };
+
+            return form;
+        }
+
+        static Form CreateFolderBrowserDialogTest()
+        {
+            var form = new Form();
+            form.Text = "FolderBrowserDialog Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Selected Path: None";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(350, 30);
+            form.Controls.Add(label);
+
+            var btnShow = new Button();
+            btnShow.Text = "Select Folder";
+            btnShow.Location = new Point(20, 60);
+            btnShow.Size = new Size(150, 30);
+            btnShow.Click += (s, e) =>
+            {
+                var dialog = new FolderBrowserDialog();
+                dialog.Description = "Select a folder for testing";
+                dialog.ShowNewFolderButton = true;
+                
+                if (dialog.ShowDialog(form) == DialogResult.OK)
+                {
+                    label.Text = $"Selected Path: {dialog.SelectedPath}";
+                }
+                else
+                {
+                    label.Text = "Selection cancelled";
+                }
+            };
+            form.Controls.Add(btnShow);
 
             return form;
         }

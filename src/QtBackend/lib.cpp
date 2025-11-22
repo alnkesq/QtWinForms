@@ -17,6 +17,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QComboBox>
+#include <QFileDialog>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -568,5 +569,20 @@ extern "C" {
         QObject::connect((QComboBox*)comboBox, &QComboBox::currentTextChanged, [callback, userData](const QString &text) {
             callback((const void*)text.constData(), text.size(), userData);
         });
+    }
+
+    EXPORT void QFileDialog_GetExistingDirectory(void* parent, const char* initialDirectory, const char* title, bool showNewFolderButton, ReadQStringCallback callback, void* userData) {
+        QWidget* parentWidget = (QWidget*)parent;
+        
+        QFileDialog::Options options = QFileDialog::ShowDirsOnly;
+        if (!showNewFolderButton) {
+            options |= QFileDialog::ReadOnly;
+        }
+
+        QString dir = QFileDialog::getExistingDirectory(parentWidget, QString::fromUtf8(title), QString::fromUtf8(initialDirectory), options);
+        
+        if (!dir.isEmpty()) {
+             callback((const void*)dir.constData(), dir.size(), userData);
+        }
     }
 }

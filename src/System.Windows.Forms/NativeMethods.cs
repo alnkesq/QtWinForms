@@ -217,5 +217,10 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QComboBox_ConnectCurrentTextChanged(IntPtr comboBox, delegate* unmanaged[Cdecl]<void*, int, nint, void> callback, IntPtr userData);
+
+        public unsafe delegate void ReadQStringCallback(void* data, int length, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QFileDialog_GetExistingDirectory(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPStr)] string title, bool showNewFolderButton, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
     }
 }
