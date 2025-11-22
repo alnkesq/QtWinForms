@@ -21,7 +21,7 @@ namespace System.Windows.Forms
             return (DialogResult)result;
         }
 
-        private static DialogResult ShowCore(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, HelpInfo hpi)
+        private static DialogResult ShowCore(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, object? hpi)
         {
             return ShowCore(owner, text, caption, buttons, MessageBoxIcon.Stop, defaultButton, options, false);
         }
@@ -33,43 +33,35 @@ namespace System.Windows.Forms
 
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath);
-            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath);
-            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, string keyword)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath, keyword);
-            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, string keyword)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath, keyword);
-            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath, navigator);
-            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath, navigator);
-            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator, object? param)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath, navigator, param);
-            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator, object? param)
         {
-            HelpInfo hpi = new HelpInfo(helpFilePath, navigator, param);
-            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, null);
         }
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options)
         {
