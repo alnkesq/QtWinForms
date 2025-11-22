@@ -14,6 +14,7 @@
 #include <QProgressBar>
 #include <QRadioButton>
 #include <QMenuBar>
+#include <QMenu>
 #include <QAction>
 #include <iostream>
 using namespace std;
@@ -471,5 +472,27 @@ extern "C" {
         // Position the menu bar at the top
         mb->setGeometry(0, 0, w->width(), mb->sizeHint().height());
     }
+
+    EXPORT void* QMenu_Create(const char* title) {
+        QMenu* menu = new QMenu(QString::fromUtf8(title));
+        return menu;
+    }
+
+    EXPORT void QMenu_AddAction(void* menu, void* action) {
+        ((QMenu*)menu)->addAction((QAction*)action);
+    }
+
+    EXPORT void QMenu_AddMenu(void* menu, void* submenu) {
+        ((QMenu*)menu)->addMenu((QMenu*)submenu);
+    }
+
+    EXPORT void QMenuBar_AddMenu(void* menuBar, void* menu) {
+        ((QMenuBar*)menuBar)->addMenu((QMenu*)menu);
+    }
+
+    EXPORT void QAction_SetMenu(void* action, void* menu) {
+        ((QAction*)action)->setMenu((QMenu*)menu);
+    }
+
 
 }

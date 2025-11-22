@@ -23,8 +23,21 @@ namespace System.Windows.Forms
                     {
                         item.EnsureCreated();
                     }
-                    NativeMethods.QMenuBar_AddAction(Handle, item.Handle);
+                    AddItemToMenuBar(item);
                 }
+            }
+        }
+
+        private void AddItemToMenuBar(ToolStripMenuItem item)
+        {
+            // Check if the item has a menu (submenu)
+            if (item.HasMenu)
+            {
+                NativeMethods.QMenuBar_AddMenu(Handle, item.MenuHandle);
+            }
+            else
+            {
+                NativeMethods.QMenuBar_AddAction(Handle, item.Handle);
             }
         }
 
@@ -49,7 +62,7 @@ namespace System.Windows.Forms
                     {
                         item.EnsureCreated();
                     }
-                    NativeMethods.QMenuBar_AddAction(_owner.Handle, item.Handle);
+                    _owner.AddItemToMenuBar(item);
                 }
             }
 

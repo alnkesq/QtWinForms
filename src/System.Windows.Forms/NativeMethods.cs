@@ -158,5 +158,20 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetMenuBar(IntPtr widget, IntPtr menuBar);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QMenu_Create([MarshalAs(UnmanagedType.LPStr)] string title);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QMenu_AddAction(IntPtr menu, IntPtr action);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QMenu_AddMenu(IntPtr menu, IntPtr submenu);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QMenuBar_AddMenu(IntPtr menuBar, IntPtr menu);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QAction_SetMenu(IntPtr action, IntPtr menu);
     }
 }

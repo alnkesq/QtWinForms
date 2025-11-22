@@ -477,43 +477,93 @@ namespace TestApp
             // Create menu strip
             var menuStrip = new MenuStrip();
             
-            // File menu
-            var fileMenu = menuStrip.Items.Add("File");
-            fileMenu.Click += (s, e) => Console.WriteLine("File menu clicked!");
+            // File menu with submenus
+            var fileMenu = new ToolStripMenuItem { Text = "File" };
+            
+            var saveItem = new ToolStripMenuItem { Text = "Save" };
+            saveItem.Click += (s, e) => 
+            {
+                Console.WriteLine("Save clicked!");
+                MessageBox.Show(form, "Save file", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+            fileMenu.DropDownItems.Add(saveItem);
+            
+            var openItem = new ToolStripMenuItem { Text = "Open" };
+            openItem.Click += (s, e) => 
+            {
+                Console.WriteLine("Open clicked!");
+                MessageBox.Show(form, "Open file", "Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+            fileMenu.DropDownItems.Add(openItem);
+            
+            // Recent submenu
+            var recentMenu = new ToolStripMenuItem { Text = "Recent" };
+            
+            var recent1 = new ToolStripMenuItem { Text = "1" };
+            recent1.Click += (s, e) => 
+            {
+                Console.WriteLine("Recent 1 clicked!");
+                MessageBox.Show(form, "Opening recent file 1", "Recent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+            recentMenu.DropDownItems.Add(recent1);
+            
+            var recent2 = new ToolStripMenuItem { Text = "2" };
+            recent2.Click += (s, e) => 
+            {
+                Console.WriteLine("Recent 2 clicked!");
+                MessageBox.Show(form, "Opening recent file 2", "Recent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+            recentMenu.DropDownItems.Add(recent2);
+            
+            var recent3 = new ToolStripMenuItem { Text = "3" };
+            recent3.Click += (s, e) => 
+            {
+                Console.WriteLine("Recent 3 clicked!");
+                MessageBox.Show(form, "Opening recent file 3", "Recent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+            recentMenu.DropDownItems.Add(recent3);
+            
+            fileMenu.DropDownItems.Add(recentMenu);
+            
+            menuStrip.Items.Add(fileMenu);
 
-            var editMenu = menuStrip.Items.Add("Edit");
+            // Edit menu (simple, no submenus)
+            var editMenu = new ToolStripMenuItem { Text = "Edit" };
             editMenu.Click += (s, e) => Console.WriteLine("Edit menu clicked!");
+            menuStrip.Items.Add(editMenu);
 
-            var helpMenu = menuStrip.Items.Add("Help");
+            // Help menu
+            var helpMenu = new ToolStripMenuItem { Text = "Help" };
             helpMenu.Click += (s, e) =>
             {
                 MessageBox.Show(
                     form,
-                    "MenuStrip Test Application\nVersion 1.0\n\nThis demonstrates MenuStrip and ToolStripMenuItem.",
+                    "MenuStrip Test Application\nVersion 1.0\n\nThis demonstrates MenuStrip with submenus.\nTry the File > Recent menu!",
                     "About",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             };
+            menuStrip.Items.Add(helpMenu);
 
             // Set the menu strip on the form
             form.MainMenuStrip = menuStrip;
 
             // Add some content to the form
             var label = new Label();
-            label.Text = "Click on the menu items above!";
+            label.Text = "Click on the menu items above!\nTry File > Save, File > Open, and File > Recent > 1, 2, 3";
             label.Location = new Point(50, 80);
-            label.Size = new Size(400, 30);
+            label.Size = new Size(500, 60);
             form.Controls.Add(label);
 
             var button = new Button();
             button.Text = "Show Message";
-            button.Location = new Point(50, 120);
+            button.Location = new Point(50, 150);
             button.Size = new Size(150, 30);
             button.Click += (s, e) =>
             {
                 MessageBox.Show(
                     form,
-                    "This is a test form with a MenuStrip!",
+                    "This is a test form with a MenuStrip and submenus!",
                     "Information",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
