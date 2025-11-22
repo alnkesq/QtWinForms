@@ -184,6 +184,15 @@ namespace TestApp
             };
             form.Controls.Add(btnState);
 
+            var linkLabel = new LinkLabel();
+            linkLabel.Text = "LinkLabel";
+            linkLabel.Location = new Point(10, 170);
+            linkLabel.Size = new Size(100, 30);
+            linkLabel.LinkClicked += (s, e) => {
+                MessageBox.Show($"Link clicked!");
+            };
+            form.Controls.Add(linkLabel);
+
             form.Controls.Add(panel);
 
             grp.ForeColor = Color.Blue;

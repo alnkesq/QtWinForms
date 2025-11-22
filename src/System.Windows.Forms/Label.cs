@@ -5,7 +5,7 @@ namespace System.Windows.Forms
 {
     public class Label : Control
     {
-        private string _text = string.Empty;
+        protected string _text = string.Empty;
 
         protected override void CreateHandle()
         {
@@ -24,9 +24,14 @@ namespace System.Windows.Forms
                 _text = value ?? "";
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QLabel_SetText(Handle, _text);
+                    UpdateNativeText();
                 }
             }
+        }
+
+        protected virtual void UpdateNativeText()
+        {
+            NativeMethods.QLabel_SetText(Handle, _text);
         }
     }
 }

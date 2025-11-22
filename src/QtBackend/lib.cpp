@@ -502,4 +502,17 @@ extern "C" {
     }
 
 
+    EXPORT void* QLinkLabel_Create(void* parent, const char* text) {
+        QLabel* widget = new QLabel(QString::fromUtf8(text), (QWidget*)parent);
+        widget->setTextInteractionFlags(Qt::TextBrowserInteraction);
+        widget->setOpenExternalLinks(false); 
+        return widget;
+    }
+
+    EXPORT void QLinkLabel_ConnectLinkClicked(void* widget, void (*callback)(void*, const char*), void* userData) {
+        QObject::connect((QLabel*)widget, &QLabel::linkActivated, [callback, userData](const QString &link) {
+            callback(userData, link.toUtf8().constData());
+        });
+    }
+
 }
