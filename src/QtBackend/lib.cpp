@@ -13,6 +13,8 @@
 #include <QCloseEvent>
 #include <QProgressBar>
 #include <QRadioButton>
+#include <QMenuBar>
+#include <QAction>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -430,6 +432,44 @@ extern "C" {
 
     EXPORT void QProgressBar_SetValue(void* progressBar, int value) {
         ((QProgressBar*)progressBar)->setValue(value);
+    }
+
+    EXPORT void* QMenuBar_Create(void* parent) {
+        QMenuBar* menuBar = new QMenuBar((QWidget*)parent);
+        return menuBar;
+    }
+
+    EXPORT void QMenuBar_AddAction(void* menuBar, void* action) {
+        ((QMenuBar*)menuBar)->addAction((QAction*)action);
+    }
+
+    EXPORT void* QAction_Create(const char* text) {
+        QAction* action = new QAction(QString::fromUtf8(text));
+        return action;
+    }
+
+    EXPORT void QAction_SetText(void* action, const char* text) {
+        ((QAction*)action)->setText(QString::fromUtf8(text));
+    }
+
+    EXPORT void QAction_ConnectTriggered(void* action, void (*callback)(void*), void* userData) {
+        QObject::connect((QAction*)action, &QAction::triggered, [callback, userData]() {
+            callback(userData);
+        });
+    }
+
+    EXPORT void QWidget_SetMenuBar(void* widget, void* menuBar) {
+        QWidget* w = (QWidget*)widget;
+        // Only QMainWindow has a setMenuBar method, but we can use QWidget::layout
+        // For simplicity, we'll cast to QMainWindow if needed
+        // Actually, in Qt, only QMainWindow supports menuBar properly
+        // For a regular QWidget acting as a window, we need to use a layout
+        // But for Forms, we should use QMainWindow instead
+        // For now, let's assume the widget is a top-level window and add the menubar
+        QMenuBar* mb = (QMenuBar*)menuBar;
+        mb->setParent(w);
+        // Position the menu bar at the top
+        mb->setGeometry(0, 0, w->width(), mb->sizeHint().height());
     }
 
 }

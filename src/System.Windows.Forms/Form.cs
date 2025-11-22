@@ -7,6 +7,7 @@ namespace System.Windows.Forms
     {
         private string _text = string.Empty;
         private FormWindowState _windowState = FormWindowState.Normal;
+        private MenuStrip? _mainMenuStrip;
 
         public Form() : base()
         {
@@ -32,6 +33,16 @@ namespace System.Windows.Forms
             if (_windowState != FormWindowState.Normal)
             {
                 NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
+            }
+            
+            // Attach menu bar if set
+            if (_mainMenuStrip != null)
+            {
+                if (!_mainMenuStrip.IsHandleCreated)
+                {
+                    _mainMenuStrip.EnsureCreated();
+                }
+                NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
             }
             
             // Connect resize and move events
@@ -113,6 +124,23 @@ namespace System.Windows.Forms
             }
             }
 
+
+        public MenuStrip? MainMenuStrip
+        {
+            get => _mainMenuStrip;
+            set
+            {
+                _mainMenuStrip = value;
+                if (_mainMenuStrip != null && IsHandleCreated)
+                {
+                    if (!_mainMenuStrip.IsHandleCreated)
+                    {
+                        _mainMenuStrip.EnsureCreated();
+                    }
+                    NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
+                }
+            }
+        }
 
         public FormWindowState WindowState
         {

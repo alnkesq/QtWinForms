@@ -20,6 +20,7 @@ namespace TestApp
                 Console.WriteLine("5. ProgressBar Test");
                 Console.WriteLine("6. RadioButton Test");
                 Console.WriteLine("7. FormClosing Test");
+                Console.WriteLine("8. MenuStrip Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -63,6 +64,11 @@ namespace TestApp
                     case "7":
                         Console.WriteLine("Running FormClosing Test...");
                         testForm = CreateFormClosingTest();
+                        break;
+
+                    case "8":
+                        Console.WriteLine("Running MenuStrip Test...");
+                        testForm = CreateMenuStripTest();
                         break;
                     
                     default:
@@ -458,6 +464,61 @@ namespace TestApp
                 Console.WriteLine($"FormClosed event fired! CloseReason: {e.CloseReason}");
                 Console.WriteLine("Form has been successfully closed.");
             };
+
+            return form;
+        }
+
+        static Form CreateMenuStripTest()
+        {
+            var form = new Form();
+            form.Text = "MenuStrip Test";
+            form.Size = new Size(600, 400);
+
+            // Create menu strip
+            var menuStrip = new MenuStrip();
+            
+            // File menu
+            var fileMenu = menuStrip.Items.Add("File");
+            fileMenu.Click += (s, e) => Console.WriteLine("File menu clicked!");
+
+            var editMenu = menuStrip.Items.Add("Edit");
+            editMenu.Click += (s, e) => Console.WriteLine("Edit menu clicked!");
+
+            var helpMenu = menuStrip.Items.Add("Help");
+            helpMenu.Click += (s, e) =>
+            {
+                MessageBox.Show(
+                    form,
+                    "MenuStrip Test Application\nVersion 1.0\n\nThis demonstrates MenuStrip and ToolStripMenuItem.",
+                    "About",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            };
+
+            // Set the menu strip on the form
+            form.MainMenuStrip = menuStrip;
+
+            // Add some content to the form
+            var label = new Label();
+            label.Text = "Click on the menu items above!";
+            label.Location = new Point(50, 80);
+            label.Size = new Size(400, 30);
+            form.Controls.Add(label);
+
+            var button = new Button();
+            button.Text = "Show Message";
+            button.Location = new Point(50, 120);
+            button.Size = new Size(150, 30);
+            button.Click += (s, e) =>
+            {
+                MessageBox.Show(
+                    form,
+                    "This is a test form with a MenuStrip!",
+                    "Information",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            };
+            form.Controls.Add(button);
 
             return form;
         }
