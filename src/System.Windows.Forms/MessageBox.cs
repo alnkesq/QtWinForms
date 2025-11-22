@@ -2,34 +2,13 @@ using System;
 
 namespace System.Windows.Forms
 {
-    /// <summary>
-    /// Displays a message box that can contain text, buttons, and symbols that inform and instruct the user.
-    /// </summary>
+
     public static class MessageBox
     {
-
-        /// <summary>
-        /// Displays a message box with the specified text, caption, buttons, icon, default button, and options.
-        /// </summary>
-        /// <param name="owner">An implementation of IWin32Window that will own the modal dialog box.</param>
-        /// <param name="text">The text to display in the message box.</param>
-        /// <param name="caption">The text to display in the title bar of the message box.</param>
-        /// <param name="buttons">One of the MessageBoxButtons values that specifies which buttons to display in the message box.</param>
-        /// <param name="icon">One of the MessageBoxIcon values that specifies which icon to display in the message box.</param>
-        /// <param name="defaultButton">One of the MessageBoxDefaultButton values that specifies the default button for the message box.</param>
-        /// <param name="options">One of the MessageBoxOptions values that specifies which display and association options will be used for the message box.</param>
-        /// <returns>One of the DialogResult values.</returns>
-        public static DialogResult Show(
-            IWin32Window? owner,
-            string? text,
-            string? caption,
-            MessageBoxButtons buttons,
-            MessageBoxIcon icon,
-            MessageBoxDefaultButton defaultButton,
-            MessageBoxOptions options)
+        private static DialogResult ShowCore(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, bool showHelp)
         {
             IntPtr ownerHandle = owner?.Handle ?? IntPtr.Zero;
-            
+
             int result = NativeMethods.QMessageBox_Show(
                 ownerHandle,
                 text ?? string.Empty,
@@ -42,36 +21,110 @@ namespace System.Windows.Forms
             return (DialogResult)result;
         }
 
-        /// <summary>
-        /// Displays a message box with the specified text, caption, buttons, and icon.
-        /// </summary>
+        private static DialogResult ShowCore(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, HelpInfo hpi)
+        {
+            return ShowCore(owner, text, caption, buttons, MessageBoxIcon.Stop, defaultButton, options, false);
+        }
+
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, bool displayHelpButton)
+        {
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, displayHelpButton);
+        }
+
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, string keyword)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath, keyword);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, string keyword)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath, keyword);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath, navigator);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath, navigator);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator, object? param)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath, navigator, param);
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options, string helpFilePath, HelpNavigator navigator, object? param)
+        {
+            HelpInfo hpi = new HelpInfo(helpFilePath, navigator, param);
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, hpi);
+        }
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options)
+        {
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, options, showHelp: false);
+        }
+        public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+        {
+            return ShowCore(null, text, caption, buttons, icon, defaultButton, (MessageBoxOptions)0, showHelp: false);
+        }
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            return Show(null, text, caption, buttons, icon, MessageBoxDefaultButton.Button1, 0);
+            return ShowCore(null, text, caption, buttons, icon, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
         }
 
-        /// <summary>
-        /// Displays a message box with the specified text, caption, and buttons.
-        /// </summary>
         public static DialogResult Show(string? text, string? caption, MessageBoxButtons buttons)
         {
-            return Show(null, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0);
+            return ShowCore(null, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
         }
 
-        /// <summary>
-        /// Displays a message box with the specified text and caption.
-        /// </summary>
         public static DialogResult Show(string? text, string? caption)
         {
-            return Show(null, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0);
+            return ShowCore(null, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
         }
-
-        /// <summary>
-        /// Displays a message box with the specified text.
-        /// </summary>
         public static DialogResult Show(string? text)
         {
-            return Show(null, text, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0);
+            return ShowCore(null, text, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
         }
+
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, MessageBoxOptions options)
+        {
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, options, showHelp: false);
+        }
+
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+        {
+            return ShowCore(owner, text, caption, buttons, icon, defaultButton, (MessageBoxOptions)0, showHelp: false);
+        }
+
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            return ShowCore(owner, text, caption, buttons, icon, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption, MessageBoxButtons buttons)
+        {
+            return ShowCore(owner, text, caption, buttons, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text, string? caption)
+        {
+            return ShowCore(owner, text, caption, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
+        }
+        public static DialogResult Show(IWin32Window? owner, string? text)
+        {
+            return ShowCore(owner, text, string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0, showHelp: false);
+        }
+
+
     }
 }
