@@ -5,27 +5,22 @@ using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
-    public class FolderBrowserDialog : Component
+    public class FolderBrowserDialog : CommonDialog
     {
         public string SelectedPath { get; set; } = string.Empty;
         public string InitialDirectory { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public bool ShowNewFolderButton { get; set; } = true;
 
-        public void Reset()
+        public override void Reset()
         {
             SelectedPath = string.Empty;
             InitialDirectory = string.Empty;
             Description = string.Empty;
             ShowNewFolderButton = true;
         }
-
-        public DialogResult ShowDialog()
-        {
-            return ShowDialog(null);
-        }
-
-        public unsafe DialogResult ShowDialog(IWin32Window? owner)
+        
+        public override unsafe DialogResult ShowDialog(IWin32Window? owner)
         {
              Utils.EnsureSTAThread();
 

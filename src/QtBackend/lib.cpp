@@ -585,4 +585,24 @@ extern "C" {
              callback((const void*)dir.constData(), dir.size(), userData);
         }
     }
+
+    EXPORT void QFileDialog_GetOpenFileName(void* parent, const char* initialDirectory, const char* title, const char* filter, ReadQStringCallback callback, void* userData) {
+        QWidget* parentWidget = (QWidget*)parent;
+        
+        QString fileName = QFileDialog::getOpenFileName(parentWidget, QString::fromUtf8(title), QString::fromUtf8(initialDirectory), QString::fromUtf8(filter));
+        
+        if (!fileName.isEmpty()) {
+             callback((const void*)fileName.constData(), fileName.size(), userData);
+        }
+    }
+
+    EXPORT void QFileDialog_GetSaveFileName(void* parent, const char* initialDirectory, const char* title, const char* filter, ReadQStringCallback callback, void* userData) {
+        QWidget* parentWidget = (QWidget*)parent;
+        
+        QString fileName = QFileDialog::getSaveFileName(parentWidget, QString::fromUtf8(title), QString::fromUtf8(initialDirectory), QString::fromUtf8(filter));
+        
+        if (!fileName.isEmpty()) {
+             callback((const void*)fileName.constData(), fileName.size(), userData);
+        }
+    }
 }

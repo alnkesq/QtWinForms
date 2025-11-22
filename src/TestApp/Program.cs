@@ -25,6 +25,7 @@ namespace TestApp
                 Console.WriteLine("8. MenuStrip Test");
                 Console.WriteLine("9. ComboBox Test");
                 Console.WriteLine("10. FolderBrowserDialog Test");
+                Console.WriteLine("11. FileDialog Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -83,6 +84,11 @@ namespace TestApp
                     case "10":
                         Console.WriteLine("Running FolderBrowserDialog Test...");
                         testForm = CreateFolderBrowserDialogTest();
+                        break;
+
+                    case "11":
+                        Console.WriteLine("Running FileDialog Test...");
+                        testForm = CreateFileDialogTest();
                         break;
                     
                     default:
@@ -726,6 +732,64 @@ namespace TestApp
                 }
             };
             form.Controls.Add(btnShow);
+
+            return form;
+        }
+
+        static Form CreateFileDialogTest()
+        {
+            var form = new Form();
+            form.Text = "FileDialog Test";
+            form.Size = new Size(500, 300);
+
+            var label = new Label();
+            label.Text = "Selected File: None";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(450, 30);
+            form.Controls.Add(label);
+
+            var btnOpen = new Button();
+            btnOpen.Text = "Open File";
+            btnOpen.Location = new Point(20, 60);
+            btnOpen.Size = new Size(150, 30);
+            btnOpen.Click += (s, e) =>
+            {
+                var dialog = new OpenFileDialog();
+                dialog.Title = "Open a file";
+                dialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                
+                if (dialog.ShowDialog(form) == DialogResult.OK)
+                {
+                    label.Text = $"Opened: {dialog.FileName}";
+                }
+                else
+                {
+                    label.Text = "Open cancelled";
+                }
+            };
+            form.Controls.Add(btnOpen);
+
+            var btnSave = new Button();
+            btnSave.Text = "Save File";
+            btnSave.Location = new Point(180, 60);
+            btnSave.Size = new Size(150, 30);
+            btnSave.Click += (s, e) =>
+            {
+                var dialog = new SaveFileDialog();
+                dialog.Title = "Save a file";
+                dialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                dialog.FileName = "test.txt";
+                
+                if (dialog.ShowDialog(form) == DialogResult.OK)
+                {
+                    label.Text = $"Saved: {dialog.FileName}";
+                }
+                else
+                {
+                    label.Text = "Save cancelled";
+                }
+            };
+            form.Controls.Add(btnSave);
 
             return form;
         }
