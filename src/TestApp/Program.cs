@@ -121,6 +121,7 @@ namespace TestApp
         {
             var form = new Form();
             var textBox = new TextBox();
+            var multiline = new TextBox { Multiline = true };
 
             var lbl = new Label();
             form.Text = "Hello Qt from C#";
@@ -150,7 +151,7 @@ namespace TestApp
             {
                 Console.WriteLine("Button2 clicked!");
                 var result = MessageBox.Show(
-                    "The text from the textbox is: " + textBox.Text,
+                    "The text from the textbox is: " + textBox.Text + ",\nmultiline: " + multiline.Text,
                     "Information",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -180,6 +181,10 @@ namespace TestApp
             textBox.Text = "Enter text here...";
             textBox.Location = new Point(10, 90);
             textBox.Size = new Size(200, 30);
+            
+            multiline.Text = "Multiline\nText";
+            multiline.Location = new Point(10, 450);
+            multiline.Size = new Size(200, 100);
 
             var grp = new GroupBox();
             grp.Text = "Group box";
@@ -194,6 +199,7 @@ namespace TestApp
             grp.Controls.Add(lbl);
 
             form.Controls.Add(textBox);
+            form.Controls.Add(multiline);
             
             
             var btnState = new Button();

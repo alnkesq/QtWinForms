@@ -92,6 +92,15 @@ namespace System.Windows.Forms
         public unsafe static extern void QLineEdit_GetText_Invoke(IntPtr label, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QPlainTextEdit_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QPlainTextEdit_SetText(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QPlainTextEdit_GetText_Invoke(IntPtr widget, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_ConnectResize(IntPtr widget, IntPtr resizeCallback, IntPtr moveCallback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

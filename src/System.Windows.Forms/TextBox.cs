@@ -7,12 +7,33 @@ namespace System.Windows.Forms
     public class TextBox : Control
     {
         private string _text = string.Empty;
+        private bool _multiline;
+
+        public bool Multiline
+        {
+            get => _multiline;
+            set
+            {
+                if (_multiline != value)
+                {
+                    if (IsHandleCreated) throw new NotSupportedException("Multiline cannot be toggled after the control is created.");
+                    _multiline = value;
+                }
+            }
+        }
 
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QLineEdit_Create(IntPtr.Zero, Text);
+                if (_multiline)
+                {
+                    Handle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
+                }
+                else
+                {
+                    Handle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
+                }
                 SetCommonProperties();
             }
         }
@@ -31,7 +52,15 @@ namespace System.Windows.Forms
                     string s = Marshal.PtrToStringUni((nint)utf16, length);
                     box.Target = s;
                 }
-                NativeMethods.QLineEdit_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+
+                if (_multiline)
+                {
+                    NativeMethods.QPlainTextEdit_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                }
+                else
+                {
+                    NativeMethods.QLineEdit_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                }
                 return box.Target;
             }
             set
@@ -39,7 +68,14 @@ namespace System.Windows.Forms
                 _text = value ?? "";
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QLineEdit_SetText(Handle, _text);
+                    if (_multiline)
+                    {
+                        NativeMethods.QPlainTextEdit_SetText(Handle, _text);
+                    }
+                    else
+                    {
+                        NativeMethods.QLineEdit_SetText(Handle, _text);
+                    }
                 }
             }
         }

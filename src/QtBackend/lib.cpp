@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QPlainTextEdit>
 #include <QGroupBox>
 #include <QTabWidget>
 #include <QMessageBox>
@@ -161,6 +162,20 @@ extern "C" {
 
     EXPORT void QLineEdit_GetText_Invoke(void* label, ReadQStringCallback cb, void* userData) {
         QString s = ((QLineEdit*)label)->text();
+        cb((const void*)s.constData(), s.size(), userData);
+    }
+
+    EXPORT void* QPlainTextEdit_Create(void* parent, const char* text) {
+        QPlainTextEdit* widget = new QPlainTextEdit(QString::fromUtf8(text), (QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QPlainTextEdit_SetText(void* widget, const char* text) {
+        ((QPlainTextEdit*)widget)->setPlainText(QString::fromUtf8(text));
+    }
+
+    EXPORT void QPlainTextEdit_GetText_Invoke(void* widget, ReadQStringCallback cb, void* userData) {
+        QString s = ((QPlainTextEdit*)widget)->toPlainText();
         cb((const void*)s.constData(), s.size(), userData);
     }
 
