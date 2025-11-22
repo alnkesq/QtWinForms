@@ -653,6 +653,36 @@ namespace TestApp
             };
             form.Controls.Add(btnClear);
 
+            var btnToggleStyle = new Button();
+            btnToggleStyle.Text = "Toggle Style";
+            btnToggleStyle.Location = new Point(240, 140);
+            btnToggleStyle.Size = new Size(100, 30);
+            btnToggleStyle.Click += (s, e) =>
+            {
+                if (comboBox.DropDownStyle == ComboBoxStyle.DropDownList)
+                {
+                    comboBox.DropDownStyle = ComboBoxStyle.DropDown;
+                    label.Text = "Select or Type:";
+                }
+                else
+                {
+                    comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+                    label.Text = "Select an item:";
+                }
+            };
+            form.Controls.Add(btnToggleStyle);
+
+            var textLabel = new Label();
+            textLabel.Text = "Text: ";
+            textLabel.Location = new Point(20, 180);
+            textLabel.Size = new Size(300, 30);
+            form.Controls.Add(textLabel);
+
+            comboBox.TextChanged += (s, e) =>
+            {
+                textLabel.Text = $"Text: {comboBox.Text}";
+            };
+
             return form;
         }
     }

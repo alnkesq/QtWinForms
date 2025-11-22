@@ -554,4 +554,19 @@ extern "C" {
     EXPORT void QComboBox_RemoveItem(void* comboBox, int index) {
         ((QComboBox*)comboBox)->removeItem(index);
     }
+
+    EXPORT void QComboBox_SetText(void* comboBox, const char* text) {
+        ((QComboBox*)comboBox)->setCurrentText(QString::fromUtf8(text));
+    }
+
+    EXPORT void QComboBox_GetText_Invoke(void* comboBox, ReadQStringCallback cb, void* userData) {
+        QString s = ((QComboBox*)comboBox)->currentText();
+        cb((const void*)s.constData(), s.size(), userData);
+    }
+
+    EXPORT void QComboBox_ConnectCurrentTextChanged(void* comboBox, ReadQStringCallback callback, void* userData) {
+        QObject::connect((QComboBox*)comboBox, &QComboBox::currentTextChanged, [callback, userData](const QString &text) {
+            callback((const void*)text.constData(), text.size(), userData);
+        });
+    }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -9,6 +10,7 @@ namespace System.Windows.Forms
         private ObjectCollection _items;
         private ComboBoxStyle _dropDownStyle = ComboBoxStyle.DropDown;
         private int _selectedIndex = -1;
+        private string _text = string.Empty;
 
         public ComboBox()
         {
@@ -50,7 +52,13 @@ namespace System.Windows.Forms
                     NativeMethods.QComboBox_SetSelectedIndex(Handle, _selectedIndex);
                 }
 
+                if (!string.IsNullOrEmpty(_text))
+                {
+                    NativeMethods.QComboBox_SetText(Handle, _text);
+                }
+
                 ConnectSelectedIndexChanged();
+                ConnectCurrentTextChanged();
             }
         }
 
@@ -94,6 +102,55 @@ namespace System.Windows.Forms
                     OnSelectedIndexChanged(EventArgs.Empty);
                 }
             }
+        }
+
+        public unsafe override string Text
+        {
+            get
+            {
+                if (!IsHandleCreated) return _text;
+                using var box = new GCHandle<string>(string.Empty);
+
+                [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+                static void Callback(void* utf16, int length, void* userData)
+                {
+                    var box = GCHandle<string?>.FromIntPtr((nint)userData);
+                    string s = Marshal.PtrToStringUni((nint)utf16, length);
+                    box.Target = s;
+                }
+                NativeMethods.QComboBox_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                return box.Target ?? string.Empty;
+            }
+            set
+            {
+                _text = value ?? string.Empty;
+                if (IsHandleCreated)
+                {
+                    NativeMethods.QComboBox_SetText(Handle, _text);
+                }
+            }
+        }
+
+        public event EventHandler? TextChanged;
+
+        protected virtual void OnTextChanged(EventArgs e)
+        {
+            TextChanged?.Invoke(this, e);
+        }
+
+        private unsafe void ConnectCurrentTextChanged()
+        {
+            delegate* unmanaged[Cdecl]<void*, int, nint, void> callback = &OnCurrentTextChangedCallback;
+            NativeMethods.QComboBox_ConnectCurrentTextChanged(Handle, callback, GCHandlePtr);
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe void OnCurrentTextChangedCallback(void* dataUtf16, int length, nint userData)
+        {
+            var control = ObjectFromGCHandle<ComboBox>(userData);
+            string text = new string((char*)dataUtf16, 0, length);
+            control._text = text;
+            control.OnTextChanged(EventArgs.Empty);
         }
 
         public event EventHandler SelectedIndexChanged
