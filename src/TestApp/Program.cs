@@ -756,8 +756,9 @@ namespace TestApp
             {
                 var dialog = new OpenFileDialog();
                 dialog.Title = "Open a file";
-                dialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-                
+                dialog.Filter = "Image Files (*.bmp, *.jpg, *.gif)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*";
+
+
                 if (dialog.ShowDialog(form) == DialogResult.OK)
                 {
                     label.Text = $"Opened: {dialog.FileName}";
