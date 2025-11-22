@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-    public class ToolStripMenuItem : Control
+    public class ToolStripMenuItem : ToolStripDropDownItem
     {
         private EventHandler? _clickHandler;
-        private readonly List<Control> _dropDownItems = new List<Control>();
+        private readonly List<ToolStripItem> _dropDownItems = new List<ToolStripItem>();
         private IntPtr _menuHandle = IntPtr.Zero; // QMenu handle if this has children
         private bool _hasChildren = false;
 
@@ -63,13 +63,13 @@ namespace System.Windows.Forms
         public bool HasMenu => _hasChildren;
         public IntPtr MenuHandle => _menuHandle;
 
-        public ToolStripMenuItemCollection DropDownItems => new ToolStripMenuItemCollection(this);
+        public ToolStripItemCollection DropDownItems => new ToolStripItemCollection(this);
 
-        public class ToolStripMenuItemCollection
+        public class ToolStripItemCollection
         {
             private readonly ToolStripMenuItem _owner;
 
-            internal ToolStripMenuItemCollection(ToolStripMenuItem owner)
+            internal ToolStripItemCollection(ToolStripMenuItem owner)
             {
                 _owner = owner;
             }

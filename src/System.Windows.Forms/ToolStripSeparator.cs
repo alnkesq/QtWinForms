@@ -2,7 +2,7 @@ using System;
 
 namespace System.Windows.Forms
 {
-    public class ToolStripSeparator : Control
+    public class ToolStripSeparator : ToolStripItem
     {
         protected override void CreateHandle()
         {
