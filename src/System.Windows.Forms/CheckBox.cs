@@ -5,38 +5,33 @@ namespace System.Windows.Forms
 {
     public class CheckBox : Control
     {
-        private string? _text;
+        private string _text = string.Empty;
         private bool _checked;
-        private EventHandler? _checkedChangedHandler;
 
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text ?? "");
+                Handle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
                 
                 if (_checked)
                 {
                     NativeMethods.QCheckBox_SetChecked(Handle, _checked);
                 }
-                
-                if (_checkedChangedHandler != null)
-                {
-                    ConnectStateChangedEvent();
-                }
+                ConnectStateChangedEvent();
             }
         }
 
         public override string Text
         {
-            get => _text ?? "";
+            get => _text;
             set
             {
-                _text = value;
+                _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QCheckBox_SetText(Handle, value);
+                    NativeMethods.QCheckBox_SetText(Handle, _text);
                 }
             }
         }
@@ -54,21 +49,7 @@ namespace System.Windows.Forms
             }
         }
 
-        public event EventHandler CheckedChanged
-        {
-            add
-            {
-                if (_checkedChangedHandler == null && IsHandleCreated)
-                {
-                    ConnectStateChangedEvent();
-                }
-                _checkedChangedHandler += value;
-            }
-            remove
-            {
-                _checkedChangedHandler -= value;
-            }
-        }
+        public event EventHandler? CheckedChanged;
 
         private unsafe void ConnectStateChangedEvent()
         {
@@ -77,12 +58,12 @@ namespace System.Windows.Forms
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static unsafe void OnStateChangedCallback(nint userData, int state)
+        private static void OnStateChangedCallback(nint userData, int state)
         {
             var checkBox = ObjectFromGCHandle<CheckBox>(userData);
 
             checkBox._checked = (state != 0);
-            checkBox._checkedChangedHandler?.Invoke(checkBox, EventArgs.Empty);
+            checkBox.CheckedChanged?.Invoke(checkBox, EventArgs.Empty);
         }
     }
 }

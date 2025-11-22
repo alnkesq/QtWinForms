@@ -7,16 +7,11 @@ namespace System.Windows.Forms
     {
         private EventHandler? _clickHandler;
 
-        public Button()
-        {
-            // Deferred creation
-        }
-
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text ?? "");
+                Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
                 
                 // Connect click event if handler is already attached
@@ -29,17 +24,17 @@ namespace System.Windows.Forms
 
         public new string Text
         {
-            get => _text ?? "";
+            get => _text;
             set
             {
-                _text = value;
+                _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QPushButton_SetText(Handle, value);
+                    NativeMethods.QPushButton_SetText(Handle, _text);
                 }
             }
         }
-        private string? _text;
+        private string _text = string.Empty;
 
         public event EventHandler Click
         {

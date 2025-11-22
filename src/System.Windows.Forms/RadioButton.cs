@@ -7,24 +7,20 @@ namespace System.Windows.Forms
     {
         private string _text = string.Empty;
         private bool _checked;
-        private EventHandler? _checkedChangedHandler;
 
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text ?? "");
+                Handle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
                 
                 if (_checked)
                 {
                     NativeMethods.QRadioButton_SetChecked(Handle, _checked);
                 }
-                
-                if (_checkedChangedHandler != null)
-                {
-                    ConnectToggledEvent();
-                }
+
+                ConnectToggledEvent();
             }
         }
 
@@ -58,25 +54,11 @@ namespace System.Windows.Forms
             }
         }
 
-        public event EventHandler CheckedChanged
-        {
-            add
-            {
-                if (_checkedChangedHandler == null && IsHandleCreated)
-                {
-                    ConnectToggledEvent();
-                }
-                _checkedChangedHandler += value;
-            }
-            remove
-            {
-                _checkedChangedHandler -= value;
-            }
-        }
+        public event EventHandler? CheckedChanged;
 
         protected virtual void OnCheckedChanged(EventArgs e)
         {
-            _checkedChangedHandler?.Invoke(this, e);
+            CheckedChanged?.Invoke(this, e);
         }
 
         private unsafe void ConnectToggledEvent()
