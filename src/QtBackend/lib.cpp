@@ -10,6 +10,7 @@
 #include <QEvent>
 #include <QResizeEvent>
 #include <QMoveEvent>
+#include <QCloseEvent>
 #include <QProgressBar>
 #include <QRadioButton>
 #include <iostream>
@@ -192,6 +193,43 @@ extern "C" {
         QWidget* w = static_cast<QWidget*>(widget);
         ResizeEventFilter* filter = new ResizeEventFilter(resizeCallback, moveCallback, userData);
         w->installEventFilter(filter);
+    }
+
+    // Close event support
+    class CloseEventFilter : public QObject {
+    private:
+        int (*closeCallback)(void*);
+        void* userData;
+
+    public:
+        CloseEventFilter(int (*closeCb)(void*), void* data)
+            : closeCallback(closeCb), userData(data) {}
+
+    protected:
+        bool eventFilter(QObject* obj, QEvent* event) override {
+            if (event->type() == QEvent::Close && closeCallback) {
+                QCloseEvent* closeEvent = static_cast<QCloseEvent*>(event);
+                // Call the callback and get whether to allow the close (1 = allow, 0 = cancel)
+                int allowClose = closeCallback(userData);
+                if (allowClose == 0) {
+                    // Cancel the close event
+                    closeEvent->ignore();
+                    return true; // Event handled
+                }
+            }
+            return QObject::eventFilter(obj, event);
+        }
+    };
+
+    EXPORT void QWidget_ConnectCloseEvent(void* widget, int (*closeCallback)(void*), void* userData) {
+        QWidget* w = static_cast<QWidget*>(widget);
+        CloseEventFilter* filter = new CloseEventFilter(closeCallback, userData);
+        w->installEventFilter(filter);
+    }
+
+    EXPORT void QWidget_Close(void* widget) {
+        QWidget* w = static_cast<QWidget*>(widget);
+        w->close();
     }
 
     EXPORT void* QGroupBox_Create(void* parent, const char* title) {

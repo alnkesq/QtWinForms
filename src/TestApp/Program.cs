@@ -19,6 +19,7 @@ namespace TestApp
                 Console.WriteLine("4. TabControl Test");
                 Console.WriteLine("5. ProgressBar Test");
                 Console.WriteLine("6. RadioButton Test");
+                Console.WriteLine("7. FormClosing Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -57,6 +58,11 @@ namespace TestApp
                     case "6":
                         Console.WriteLine("Running RadioButton Test...");
                         testForm = CreateRadioButtonTest();
+                        break;
+
+                    case "7":
+                        Console.WriteLine("Running FormClosing Test...");
+                        testForm = CreateFormClosingTest();
                         break;
                     
                     default:
@@ -388,6 +394,64 @@ namespace TestApp
                     progressBar.Style = ProgressBarStyle.Blocks;
             };
             form.Controls.Add(btnMarquee);
+
+            return form;
+        }
+
+        static Form CreateFormClosingTest()
+        {
+            var form = new Form();
+            form.Text = "FormClosing Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Try to close this form.\nIt will ask for confirmation.";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(350, 60);
+            form.Controls.Add(label);
+
+            var checkBox = new CheckBox();
+            checkBox.Text = "Allow closing without confirmation";
+            checkBox.Location = new Point(20, 100);
+            checkBox.Size = new Size(300, 30);
+            form.Controls.Add(checkBox);
+
+            var closeButton = new Button();
+            closeButton.Text = "Close Form";
+            closeButton.Location = new Point(20, 150);
+            closeButton.Size = new Size(120, 30);
+            closeButton.Click += (s, e) => form.Close();
+            form.Controls.Add(closeButton);
+
+            form.FormClosing += (s, e) =>
+            {
+                Console.WriteLine($"FormClosing event fired! CloseReason: {e.CloseReason}");
+                
+                if (!checkBox.Checked)
+                {
+                    var result = MessageBox.Show(
+                        form,
+                        "Are you sure you want to close this form?",
+                        "Confirm Close",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button1);
+
+                    if (result != DialogResult.Yes)
+                    {
+                        Console.WriteLine("Close cancelled by user!");
+                        e.Cancel = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Close confirmed by user.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Closing without confirmation (checkbox is checked).");
+                }
+            };
 
             return form;
         }

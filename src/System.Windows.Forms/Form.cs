@@ -16,14 +16,13 @@ namespace System.Windows.Forms
 
         public event EventHandler? Load;
         [Obsolete(NotImplementedWarning)] public event EventHandler<FormClosedEventArgs>? FormClosed;
-        [Obsolete(NotImplementedWarning)] public event EventHandler<FormClosingEventArgs>? FormClosing;
+        public event EventHandler<FormClosingEventArgs>? FormClosing;
 
         protected virtual void OnLoad(EventArgs e) => Load?.Invoke(this, e);
 
         [Obsolete(NotImplementedWarning)]
         protected virtual void OnFormClosed(FormClosedEventArgs e) => FormClosed?.Invoke(this, e);
 
-        [Obsolete(NotImplementedWarning)]
         protected virtual void OnFormClosing(FormClosingEventArgs e) => FormClosing?.Invoke(this, e);
 
         protected override void CreateHandle()
@@ -38,6 +37,7 @@ namespace System.Windows.Forms
             
             // Connect resize and move events
             ConnectResizeEvent();
+            ConnectCloseEvent();
             OnLoad(EventArgs.Empty);
         }
 
@@ -66,6 +66,25 @@ namespace System.Windows.Forms
             // Don't trigger resize event since size hasn't changed
             var currentSize = form.Size;
             form.SetBoundsCore(x, y, currentSize.Width, currentSize.Height);
+        }
+
+        private void ConnectCloseEvent()
+        {
+            unsafe
+            {
+                var closeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int>)&OnCloseCallback;
+                NativeMethods.QWidget_ConnectCloseEvent(Handle, closeCallbackPtr, GCHandlePtr);
+            }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe int OnCloseCallback(nint userData)
+        {
+            var form = ObjectFromGCHandle<Form>(userData);
+            var args = new FormClosingEventArgs(CloseReason.UserClosing, false);
+            form.OnFormClosing(args);
+            // Return 1 to allow close, 0 to cancel
+            return args.Cancel ? 0 : 1;
         }
 
         public Size ClientSize
@@ -107,6 +126,14 @@ namespace System.Windows.Forms
                         NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
                     }
                 }
+            }
+        }
+
+        public void Close()
+        {
+            if (IsHandleCreated)
+            {
+                NativeMethods.QWidget_Close(Handle);
             }
         }
 
