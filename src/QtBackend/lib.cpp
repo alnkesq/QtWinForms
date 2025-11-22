@@ -18,6 +18,7 @@
 #include <QAction>
 #include <QComboBox>
 #include <QFileDialog>
+#include <QDoubleSpinBox>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -604,5 +605,32 @@ extern "C" {
         if (!fileName.isEmpty()) {
              callback((const void*)fileName.constData(), fileName.size(), userData);
         }
+    }
+
+    EXPORT void* QDoubleSpinBox_Create(void* parent) {
+        QDoubleSpinBox* widget = new QDoubleSpinBox((QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QDoubleSpinBox_SetValue(void* spinBox, double value) {
+        ((QDoubleSpinBox*)spinBox)->setValue(value);
+    }
+
+    EXPORT double QDoubleSpinBox_GetValue(void* spinBox) {
+        return ((QDoubleSpinBox*)spinBox)->value();
+    }
+
+    EXPORT void QDoubleSpinBox_SetRange(void* spinBox, double min, double max) {
+        ((QDoubleSpinBox*)spinBox)->setRange(min, max);
+    }
+
+    EXPORT void QDoubleSpinBox_SetSingleStep(void* spinBox, double step) {
+        ((QDoubleSpinBox*)spinBox)->setSingleStep(step);
+    }
+
+    EXPORT void QDoubleSpinBox_ConnectValueChanged(void* spinBox, void (*callback)(void*, double), void* userData) {
+        QObject::connect((QDoubleSpinBox*)spinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [callback, userData](double value) {
+            callback(userData, value);
+        });
     }
 }

@@ -26,6 +26,7 @@ namespace TestApp
                 Console.WriteLine("9. ComboBox Test");
                 Console.WriteLine("10. FolderBrowserDialog Test");
                 Console.WriteLine("11. FileDialog Test");
+                Console.WriteLine("12. NumericUpDown Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -89,6 +90,11 @@ namespace TestApp
                     case "11":
                         Console.WriteLine("Running FileDialog Test...");
                         testForm = CreateFileDialogTest();
+                        break;
+
+                    case "12":
+                        Console.WriteLine("Running NumericUpDown Test...");
+                        testForm = CreateNumericUpDownTest();
                         break;
                     
                     default:
@@ -791,6 +797,56 @@ namespace TestApp
                 }
             };
             form.Controls.Add(btnSave);
+
+            return form;
+        }
+
+        static Form CreateNumericUpDownTest()
+        {
+            var form = new Form();
+            form.Text = "NumericUpDown Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Value: 0";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(200, 30);
+            form.Controls.Add(label);
+
+            var numeric = new NumericUpDown();
+            numeric.Location = new Point(20, 60);
+            numeric.Size = new Size(120, 30);
+            numeric.Minimum = -100;
+            numeric.Maximum = 100;
+            numeric.Value = 0;
+            numeric.Increment = 5;
+            numeric.ValueChanged += (s, e) =>
+            {
+                label.Text = $"Value: {numeric.Value}";
+            };
+            form.Controls.Add(numeric);
+
+            var btnSet = new Button();
+            btnSet.Text = "Set to 50";
+            btnSet.Location = new Point(150, 60);
+            btnSet.Size = new Size(100, 30);
+            btnSet.Click += (s, e) =>
+            {
+                numeric.Value = 50;
+            };
+            form.Controls.Add(btnSet);
+
+            var btnRange = new Button();
+            btnRange.Text = "Set Range 0-10";
+            btnRange.Location = new Point(20, 100);
+            btnRange.Size = new Size(120, 30);
+            btnRange.Click += (s, e) =>
+            {
+                numeric.Minimum = 0;
+                numeric.Maximum = 10;
+                label.Text = $"Range: {numeric.Minimum} to {numeric.Maximum}, Value: {numeric.Value}";
+            };
+            form.Controls.Add(btnRange);
 
             return form;
         }

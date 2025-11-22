@@ -228,5 +228,23 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QFileDialog_GetSaveFileName(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPStr)] string title, [MarshalAs(UnmanagedType.LPStr)] string filter, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QDoubleSpinBox_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDoubleSpinBox_SetValue(IntPtr spinBox, double value);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern double QDoubleSpinBox_GetValue(IntPtr spinBox);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDoubleSpinBox_SetRange(IntPtr spinBox, double min, double max);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDoubleSpinBox_SetSingleStep(IntPtr spinBox, double step);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QDoubleSpinBox_ConnectValueChanged(IntPtr spinBox, delegate* unmanaged[Cdecl]<IntPtr, double, void> callback, IntPtr userData);
     }
 }
