@@ -199,11 +199,12 @@ extern "C" {
     class CloseEventFilter : public QObject {
     private:
         int (*closeCallback)(void*);
+        void (*closedCallback)(void*);
         void* userData;
 
     public:
-        CloseEventFilter(int (*closeCb)(void*), void* data)
-            : closeCallback(closeCb), userData(data) {}
+        CloseEventFilter(int (*closeCb)(void*), void (*closedCb)(void*), void* data)
+            : closeCallback(closeCb), closedCallback(closedCb), userData(data) {}
 
     protected:
         bool eventFilter(QObject* obj, QEvent* event) override {
@@ -216,16 +217,22 @@ extern "C" {
                     closeEvent->ignore();
                     return true; // Event handled
                 }
+                // If close is allowed and we have a closed callback, invoke it
+                if (allowClose == 1 && closedCallback) {
+                    closedCallback(userData);
+                }
             }
             return QObject::eventFilter(obj, event);
         }
     };
 
-    EXPORT void QWidget_ConnectCloseEvent(void* widget, int (*closeCallback)(void*), void* userData) {
+
+    EXPORT void QWidget_ConnectCloseEvent(void* widget, int (*closeCallback)(void*), void (*closedCallback)(void*), void* userData) {
         QWidget* w = static_cast<QWidget*>(widget);
-        CloseEventFilter* filter = new CloseEventFilter(closeCallback, userData);
+        CloseEventFilter* filter = new CloseEventFilter(closeCallback, closedCallback, userData);
         w->installEventFilter(filter);
     }
+
 
     EXPORT void QWidget_Close(void* widget) {
         QWidget* w = static_cast<QWidget*>(widget);

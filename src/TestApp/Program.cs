@@ -453,6 +453,12 @@ namespace TestApp
                 }
             };
 
+            form.FormClosed += (s, e) =>
+            {
+                Console.WriteLine($"FormClosed event fired! CloseReason: {e.CloseReason}");
+                Console.WriteLine("Form has been successfully closed.");
+            };
+
             return form;
         }
     }

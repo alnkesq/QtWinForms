@@ -136,7 +136,7 @@ namespace System.Windows.Forms
         public static extern void QProgressBar_SetValue(IntPtr progressBar, int value);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QWidget_ConnectCloseEvent(IntPtr widget, IntPtr closeCallback, IntPtr userData);
+        public static extern void QWidget_ConnectCloseEvent(IntPtr widget, IntPtr closeCallback, IntPtr closedCallback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_Close(IntPtr widget);

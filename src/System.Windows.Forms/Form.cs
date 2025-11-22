@@ -15,12 +15,11 @@ namespace System.Windows.Forms
 
 
         public event EventHandler? Load;
-        [Obsolete(NotImplementedWarning)] public event EventHandler<FormClosedEventArgs>? FormClosed;
+        public event EventHandler<FormClosedEventArgs>? FormClosed;
         public event EventHandler<FormClosingEventArgs>? FormClosing;
 
         protected virtual void OnLoad(EventArgs e) => Load?.Invoke(this, e);
 
-        [Obsolete(NotImplementedWarning)]
         protected virtual void OnFormClosed(FormClosedEventArgs e) => FormClosed?.Invoke(this, e);
 
         protected virtual void OnFormClosing(FormClosingEventArgs e) => FormClosing?.Invoke(this, e);
@@ -73,7 +72,8 @@ namespace System.Windows.Forms
             unsafe
             {
                 var closeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int>)&OnCloseCallback;
-                NativeMethods.QWidget_ConnectCloseEvent(Handle, closeCallbackPtr, GCHandlePtr);
+                var closedCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, void>)&OnClosedCallback;
+                NativeMethods.QWidget_ConnectCloseEvent(Handle, closeCallbackPtr, closedCallbackPtr, GCHandlePtr);
             }
         }
 
@@ -85,6 +85,14 @@ namespace System.Windows.Forms
             form.OnFormClosing(args);
             // Return 1 to allow close, 0 to cancel
             return args.Cancel ? 0 : 1;
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe void OnClosedCallback(nint userData)
+        {
+            var form = ObjectFromGCHandle<Form>(userData);
+            var args = new FormClosedEventArgs(CloseReason.UserClosing);
+            form.OnFormClosed(args);
         }
 
         public Size ClientSize
