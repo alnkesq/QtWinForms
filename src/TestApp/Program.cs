@@ -496,6 +496,9 @@ namespace TestApp
             };
             fileMenu.DropDownItems.Add(openItem);
             
+            // Add separator
+            fileMenu.DropDownItems.Add(new ToolStripSeparator());
+            
             // Recent submenu
             var recentMenu = new ToolStripMenuItem { Text = "Recent" };
             

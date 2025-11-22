@@ -7,7 +7,7 @@ namespace System.Windows.Forms
     public class ToolStripMenuItem : Control
     {
         private EventHandler? _clickHandler;
-        private readonly List<ToolStripMenuItem> _dropDownItems = new List<ToolStripMenuItem>();
+        private readonly List<Control> _dropDownItems = new List<Control>();
         private IntPtr _menuHandle = IntPtr.Zero; // QMenu handle if this has children
         private bool _hasChildren = false;
 
@@ -94,6 +94,21 @@ namespace System.Windows.Forms
                         item.EnsureCreated();
                     }
                     NativeMethods.QMenu_AddAction(_owner._menuHandle, item.Handle);
+                }
+            }
+
+            public void Add(ToolStripSeparator separator)
+            {
+                _owner._dropDownItems.Add(separator);
+                _owner._hasChildren = true;
+
+                if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
+                {
+                    if (!separator.IsHandleCreated)
+                    {
+                        separator.EnsureCreated();
+                    }
+                    NativeMethods.QMenu_AddAction(_owner._menuHandle, separator.Handle);
                 }
             }
 

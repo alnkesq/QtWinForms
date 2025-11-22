@@ -459,6 +459,13 @@ extern "C" {
         });
     }
 
+    EXPORT void* QAction_CreateSeparator() {
+        QAction* separator = new QAction();
+        separator->setSeparator(true);
+        return separator;
+    }
+
+
     EXPORT void QWidget_SetMenuBar(void* widget, void* menuBar) {
         QWidget* w = (QWidget*)widget;
         // Only QMainWindow has a setMenuBar method, but we can use QWidget::layout
