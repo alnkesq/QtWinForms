@@ -16,6 +16,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include <QComboBox>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -515,4 +516,42 @@ extern "C" {
         });
     }
 
+    EXPORT void* QComboBox_Create(void* parent) {
+        QComboBox* widget = new QComboBox((QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QComboBox_AddItem(void* comboBox, const char* text) {
+        ((QComboBox*)comboBox)->addItem(QString::fromUtf8(text));
+    }
+
+    EXPORT void QComboBox_SetEditable(void* comboBox, bool editable) {
+        ((QComboBox*)comboBox)->setEditable(editable);
+    }
+
+    EXPORT int QComboBox_GetSelectedIndex(void* comboBox) {
+        return ((QComboBox*)comboBox)->currentIndex();
+    }
+
+    EXPORT void QComboBox_SetSelectedIndex(void* comboBox, int index) {
+        ((QComboBox*)comboBox)->setCurrentIndex(index);
+    }
+
+    EXPORT void QComboBox_ConnectSelectedIndexChanged(void* comboBox, void (*callback)(void*, int), void* userData) {
+        QObject::connect((QComboBox*)comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), [callback, userData](int index) {
+            callback(userData, index);
+        });
+    }
+
+    EXPORT void QComboBox_Clear(void* comboBox) {
+        ((QComboBox*)comboBox)->clear();
+    }
+
+    EXPORT void QComboBox_InsertItem(void* comboBox, int index, const char* text) {
+        ((QComboBox*)comboBox)->insertItem(index, QString::fromUtf8(text));
+    }
+
+    EXPORT void QComboBox_RemoveItem(void* comboBox, int index) {
+        ((QComboBox*)comboBox)->removeItem(index);
+    }
 }

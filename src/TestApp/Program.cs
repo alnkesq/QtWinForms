@@ -21,6 +21,7 @@ namespace TestApp
                 Console.WriteLine("6. RadioButton Test");
                 Console.WriteLine("7. FormClosing Test");
                 Console.WriteLine("8. MenuStrip Test");
+                Console.WriteLine("9. ComboBox Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -69,6 +70,11 @@ namespace TestApp
                     case "8":
                         Console.WriteLine("Running MenuStrip Test...");
                         testForm = CreateMenuStripTest();
+                        break;
+
+                    case "9":
+                        Console.WriteLine("Running ComboBox Test...");
+                        testForm = CreateComboBoxTest();
                         break;
                     
                     default:
@@ -581,6 +587,71 @@ namespace TestApp
                     MessageBoxIcon.Information);
             };
             form.Controls.Add(button);
+
+            return form;
+        }
+
+        static Form CreateComboBoxTest()
+        {
+            var form = new Form();
+            form.Text = "ComboBox Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Select an item:";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(150, 30);
+            form.Controls.Add(label);
+
+            var comboBox = new ComboBox();
+            comboBox.Location = new Point(20, 50);
+            comboBox.Size = new Size(200, 30);
+            comboBox.Items.Add("Item 1");
+            comboBox.Items.Add("Item 2");
+            comboBox.Items.Add("Item 3");
+            comboBox.Items.Add("Item 4");
+            comboBox.Items.Add("Item 5");
+            comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            form.Controls.Add(comboBox);
+
+            var selectionLabel = new Label();
+            selectionLabel.Text = "Selection: None";
+            selectionLabel.Location = new Point(20, 100);
+            selectionLabel.Size = new Size(300, 30);
+            form.Controls.Add(selectionLabel);
+
+            comboBox.SelectedIndexChanged += (s, e) =>
+            {
+                if (comboBox.SelectedIndex != -1)
+                {
+                    selectionLabel.Text = $"Selection: {comboBox.Items[comboBox.SelectedIndex]} (Index: {comboBox.SelectedIndex})";
+                }
+                else
+                {
+                    selectionLabel.Text = "Selection: None";
+                }
+            };
+
+            var btnAdd = new Button();
+            btnAdd.Text = "Add Item";
+            btnAdd.Location = new Point(20, 140);
+            btnAdd.Size = new Size(100, 30);
+            btnAdd.Click += (s, e) =>
+            {
+                comboBox.Items.Add($"Item {comboBox.Items.Count + 1}");
+            };
+            form.Controls.Add(btnAdd);
+
+            var btnClear = new Button();
+            btnClear.Text = "Clear Items";
+            btnClear.Location = new Point(130, 140);
+            btnClear.Size = new Size(100, 30);
+            btnClear.Click += (s, e) =>
+            {
+                comboBox.Items.Clear();
+                selectionLabel.Text = "Selection: None";
+            };
+            form.Controls.Add(btnClear);
 
             return form;
         }

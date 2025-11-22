@@ -182,5 +182,31 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QLinkLabel_ConnectLinkClicked(IntPtr label, IntPtr callback, IntPtr userData);
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QComboBox_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_AddItem(IntPtr comboBox, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_SetEditable(IntPtr comboBox, bool editable);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QComboBox_GetSelectedIndex(IntPtr comboBox);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_SetSelectedIndex(IntPtr comboBox, int index);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_ConnectSelectedIndexChanged(IntPtr comboBox, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_Clear(IntPtr comboBox);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_InsertItem(IntPtr comboBox, int index, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QComboBox_RemoveItem(IntPtr comboBox, int index);
     }
 }
