@@ -20,6 +20,7 @@
 #include <QComboBox>
 #include <QFileDialog>
 #include <QDoubleSpinBox>
+#include <QSlider>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -651,6 +652,25 @@ extern "C" {
 
     EXPORT void QDoubleSpinBox_ConnectValueChanged(void* spinBox, void (*callback)(void*, double), void* userData) {
         QObject::connect((QDoubleSpinBox*)spinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [callback, userData](double value) {
+            callback(userData, value);
+        });
+    }
+
+    EXPORT void* QSlider_Create(void* parent) {
+        QSlider* widget = new QSlider(Qt::Horizontal, (QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QSlider_SetRange(void* slider, int min, int max) {
+        ((QSlider*)slider)->setRange(min, max);
+    }
+
+    EXPORT void QSlider_SetValue(void* slider, int value) {
+        ((QSlider*)slider)->setValue(value);
+    }
+
+    EXPORT void QSlider_ConnectValueChanged(void* slider, void (*callback)(void*, int), void* userData) {
+        QObject::connect((QSlider*)slider, &QSlider::valueChanged, [callback, userData](int value) {
             callback(userData, value);
         });
     }

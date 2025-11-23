@@ -258,5 +258,17 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QDoubleSpinBox_ConnectValueChanged(IntPtr spinBox, delegate* unmanaged[Cdecl]<IntPtr, double, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QSlider_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSlider_SetRange(IntPtr slider, int min, int max);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSlider_SetValue(IntPtr slider, int value);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QSlider_ConnectValueChanged(IntPtr slider, delegate* unmanaged[Cdecl]<IntPtr, int, void> callback, IntPtr userData);
     }
 }

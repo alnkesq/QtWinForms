@@ -416,7 +416,7 @@ namespace TestApp
         {
             var form = new Form();
             form.Text = "ProgressBar Test";
-            form.Size = new Size(400, 300);
+            form.Size = new Size(400, 350);
 
             var progressBar = new ProgressBar();
             progressBar.Location = new Point(20, 20);
@@ -426,37 +426,133 @@ namespace TestApp
             progressBar.Value = 50;
             form.Controls.Add(progressBar);
 
+            var valueLabel = new Label();
+            valueLabel.Text = $"Value: {progressBar.Value}";
+            valueLabel.Location = new Point(330, 20);
+            valueLabel.Size = new Size(60, 30);
+            form.Controls.Add(valueLabel);
+
+            var trackBar = new TrackBar();
+            trackBar.Location = new Point(20, 60);
+            trackBar.Size = new Size(300, 45);
+            trackBar.Minimum = 0;
+            trackBar.Maximum = 100;
+            trackBar.Value = 50;
+            trackBar.ValueChanged += (s, e) =>
+            {
+                progressBar.Value = trackBar.Value;
+                valueLabel.Text = $"Value: {trackBar.Value}";
+            };
+            form.Controls.Add(trackBar);
+
+            var trackBarLabel = new Label();
+            trackBarLabel.Text = "Use TrackBar to adjust:";
+            trackBarLabel.Location = new Point(20, 110);
+            trackBarLabel.Size = new Size(200, 30);
+            form.Controls.Add(trackBarLabel);
+
             var btnIncrease = new Button();
             btnIncrease.Text = "Increase";
-            btnIncrease.Location = new Point(20, 60);
+            btnIncrease.Location = new Point(20, 150);
             btnIncrease.Size = new Size(100, 30);
-            btnIncrease.Click += (s, e) => {
+            btnIncrease.Click += (s, e) =>
+            {
                 if (progressBar.Value + 10 <= progressBar.Maximum)
+                {
                     progressBar.Value += 10;
+                    trackBar.Value = progressBar.Value;
+                    valueLabel.Text = $"Value: {progressBar.Value}";
+                }
             };
             form.Controls.Add(btnIncrease);
 
             var btnDecrease = new Button();
             btnDecrease.Text = "Decrease";
-            btnDecrease.Location = new Point(130, 60);
+            btnDecrease.Location = new Point(130, 150);
             btnDecrease.Size = new Size(100, 30);
-            btnDecrease.Click += (s, e) => {
+            btnDecrease.Click += (s, e) =>
+            {
                 if (progressBar.Value - 10 >= progressBar.Minimum)
+                {
                     progressBar.Value -= 10;
+                    trackBar.Value = progressBar.Value;
+                    valueLabel.Text = $"Value: {progressBar.Value}";
+                }
             };
             form.Controls.Add(btnDecrease);
 
             var btnMarquee = new Button();
             btnMarquee.Text = "Toggle Marquee";
-            btnMarquee.Location = new Point(240, 60);
+            btnMarquee.Location = new Point(240, 150);
             btnMarquee.Size = new Size(120, 30);
-            btnMarquee.Click += (s, e) => {
+            btnMarquee.Click += (s, e) =>
+            {
                 if (progressBar.Style == ProgressBarStyle.Blocks)
+                {
                     progressBar.Style = ProgressBarStyle.Marquee;
+                    trackBar.Enabled = false;
+                }
                 else
+                {
                     progressBar.Style = ProgressBarStyle.Blocks;
+                    trackBar.Enabled = true;
+                }
             };
             form.Controls.Add(btnMarquee);
+
+            var rangeLabel = new Label();
+            rangeLabel.Text = "Range Test:";
+            rangeLabel.Location = new Point(20, 190);
+            rangeLabel.Size = new Size(100, 30);
+            form.Controls.Add(rangeLabel);
+
+            var btnRange1 = new Button();
+            btnRange1.Text = "Range 0-100";
+            btnRange1.Location = new Point(20, 220);
+            btnRange1.Size = new Size(100, 30);
+            btnRange1.Click += (s, e) =>
+            {
+                progressBar.Minimum = 0;
+                progressBar.Maximum = 100;
+                trackBar.Minimum = 0;
+                trackBar.Maximum = 100;
+                progressBar.Value = 50;
+                trackBar.Value = 50;
+                valueLabel.Text = $"Value: {progressBar.Value}";
+            };
+            form.Controls.Add(btnRange1);
+
+            var btnRange2 = new Button();
+            btnRange2.Text = "Range 0-10";
+            btnRange2.Location = new Point(130, 220);
+            btnRange2.Size = new Size(100, 30);
+            btnRange2.Click += (s, e) =>
+            {
+                progressBar.Minimum = 0;
+                progressBar.Maximum = 10;
+                trackBar.Minimum = 0;
+                trackBar.Maximum = 10;
+                progressBar.Value = 5;
+                trackBar.Value = 5;
+                valueLabel.Text = $"Value: {progressBar.Value}";
+            };
+            form.Controls.Add(btnRange2);
+
+            var btnRange3 = new Button();
+            btnRange3.Text = "Range 50-150";
+            btnRange3.Location = new Point(240, 220);
+            btnRange3.Size = new Size(100, 30);
+            btnRange3.Click += (s, e) =>
+            {
+                progressBar.Minimum = 50;
+                progressBar.Maximum = 150;
+                trackBar.Minimum = 50;
+                trackBar.Maximum = 150;
+                progressBar.Value = 100;
+                trackBar.Value = 100;
+                valueLabel.Text = $"Value: {progressBar.Value}";
+            };
+            form.Controls.Add(btnRange3);
 
             return form;
         }
