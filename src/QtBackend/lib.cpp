@@ -20,6 +20,7 @@
 #include <QComboBox>
 #include <QFileDialog>
 #include <QColorDialog>
+#include <QFontDialog>
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QListWidget>
@@ -844,6 +845,41 @@ extern "C" {
             QTime time = dateTime.time();
             callback(userData, date.year(), date.month(), date.day(), time.hour(), time.minute(), time.second());
         });
+    }
+
+    EXPORT bool QFontDialog_GetFont(void* parent, 
+                                    const char* initialFamily, float initialSize, 
+                                    bool initialBold, bool initialItalic, bool initialUnderline, bool initialStrikeout,
+                                    char* outFamily, int outFamilyMaxLen, 
+                                    float* outSize, bool* outBold, bool* outItalic, bool* outUnderline, bool* outStrikeout) {
+        QWidget* parentWidget = (QWidget*)parent;
+        
+        QFont initialFont(QString::fromUtf8(initialFamily));
+        initialFont.setPointSizeF(initialSize);
+        initialFont.setBold(initialBold);
+        initialFont.setItalic(initialItalic);
+        initialFont.setUnderline(initialUnderline);
+        initialFont.setStrikeOut(initialStrikeout);
+        
+        bool ok;
+        QFont selectedFont = QFontDialog::getFont(&ok, initialFont, parentWidget);
+        
+        if (ok) {
+            string family = selectedFont.family().toUtf8().constData();
+            strncpy(outFamily, family.c_str(), outFamilyMaxLen - 1);
+            outFamily[outFamilyMaxLen - 1] = '\0';
+            
+            *outSize = selectedFont.pointSizeF();
+            if (*outSize <= 0) *outSize = selectedFont.pointSize(); // Fallback if pointSizeF is invalid
+            
+            *outBold = selectedFont.bold();
+            *outItalic = selectedFont.italic();
+            *outUnderline = selectedFont.underline();
+            *outStrikeout = selectedFont.strikeOut();
+            return true;
+        }
+        
+        return false;
     }
 }
 

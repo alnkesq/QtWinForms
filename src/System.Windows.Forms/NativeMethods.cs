@@ -332,6 +332,23 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QDateTimeEdit_ConnectDateTimeChanged(IntPtr dateTimeEdit, delegate* unmanaged[Cdecl]<IntPtr, int, int, int, int, int, int, void> callback, IntPtr userData);
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool QFontDialog_GetFont(
+            IntPtr parent,
+            [MarshalAs(UnmanagedType.LPStr)] string initialFamily,
+            float initialSize,
+            bool initialBold,
+            bool initialItalic,
+            bool initialUnderline,
+            bool initialStrikeout,
+            IntPtr outFamily,
+            int outFamilyMaxLen,
+            ref float outSize,
+            ref bool outBold,
+            ref bool outItalic,
+            ref bool outUnderline,
+            ref bool outStrikeout
+        );
     }
 }
 

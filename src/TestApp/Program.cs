@@ -1345,7 +1345,7 @@ namespace TestApp
         {
             var form = new Form();
             form.Text = "Font Test";
-            form.Size = new Size(500, 400);
+            form.Size = new Size(500, 500);
 
             int y = 20;
 
@@ -1428,6 +1428,33 @@ namespace TestApp
                 }
             };
             form.Controls.Add(btnChange);
+            y += 50;
+
+            // Font Dialog Test
+            var lblSelected = new Label();
+            lblSelected.Text = "Sample Text for Font Dialog";
+            lblSelected.Location = new Point(20, y);
+            lblSelected.Size = new Size(400, 40);
+            form.Controls.Add(lblSelected);
+            y += 50;
+
+            var btnPickFont = new Button();
+            btnPickFont.Text = "Pick Font...";
+            btnPickFont.Location = new Point(20, y);
+            btnPickFont.Size = new Size(150, 30);
+            btnPickFont.Click += (s, e) =>
+            {
+                using (var fontDialog = new FontDialog())
+                {
+                    fontDialog.Font = lblSelected.Font;
+                    if (fontDialog.ShowDialog(form) == DialogResult.OK)
+                    {
+                        lblSelected.Font = fontDialog.Font;
+                        lblSelected.Text = $"Font: {fontDialog.Font.Name}, {fontDialog.Font.Size}pt";
+                    }
+                }
+            };
+            form.Controls.Add(btnPickFont);
 
             return form;
         }
