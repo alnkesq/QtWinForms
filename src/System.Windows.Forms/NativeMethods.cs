@@ -242,6 +242,9 @@ namespace System.Windows.Forms
         public unsafe static extern void QFileDialog_GetSaveFileName(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPStr)] string title, [MarshalAs(UnmanagedType.LPStr)] string filter, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QColorDialog_GetColor(IntPtr parent, int initialColor, bool showAlphaChannel);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QDoubleSpinBox_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

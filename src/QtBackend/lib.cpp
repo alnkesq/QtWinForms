@@ -19,6 +19,7 @@
 #include <QAction>
 #include <QComboBox>
 #include <QFileDialog>
+#include <QColorDialog>
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QListWidget>
@@ -628,6 +629,35 @@ extern "C" {
         if (!fileName.isEmpty()) {
              callback((const void*)fileName.constData(), fileName.size(), userData);
         }
+    }
+
+    EXPORT int QColorDialog_GetColor(void* parent, int initialColor, bool showAlphaChannel) {
+        QWidget* parentWidget = (QWidget*)parent;
+        
+        // Convert ARGB int to QColor
+        // ARGB format: 0xAARRGGBB
+        int a = (initialColor >> 24) & 0xFF;
+        int r = (initialColor >> 16) & 0xFF;
+        int g = (initialColor >> 8) & 0xFF;
+        int b = initialColor & 0xFF;
+        QColor initial(r, g, b, a);
+        
+        // Show color dialog
+        QColorDialog::ColorDialogOptions options = QColorDialog::ColorDialogOptions();
+        if (showAlphaChannel) {
+            options |= QColorDialog::ShowAlphaChannel;
+        }
+        
+        QColor color = QColorDialog::getColor(initial, parentWidget, QString(), options);
+        
+        // Check if user cancelled
+        if (!color.isValid()) {
+            return -1;
+        }
+        
+        // Convert QColor back to ARGB int
+        int resultArgb = (color.alpha() << 24) | (color.red() << 16) | (color.green() << 8) | color.blue();
+        return resultArgb;
     }
 
     EXPORT void* QDoubleSpinBox_Create(void* parent) {

@@ -28,6 +28,7 @@ namespace TestApp
                 Console.WriteLine("11. FileDialog Test");
                 Console.WriteLine("12. NumericUpDown Test");
                 Console.WriteLine("13. ListBox Test");
+                Console.WriteLine("14. ColorDialog Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -101,6 +102,11 @@ namespace TestApp
                     case "13":
                         Console.WriteLine("Running ListBox Test...");
                         testForm = CreateListBoxTest();
+                        break;
+
+                    case "14":
+                        Console.WriteLine("Running ColorDialog Test...");
+                        testForm = CreateColorDialogTest();
                         break;
                     
                     default:
@@ -1147,6 +1153,97 @@ namespace TestApp
                 listBox1.SelectedItem = "Cherry";
             };
             form.Controls.Add(btnSelectByItem);
+
+            return form;
+        }
+
+        static Form CreateColorDialogTest()
+        {
+            var form = new Form();
+            form.Text = "ColorDialog Test";
+            form.Size = new Size(500, 400);
+
+            var label = new Label();
+            label.Text = "Click the button to select a color:";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(300, 30);
+            form.Controls.Add(label);
+
+            var colorPanel = new Panel();
+            colorPanel.Location = new Point(20, 60);
+            colorPanel.Size = new Size(200, 100);
+            colorPanel.BackColor = Color.Blue;
+            form.Controls.Add(colorPanel);
+
+            var colorLabel = new Label();
+            colorLabel.Text = $"Current Color: Blue (ARGB: {Color.Blue.ToArgb():X8})";
+            colorLabel.Location = new Point(20, 170);
+            colorLabel.Size = new Size(400, 30);
+            form.Controls.Add(colorLabel);
+
+            var btnPickColor = new Button();
+            btnPickColor.Text = "Pick Color";
+            btnPickColor.Location = new Point(20, 210);
+            btnPickColor.Size = new Size(120, 30);
+            btnPickColor.Click += (s, e) =>
+            {
+                using (var colorDialog = new ColorDialog())
+                {
+                    colorDialog.Color = colorPanel.BackColor;
+                    colorDialog.AllowFullOpen = true;
+
+                    if (colorDialog.ShowDialog(form) == DialogResult.OK)
+                    {
+                        colorPanel.BackColor = colorDialog.Color;
+                        colorLabel.Text = $"Current Color: {colorDialog.Color.Name} (ARGB: {colorDialog.Color.ToArgb():X8})";
+                        Console.WriteLine($"Selected color: {colorDialog.Color}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Color selection cancelled");
+                    }
+                }
+            };
+            form.Controls.Add(btnPickColor);
+
+            var btnRed = new Button();
+            btnRed.Text = "Red";
+            btnRed.Location = new Point(150, 210);
+            btnRed.Size = new Size(80, 30);
+            btnRed.Click += (s, e) =>
+            {
+                colorPanel.BackColor = Color.Red;
+                colorLabel.Text = $"Current Color: Red (ARGB: {Color.Red.ToArgb():X8})";
+            };
+            form.Controls.Add(btnRed);
+
+            var btnGreen = new Button();
+            btnGreen.Text = "Green";
+            btnGreen.Location = new Point(240, 210);
+            btnGreen.Size = new Size(80, 30);
+            btnGreen.Click += (s, e) =>
+            {
+                colorPanel.BackColor = Color.Green;
+                colorLabel.Text = $"Current Color: Green (ARGB: {Color.Green.ToArgb():X8})";
+            };
+            form.Controls.Add(btnGreen);
+
+            var btnBlue = new Button();
+            btnBlue.Text = "Blue";
+            btnBlue.Location = new Point(330, 210);
+            btnBlue.Size = new Size(80, 30);
+            btnBlue.Click += (s, e) =>
+            {
+                colorPanel.BackColor = Color.Blue;
+                colorLabel.Text = $"Current Color: Blue (ARGB: {Color.Blue.ToArgb():X8})";
+            };
+            form.Controls.Add(btnBlue);
+
+            var instructionLabel = new Label();
+            instructionLabel.Text = "The ColorDialog allows you to pick any color.\nThe selected color will be displayed in the panel above.";
+            instructionLabel.Location = new Point(20, 260);
+            instructionLabel.Size = new Size(450, 60);
+            form.Controls.Add(instructionLabel);
 
             return form;
         }
