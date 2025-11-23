@@ -35,6 +35,7 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
             }
+            UpdateFormStyles();
             
             // Attach menu bar if set
             if (_mainMenuStrip != null)
@@ -174,8 +175,87 @@ namespace System.Windows.Forms
             }
         }
 
+
+        private bool _minimizeBox = true;
+        private bool _maximizeBox = true;
+        private bool _showInTaskbar = true;
+        private bool _showIcon = true;
+        private bool _topMost = false;
+
+        public bool MinimizeBox
+        {
+            get => _minimizeBox;
+            set
+            {
+                if (_minimizeBox != value)
+                {
+                    _minimizeBox = value;
+                    UpdateFormStyles();
+                }
+            }
+        }
+
+        public bool MaximizeBox
+        {
+            get => _maximizeBox;
+            set
+            {
+                if (_maximizeBox != value)
+                {
+                    _maximizeBox = value;
+                    UpdateFormStyles();
+                }
+            }
+        }
+
+        public bool ShowInTaskbar
+        {
+            get => _showInTaskbar;
+            set
+            {
+                if (_showInTaskbar != value)
+                {
+                    _showInTaskbar = value;
+                    UpdateFormStyles();
+                }
+            }
+        }
+
+        public bool ShowIcon
+        {
+            get => _showIcon;
+            set
+            {
+                if (_showIcon != value)
+                {
+                    _showIcon = value;
+                    UpdateFormStyles();
+                }
+            }
+        }
+
+        public bool TopMost
+        {
+            get => _topMost;
+            set
+            {
+                if (_topMost != value)
+                {
+                    _topMost = value;
+                    UpdateFormStyles();
+                }
+            }
+        }
+
         [Obsolete(NotImplementedWarning)] public FormBorderStyle FormBorderStyle { get; set; }
-        [Obsolete(NotImplementedWarning)] public bool MaximizeBox { get; set; }
         [Obsolete(NotImplementedWarning)] public Icon Icon { get; set; }
+
+        private void UpdateFormStyles()
+        {
+            if (IsHandleCreated)
+            {
+                NativeMethods.QWidget_SetFormProperties(Handle, _minimizeBox, _maximizeBox, _showInTaskbar, _showIcon, _topMost);
+            }
+        }
     }
 }

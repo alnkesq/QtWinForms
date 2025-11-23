@@ -480,6 +480,43 @@ extern "C" {
         return 0;
     }
 
+    EXPORT void QWidget_SetFormProperties(void* widget, bool minimizeBox, bool maximizeBox, bool showInTaskbar, bool showIcon, bool topMost) {
+        QWidget* w = (QWidget*)widget;
+        
+        Qt::WindowFlags flags = w->windowFlags();
+        
+        // Clear flags we are about to manage
+        flags &= ~(Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint | Qt::Tool | Qt::Window | Qt::Dialog);
+        
+        // Set Window Type
+        if (!showInTaskbar) {
+            flags |= Qt::Tool;
+        } else {
+            flags |= Qt::Window;
+        }
+        
+        // Basic hints
+        flags |= Qt::WindowTitleHint;
+        flags |= Qt::WindowCloseButtonHint; 
+        
+        if (minimizeBox) flags |= Qt::WindowMinimizeButtonHint;
+        if (maximizeBox) flags |= Qt::WindowMaximizeButtonHint;
+        
+        if (showIcon) {
+            flags |= Qt::WindowSystemMenuHint;
+        }
+        
+        if (topMost) {
+            flags |= Qt::WindowStaysOnTopHint;
+        }
+        
+        bool wasVisible = w->isVisible();
+        w->setWindowFlags(flags);
+        if (wasVisible) {
+            w->show();
+        }
+    }
+
     EXPORT void* QProgressBar_Create(void* parent) {
         QProgressBar* widget = new QProgressBar((QWidget*)parent);
         return widget;

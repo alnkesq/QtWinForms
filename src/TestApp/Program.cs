@@ -32,6 +32,7 @@ namespace TestApp
                 Console.WriteLine("15. DateTimePicker Test");
                 Console.WriteLine("16. Font Test");
                 Console.WriteLine("17. PictureBox Test");
+                Console.WriteLine("18. Form Properties Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -125,6 +126,11 @@ namespace TestApp
                     case "17":
                         Console.WriteLine("Running PictureBox Test...");
                         testForm = CreatePictureBoxTest();
+                        break;
+
+                    case "18":
+                        Console.WriteLine("Running Form Properties Test...");
+                        testForm = CreateFormPropertiesTest();
                         break;
                     
                     default:
@@ -1534,6 +1540,61 @@ namespace TestApp
                 pb.ImageLocation = null;
             };
             form.Controls.Add(btnClear);
+
+            return form;
+        }
+
+        static Form CreateFormPropertiesTest()
+        {
+            var form = new Form();
+            form.Text = "Form Properties Test";
+            form.Size = new Size(400, 400);
+
+            var chkMinimize = new CheckBox();
+            chkMinimize.Text = "MinimizeBox";
+            chkMinimize.Location = new Point(20, 20);
+            chkMinimize.Size = new Size(200, 30);
+            chkMinimize.Checked = form.MinimizeBox;
+            chkMinimize.CheckedChanged += (s, e) => form.MinimizeBox = chkMinimize.Checked;
+            form.Controls.Add(chkMinimize);
+
+            var chkMaximize = new CheckBox();
+            chkMaximize.Text = "MaximizeBox";
+            chkMaximize.Location = new Point(20, 60);
+            chkMaximize.Size = new Size(200, 30);
+            chkMaximize.Checked = form.MaximizeBox;
+            chkMaximize.CheckedChanged += (s, e) => form.MaximizeBox = chkMaximize.Checked;
+            form.Controls.Add(chkMaximize);
+
+            var chkTaskbar = new CheckBox();
+            chkTaskbar.Text = "ShowInTaskbar";
+            chkTaskbar.Location = new Point(20, 100);
+            chkTaskbar.Size = new Size(200, 30);
+            chkTaskbar.Checked = form.ShowInTaskbar;
+            chkTaskbar.CheckedChanged += (s, e) => form.ShowInTaskbar = chkTaskbar.Checked;
+            form.Controls.Add(chkTaskbar);
+
+            var chkIcon = new CheckBox();
+            chkIcon.Text = "ShowIcon";
+            chkIcon.Location = new Point(20, 140);
+            chkIcon.Size = new Size(200, 30);
+            chkIcon.Checked = form.ShowIcon;
+            chkIcon.CheckedChanged += (s, e) => form.ShowIcon = chkIcon.Checked;
+            form.Controls.Add(chkIcon);
+
+            var chkTopMost = new CheckBox();
+            chkTopMost.Text = "TopMost";
+            chkTopMost.Location = new Point(20, 180);
+            chkTopMost.Size = new Size(200, 30);
+            chkTopMost.Checked = form.TopMost;
+            chkTopMost.CheckedChanged += (s, e) => form.TopMost = chkTopMost.Checked;
+            form.Controls.Add(chkTopMost);
+            
+            var label = new Label();
+            label.Text = "Toggle properties to see effects.";
+            label.Location = new Point(20, 220);
+            label.Size = new Size(300, 30);
+            form.Controls.Add(label);
 
             return form;
         }

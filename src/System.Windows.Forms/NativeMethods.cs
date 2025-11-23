@@ -151,6 +151,9 @@ namespace System.Windows.Forms
         public static extern int QWidget_GetWindowState(IntPtr widget);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetFormProperties(IntPtr widget, bool minimizeBox, bool maximizeBox, bool showInTaskbar, bool showIcon, bool topMost);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QProgressBar_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
