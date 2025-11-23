@@ -22,6 +22,24 @@ namespace System.Windows.Forms
             }
         }
 
+        private bool _useSystemPasswordChar;
+
+        public bool UseSystemPasswordChar
+        {
+            get => _useSystemPasswordChar;
+            set
+            {
+                if (_useSystemPasswordChar != value)
+                {
+                    _useSystemPasswordChar = value;
+                    if (IsHandleCreated && !_multiline)
+                    {
+                        NativeMethods.QLineEdit_SetEchoMode(Handle, value ? 2 : 0);
+                    }
+                }
+            }
+        }
+
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
@@ -33,6 +51,10 @@ namespace System.Windows.Forms
                 else
                 {
                     Handle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
+                    if (_useSystemPasswordChar)
+                    {
+                        NativeMethods.QLineEdit_SetEchoMode(Handle, 2);
+                    }
                 }
                 SetCommonProperties();
             }

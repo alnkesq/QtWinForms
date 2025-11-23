@@ -168,6 +168,11 @@ extern "C" {
         cb((const void*)s.constData(), s.size(), userData);
     }
 
+    EXPORT void QLineEdit_SetEchoMode(void* lineEdit, int mode) {
+        // 0 = Normal, 1 = NoEcho, 2 = Password, 3 = PasswordEchoOnEdit
+        ((QLineEdit*)lineEdit)->setEchoMode((QLineEdit::EchoMode)mode);
+    }
+
     EXPORT void* QPlainTextEdit_Create(void* parent, const char* text) {
         QPlainTextEdit* widget = new QPlainTextEdit(QString::fromUtf8(text), (QWidget*)parent);
         return widget;

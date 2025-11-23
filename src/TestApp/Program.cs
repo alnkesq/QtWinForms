@@ -212,6 +212,15 @@ namespace TestApp
 
             form.Controls.Add(textBox);
             form.Controls.Add(multiline);
+
+            var chkPassword = new CheckBox();
+            chkPassword.Text = "Password Char";
+            chkPassword.Location = new Point(220, 90);
+            chkPassword.Size = new Size(150, 30);
+            chkPassword.CheckedChanged += (s, e) => {
+                textBox.UseSystemPasswordChar = chkPassword.Checked;
+            };
+            form.Controls.Add(chkPassword);
             
             
             var btnState = new Button();
