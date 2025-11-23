@@ -31,6 +31,7 @@ namespace TestApp
                 Console.WriteLine("14. ColorDialog Test");
                 Console.WriteLine("15. DateTimePicker Test");
                 Console.WriteLine("16. Font Test");
+                Console.WriteLine("17. PictureBox Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -119,6 +120,11 @@ namespace TestApp
                     case "16":
                         Console.WriteLine("Running Font Test...");
                         testForm = CreateFontTest();
+                        break;
+
+                    case "17":
+                        Console.WriteLine("Running PictureBox Test...");
+                        testForm = CreatePictureBoxTest();
                         break;
                     
                     default:
@@ -1455,6 +1461,79 @@ namespace TestApp
                 }
             };
             form.Controls.Add(btnPickFont);
+
+            return form;
+        }
+        static Form CreatePictureBoxTest()
+        {
+            var form = new Form();
+            form.Text = "PictureBox Test";
+            form.Size = new Size(600, 500);
+
+            var pb = new PictureBox();
+            pb.Location = new Point(20, 20);
+            pb.Size = new Size(200, 200);
+            pb.BackColor = Color.LightGray;
+            form.Controls.Add(pb);
+
+            // Create a bitmap in code
+            var bmp = new Bitmap(100, 100);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.White);
+                g.FillEllipse(Brushes.Red, 10, 10, 80, 80);
+                g.DrawRectangle(Pens.Blue, 0, 0, 99, 99);
+                g.DrawLine(Pens.Green, 0, 0, 100, 100);
+                g.DrawLine(Pens.Green, 100, 0, 0, 100);
+            }
+            pb.Image = bmp;
+
+            var cmbMode = new ComboBox();
+            cmbMode.Location = new Point(240, 20);
+            cmbMode.Size = new Size(150, 30);
+            cmbMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbMode.Items.Add("Normal");
+            cmbMode.Items.Add("StretchImage");
+            cmbMode.Items.Add("AutoSize");
+            cmbMode.Items.Add("CenterImage");
+            cmbMode.Items.Add("Zoom");
+            cmbMode.SelectedIndex = 0;
+            cmbMode.SelectedIndexChanged += (s, e) =>
+            {
+                pb.SizeMode = (PictureBoxSizeMode)cmbMode.SelectedIndex;
+                // Reset size if not AutoSize, to demonstrate
+                if (pb.SizeMode != PictureBoxSizeMode.AutoSize)
+                {
+                    pb.Size = new Size(200, 200);
+                }
+            };
+            form.Controls.Add(cmbMode);
+
+            var btnLoad = new Button();
+            btnLoad.Text = "Load Image...";
+            btnLoad.Location = new Point(240, 60);
+            btnLoad.Size = new Size(150, 30);
+            btnLoad.Click += (s, e) =>
+            {
+                var dlg = new OpenFileDialog();
+                dlg.Filter = "Images|*.png;*.jpg;*.bmp|All files|*.*";
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    pb.ImageLocation = dlg.FileName;
+                }
+            };
+            form.Controls.Add(btnLoad);
+
+            var btnClear = new Button();
+            btnClear.Text = "Clear Image";
+            btnClear.Location = new Point(240, 100);
+            btnClear.Size = new Size(150, 30);
+            btnClear.Click += (s, e) =>
+            {
+                pb.Image = null;
+                pb.ImageLocation = null;
+            };
+            form.Controls.Add(btnClear);
 
             return form;
         }

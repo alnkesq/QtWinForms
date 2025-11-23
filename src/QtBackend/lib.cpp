@@ -26,6 +26,11 @@
 #include <QListWidget>
 #include <QDateTimeEdit>
 #include <QDateTime>
+#include <QDateTimeEdit>
+#include <QDateTime>
+#include <QPixmap>
+#include <QBuffer>
+#include <QPainter>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -801,19 +806,20 @@ extern "C" {
     }
 
     EXPORT void QListWidget_ConnectCurrentRowChanged(void* listWidget, void (*callback)(void*), void* userData) {
-        QObject::connect((QListWidget*)listWidget, &QListWidget::itemSelectionChanged, [callback, userData]() {
+        QObject::connect((QListWidget*)listWidget, &QListWidget::currentRowChanged, [callback, userData](int currentRow) {
             callback(userData);
         });
     }
 
     EXPORT void* QDateTimeEdit_Create(void* parent) {
         QDateTimeEdit* widget = new QDateTimeEdit((QWidget*)parent);
-        widget->setCalendarPopup(true); // Make it look more like a standard date picker
         return widget;
     }
 
     EXPORT void QDateTimeEdit_SetDateTime(void* dateTimeEdit, int year, int month, int day, int hour, int minute, int second) {
-        QDateTime dt(QDate(year, month, day), QTime(hour, minute, second));
+        QDate date(year, month, day);
+        QTime time(hour, minute, second);
+        QDateTime dt(date, time);
         ((QDateTimeEdit*)dateTimeEdit)->setDateTime(dt);
     }
 
@@ -830,12 +836,16 @@ extern "C" {
     }
 
     EXPORT void QDateTimeEdit_SetMinimumDateTime(void* dateTimeEdit, int year, int month, int day, int hour, int minute, int second) {
-        QDateTime dt(QDate(year, month, day), QTime(hour, minute, second));
+        QDate date(year, month, day);
+        QTime time(hour, minute, second);
+        QDateTime dt(date, time);
         ((QDateTimeEdit*)dateTimeEdit)->setMinimumDateTime(dt);
     }
 
     EXPORT void QDateTimeEdit_SetMaximumDateTime(void* dateTimeEdit, int year, int month, int day, int hour, int minute, int second) {
-        QDateTime dt(QDate(year, month, day), QTime(hour, minute, second));
+        QDate date(year, month, day);
+        QTime time(hour, minute, second);
+        QDateTime dt(date, time);
         ((QDateTimeEdit*)dateTimeEdit)->setMaximumDateTime(dt);
     }
 
@@ -847,11 +857,22 @@ extern "C" {
         });
     }
 
-    EXPORT bool QFontDialog_GetFont(void* parent, 
-                                    const char* initialFamily, float initialSize, 
-                                    bool initialBold, bool initialItalic, bool initialUnderline, bool initialStrikeout,
-                                    char* outFamily, int outFamilyMaxLen, 
-                                    float* outSize, bool* outBold, bool* outItalic, bool* outUnderline, bool* outStrikeout) {
+    EXPORT bool QFontDialog_GetFont(
+        void* parent,
+        const char* initialFamily,
+        float initialSize,
+        bool initialBold,
+        bool initialItalic,
+        bool initialUnderline,
+        bool initialStrikeout,
+        char* outFamily,
+        int outFamilyMaxLen,
+        float* outSize,
+        bool* outBold,
+        bool* outItalic,
+        bool* outUnderline,
+        bool* outStrikeout
+    ) {
         QWidget* parentWidget = (QWidget*)parent;
         
         QFont initialFont(QString::fromUtf8(initialFamily));
@@ -862,24 +883,121 @@ extern "C" {
         initialFont.setStrikeOut(initialStrikeout);
         
         bool ok;
-        QFont selectedFont = QFontDialog::getFont(&ok, initialFont, parentWidget);
+        QFont font = QFontDialog::getFont(&ok, initialFont, parentWidget);
         
         if (ok) {
-            string family = selectedFont.family().toUtf8().constData();
-            strncpy(outFamily, family.c_str(), outFamilyMaxLen - 1);
+            QString family = font.family();
+            QByteArray familyUtf8 = family.toUtf8();
+            strncpy(outFamily, familyUtf8.constData(), outFamilyMaxLen - 1);
             outFamily[outFamilyMaxLen - 1] = '\0';
             
-            *outSize = selectedFont.pointSizeF();
-            if (*outSize <= 0) *outSize = selectedFont.pointSize(); // Fallback if pointSizeF is invalid
+            *outSize = font.pointSizeF();
+            // If point size is -1, try pixel size
+            if (*outSize <= 0) {
+                *outSize = font.pixelSize();
+            }
             
-            *outBold = selectedFont.bold();
-            *outItalic = selectedFont.italic();
-            *outUnderline = selectedFont.underline();
-            *outStrikeout = selectedFont.strikeOut();
+            *outBold = font.bold();
+            *outItalic = font.italic();
+            *outUnderline = font.underline();
+            *outStrikeout = font.strikeOut();
             return true;
         }
         
         return false;
     }
-}
+
+    // PictureBox implementation
+    class QPictureBox : public QLabel {
+    public:
+        QPictureBox(QWidget* parent = nullptr) : QLabel(parent) {
+            setMinimumSize(1, 1);
+            // Enable mouse tracking if needed, but for now just display
+        }
+
+        int sizeMode = 0; // 0=Normal, 1=Stretch, 2=AutoSize, 3=Center, 4=Zoom
+        QPixmap originalPixmap;
+
+        void setOriginalPixmap(const QPixmap& pixmap) {
+            originalPixmap = pixmap;
+            updateDisplay();
+        }
+
+        void setMode(int mode) {
+            sizeMode = mode;
+            updateDisplay();
+        }
+
+    protected:
+        void resizeEvent(QResizeEvent* event) override {
+            QLabel::resizeEvent(event);
+            if (sizeMode == 4) { // Zoom
+                updateDisplay();
+            }
+        }
+
+        void updateDisplay() {
+            if (originalPixmap.isNull()) {
+                this->clear();
+                return;
+            }
+
+            setAlignment(Qt::AlignTop | Qt::AlignLeft);
+            setScaledContents(false);
+
+            switch (sizeMode) {
+                case 0: // Normal
+                    setPixmap(originalPixmap);
+                    break;
+                case 1: // StretchImage
+                    setScaledContents(true);
+                    setPixmap(originalPixmap);
+                    break;
+                case 2: // AutoSize
+                    setPixmap(originalPixmap);
+                    adjustSize();
+                    break;
+                case 3: // CenterImage
+                    setAlignment(Qt::AlignCenter);
+                    setPixmap(originalPixmap);
+                    break;
+                case 4: // Zoom
+                    // Scale keeping aspect ratio
+                    if (width() > 0 && height() > 0) {
+                        setPixmap(originalPixmap.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                        setAlignment(Qt::AlignCenter);
+                    }
+                    break;
+            }
+        }
+    };
+
+    EXPORT void* QPictureBox_Create(void* parent) {
+        QPictureBox* widget = new QPictureBox((QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QPictureBox_SetImage(void* pictureBox, const unsigned char* data, int length) {
+        QPictureBox* pb = (QPictureBox*)pictureBox;
+        if (data == nullptr || length == 0) {
+            pb->setOriginalPixmap(QPixmap());
+        } else {
+            QPixmap pixmap;
+            pixmap.loadFromData(data, length);
+            pb->setOriginalPixmap(pixmap);
+        }
+    }
+
+    EXPORT void QPictureBox_SetImageLocation(void* pictureBox, const char* path) {
+        QPictureBox* pb = (QPictureBox*)pictureBox;
+        QPixmap pixmap(QString::fromUtf8(path));
+        pb->setOriginalPixmap(pixmap);
+    }
+
+    EXPORT void QPictureBox_SetSizeMode(void* pictureBox, int mode) {
+        QPictureBox* pb = (QPictureBox*)pictureBox;
+        pb->setMode(mode);
+    }
+    }
+
 
