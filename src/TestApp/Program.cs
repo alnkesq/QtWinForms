@@ -221,6 +221,16 @@ namespace TestApp
                 textBox.UseSystemPasswordChar = chkPassword.Checked;
             };
             form.Controls.Add(chkPassword);
+
+            var chkVisible = new CheckBox();
+            chkVisible.Text = "Toggle Button2 Visible";
+            chkVisible.Location = new Point(220, 130);
+            chkVisible.Size = new Size(150, 30);
+            chkVisible.Checked = true;
+            chkVisible.CheckedChanged += (s, e) => {
+                button2.Visible = chkVisible.Checked;
+            };
+            form.Controls.Add(chkVisible);
             
             
             var btnState = new Button();

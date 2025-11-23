@@ -56,6 +56,14 @@ extern "C" {
     EXPORT void QWidget_Show(void* widget) {
         ((QWidget*)widget)->show();
     }
+
+    EXPORT void QWidget_Hide(void* widget) {
+        ((QWidget*)widget)->hide();
+    }
+
+    EXPORT bool QWidget_IsVisible(void* widget) {
+        return ((QWidget*)widget)->isVisible();
+    }
     
     EXPORT void QWidget_SetParent(void* widget, void* parent) {
         ((QWidget*)widget)->setParent((QWidget*)parent);

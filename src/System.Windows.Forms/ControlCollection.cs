@@ -33,7 +33,11 @@ namespace System.Windows.Forms
             // Initialize anchor bounds now that parent is set
             item.InitializeAnchorBounds();
             
-            item.Show();
+            // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
+            if (item.Visible)
+            {
+                NativeMethods.QWidget_Show(item.Handle);
+            }
             
             // Trigger layout to handle docking/anchoring
             _owner.PerformLayout();

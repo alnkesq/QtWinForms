@@ -11,6 +11,7 @@ namespace System.Windows.Forms
 
         public Form() : base()
         {
+            Visible = false;
             Size = new Size(800, 600);
         }
 

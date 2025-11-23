@@ -71,6 +71,15 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetEnabled(Handle, _enabled);
             }
+
+            if (_visible)
+            {
+                NativeMethods.QWidget_Show(Handle);
+            }
+            else
+            {
+                NativeMethods.QWidget_Hide(Handle);
+            }
         }
 
         public virtual string Text
@@ -81,20 +90,38 @@ namespace System.Windows.Forms
 
         public bool Visible
         {
+            get => _visible;
             set
             {
-                if (value)
+                if (_visible != value)
                 {
-                    EnsureCreated();
-                    NativeMethods.QWidget_Show(Handle);
+                    _visible = value;
+                    if (value) EnsureCreated();
+
+                    if (IsHandleCreated)
+                    {
+                        if (value)
+                        {
+                            NativeMethods.QWidget_Show(Handle);
+                        }
+                        else
+                        {
+                            NativeMethods.QWidget_Hide(Handle);
+                        }
+                    }
                 }
             }
         }
+        private bool _visible = true;
 
         public void Show()
         {
-            EnsureCreated();
-            NativeMethods.QWidget_Show(Handle);
+            Visible = true;
+        }
+
+        public void Hide()
+        {
+            Visible = false;
         }
 
         public Point Location
