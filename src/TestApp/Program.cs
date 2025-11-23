@@ -29,6 +29,7 @@ namespace TestApp
                 Console.WriteLine("12. NumericUpDown Test");
                 Console.WriteLine("13. ListBox Test");
                 Console.WriteLine("14. ColorDialog Test");
+                Console.WriteLine("15. DateTimePicker Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -107,6 +108,11 @@ namespace TestApp
                     case "14":
                         Console.WriteLine("Running ColorDialog Test...");
                         testForm = CreateColorDialogTest();
+                        break;
+
+                    case "15":
+                        Console.WriteLine("Running DateTimePicker Test...");
+                        testForm = CreateDateTimePickerTest();
                         break;
                     
                     default:
@@ -1263,6 +1269,68 @@ namespace TestApp
             instructionLabel.Location = new Point(20, 260);
             instructionLabel.Size = new Size(450, 60);
             form.Controls.Add(instructionLabel);
+
+            return form;
+        }
+        static Form CreateDateTimePickerTest()
+        {
+            var form = new Form();
+            form.Text = "DateTimePicker Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Select a date:";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(150, 30);
+            form.Controls.Add(label);
+
+            var dtp = new DateTimePicker();
+            dtp.Location = new Point(20, 50);
+            dtp.Size = new Size(200, 30);
+            dtp.MinDate = DateTime.Now.AddDays(-7);
+            dtp.MaxDate = DateTime.Now.AddDays(7);
+            form.Controls.Add(dtp);
+
+            var valueLabel = new Label();
+            valueLabel.Text = $"Selected: {dtp.Value}";
+            valueLabel.Location = new Point(20, 100);
+            valueLabel.Size = new Size(300, 30);
+            form.Controls.Add(valueLabel);
+
+            dtp.ValueChanged += (s, e) =>
+            {
+                valueLabel.Text = $"Selected: {dtp.Value}";
+            };
+
+            var btnSetNow = new Button();
+            btnSetNow.Text = "Set to Now";
+            btnSetNow.Location = new Point(20, 150);
+            btnSetNow.Size = new Size(100, 30);
+            btnSetNow.Click += (s, e) =>
+            {
+                dtp.Value = DateTime.Now;
+            };
+            form.Controls.Add(btnSetNow);
+
+            var btnSetMin = new Button();
+            btnSetMin.Text = "Set to Min";
+            btnSetMin.Location = new Point(130, 150);
+            btnSetMin.Size = new Size(100, 30);
+            btnSetMin.Click += (s, e) =>
+            {
+                dtp.Value = dtp.MinDate;
+            };
+            form.Controls.Add(btnSetMin);
+
+            var btnSetMax = new Button();
+            btnSetMax.Text = "Set to Max";
+            btnSetMax.Location = new Point(240, 150);
+            btnSetMax.Size = new Size(100, 30);
+            btnSetMax.Click += (s, e) =>
+            {
+                dtp.Value = dtp.MaxDate;
+            };
+            form.Controls.Add(btnSetMax);
 
             return form;
         }

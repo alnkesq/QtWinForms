@@ -23,6 +23,8 @@
 #include <QDoubleSpinBox>
 #include <QSlider>
 #include <QListWidget>
+#include <QDateTimeEdit>
+#include <QDateTime>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -790,6 +792,47 @@ extern "C" {
     EXPORT void QListWidget_ConnectCurrentRowChanged(void* listWidget, void (*callback)(void*), void* userData) {
         QObject::connect((QListWidget*)listWidget, &QListWidget::itemSelectionChanged, [callback, userData]() {
             callback(userData);
+        });
+    }
+
+    EXPORT void* QDateTimeEdit_Create(void* parent) {
+        QDateTimeEdit* widget = new QDateTimeEdit((QWidget*)parent);
+        widget->setCalendarPopup(true); // Make it look more like a standard date picker
+        return widget;
+    }
+
+    EXPORT void QDateTimeEdit_SetDateTime(void* dateTimeEdit, int year, int month, int day, int hour, int minute, int second) {
+        QDateTime dt(QDate(year, month, day), QTime(hour, minute, second));
+        ((QDateTimeEdit*)dateTimeEdit)->setDateTime(dt);
+    }
+
+    EXPORT void QDateTimeEdit_GetDateTime(void* dateTimeEdit, int* year, int* month, int* day, int* hour, int* minute, int* second) {
+        QDateTime dt = ((QDateTimeEdit*)dateTimeEdit)->dateTime();
+        QDate date = dt.date();
+        QTime time = dt.time();
+        *year = date.year();
+        *month = date.month();
+        *day = date.day();
+        *hour = time.hour();
+        *minute = time.minute();
+        *second = time.second();
+    }
+
+    EXPORT void QDateTimeEdit_SetMinimumDateTime(void* dateTimeEdit, int year, int month, int day, int hour, int minute, int second) {
+        QDateTime dt(QDate(year, month, day), QTime(hour, minute, second));
+        ((QDateTimeEdit*)dateTimeEdit)->setMinimumDateTime(dt);
+    }
+
+    EXPORT void QDateTimeEdit_SetMaximumDateTime(void* dateTimeEdit, int year, int month, int day, int hour, int minute, int second) {
+        QDateTime dt(QDate(year, month, day), QTime(hour, minute, second));
+        ((QDateTimeEdit*)dateTimeEdit)->setMaximumDateTime(dt);
+    }
+
+    EXPORT void QDateTimeEdit_ConnectDateTimeChanged(void* dateTimeEdit, void (*callback)(void*, int, int, int, int, int, int), void* userData) {
+        QObject::connect((QDateTimeEdit*)dateTimeEdit, &QDateTimeEdit::dateTimeChanged, [callback, userData](const QDateTime &dateTime) {
+            QDate date = dateTime.date();
+            QTime time = dateTime.time();
+            callback(userData, date.year(), date.month(), date.day(), time.hour(), time.minute(), time.second());
         });
     }
 }

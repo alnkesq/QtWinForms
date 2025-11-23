@@ -312,6 +312,23 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QListWidget_ConnectCurrentRowChanged(IntPtr listWidget, IntPtr callback, IntPtr userData);
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QDateTimeEdit_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDateTimeEdit_SetDateTime(IntPtr dateTimeEdit, int year, int month, int day, int hour, int minute, int second);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDateTimeEdit_GetDateTime(IntPtr dateTimeEdit, out int year, out int month, out int day, out int hour, out int minute, out int second);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDateTimeEdit_SetMinimumDateTime(IntPtr dateTimeEdit, int year, int month, int day, int hour, int minute, int second);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QDateTimeEdit_SetMaximumDateTime(IntPtr dateTimeEdit, int year, int month, int day, int hour, int minute, int second);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QDateTimeEdit_ConnectDateTimeChanged(IntPtr dateTimeEdit, delegate* unmanaged[Cdecl]<IntPtr, int, int, int, int, int, int, void> callback, IntPtr userData);
     }
 }
 
