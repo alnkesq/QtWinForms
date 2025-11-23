@@ -89,6 +89,9 @@ namespace System.Windows.Forms
         public static extern void QWidget_SetEnabled(IntPtr widget, bool enabled);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetFont(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string family, float size, bool bold, bool italic, bool underline, bool strikeout);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QLineEdit_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

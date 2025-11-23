@@ -30,6 +30,7 @@ namespace TestApp
                 Console.WriteLine("13. ListBox Test");
                 Console.WriteLine("14. ColorDialog Test");
                 Console.WriteLine("15. DateTimePicker Test");
+                Console.WriteLine("16. Font Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -113,6 +114,11 @@ namespace TestApp
                     case "15":
                         Console.WriteLine("Running DateTimePicker Test...");
                         testForm = CreateDateTimePickerTest();
+                        break;
+
+                    case "16":
+                        Console.WriteLine("Running Font Test...");
+                        testForm = CreateFontTest();
                         break;
                     
                     default:
@@ -1331,6 +1337,97 @@ namespace TestApp
                 dtp.Value = dtp.MaxDate;
             };
             form.Controls.Add(btnSetMax);
+
+            return form;
+        }
+
+        static Form CreateFontTest()
+        {
+            var form = new Form();
+            form.Text = "Font Test";
+            form.Size = new Size(500, 400);
+
+            int y = 20;
+
+            // Default Font
+            var lblDefault = new Label();
+            lblDefault.Text = "Default Font";
+            lblDefault.Location = new Point(20, y);
+            lblDefault.Size = new Size(400, 30);
+            form.Controls.Add(lblDefault);
+            y += 40;
+
+            // Bold
+            var lblBold = new Label();
+            lblBold.Text = "Bold Font";
+            lblBold.Location = new Point(20, y);
+            lblBold.Size = new Size(400, 30);
+            lblBold.Font = new Font("Arial", 12, FontStyle.Bold);
+            form.Controls.Add(lblBold);
+            y += 40;
+
+            // Italic
+            var lblItalic = new Label();
+            lblItalic.Text = "Italic Font";
+            lblItalic.Location = new Point(20, y);
+            lblItalic.Size = new Size(400, 30);
+            lblItalic.Font = new Font("Times New Roman", 12, FontStyle.Italic);
+            form.Controls.Add(lblItalic);
+            y += 40;
+
+            // Underline
+            var lblUnderline = new Label();
+            lblUnderline.Text = "Underline Font";
+            lblUnderline.Location = new Point(20, y);
+            lblUnderline.Size = new Size(400, 30);
+            lblUnderline.Font = new Font("Courier New", 12, FontStyle.Underline);
+            form.Controls.Add(lblUnderline);
+            y += 40;
+
+            // Strikeout
+            var lblStrikeout = new Label();
+            lblStrikeout.Text = "Strikeout Font";
+            lblStrikeout.Location = new Point(20, y);
+            lblStrikeout.Size = new Size(400, 30);
+            lblStrikeout.Font = new Font("Verdana", 12, FontStyle.Strikeout);
+            form.Controls.Add(lblStrikeout);
+            y += 40;
+
+            // Large Size
+            var lblLarge = new Label();
+            lblLarge.Text = "Large Font (20pt)";
+            lblLarge.Location = new Point(20, y);
+            lblLarge.Size = new Size(400, 40);
+            lblLarge.Font = new Font("Arial", 20);
+            form.Controls.Add(lblLarge);
+            y += 50;
+
+            // Mixed
+            var lblMixed = new Label();
+            lblMixed.Text = "Bold + Italic + Underline";
+            lblMixed.Location = new Point(20, y);
+            lblMixed.Size = new Size(400, 30);
+            lblMixed.Font = new Font("Arial", 10, FontStyle.Bold | FontStyle.Italic | FontStyle.Underline);
+            form.Controls.Add(lblMixed);
+            y += 40;
+
+            // Dynamic Change
+            var btnChange = new Button();
+            btnChange.Text = "Change My Font";
+            btnChange.Location = new Point(20, y);
+            btnChange.Size = new Size(200, 40);
+            btnChange.Click += (s, e) =>
+            {
+                if (btnChange.Font.Bold)
+                {
+                    btnChange.Font = new Font("Arial", 10, FontStyle.Regular);
+                }
+                else
+                {
+                    btnChange.Font = new Font("Arial", 14, FontStyle.Bold | FontStyle.Italic);
+                }
+            };
+            form.Controls.Add(btnChange);
 
             return form;
         }

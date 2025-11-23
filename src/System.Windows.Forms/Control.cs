@@ -72,6 +72,11 @@ namespace System.Windows.Forms
                 NativeMethods.QWidget_SetEnabled(Handle, _enabled);
             }
 
+            if (_font != null)
+            {
+                NativeMethods.QWidget_SetFont(Handle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
+            }
+
             if (_visible)
             {
                 NativeMethods.QWidget_Show(Handle);
@@ -498,7 +503,22 @@ namespace System.Windows.Forms
             }
         }
 
-        [Obsolete(NotImplementedWarning)] public Font Font { get; set; }
+        public virtual Font Font
+        {
+            get => _font ??= SystemFonts.DefaultFont; // Default to system font if not set
+            set
+            {
+                if (_font != value)
+                {
+                    _font = value;
+                    if (IsHandleCreated && _font != null)
+                    {
+                        NativeMethods.QWidget_SetFont(Handle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
+                    }
+                }
+            }
+        }
+        private Font? _font;
         [Obsolete(NotImplementedWarning)] public ContentAlignment TextAlign { get; set; }
         [Obsolete(NotImplementedWarning)] public event PreviewKeyDownEventHandler? PreviewKeyDown;
 

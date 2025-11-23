@@ -163,6 +163,16 @@ extern "C" {
     EXPORT void QWidget_SetEnabled(void* widget, bool enabled) {
         ((QWidget*)widget)->setEnabled(enabled);
     }
+
+    EXPORT void QWidget_SetFont(void* widget, const char* family, float size, bool bold, bool italic, bool underline, bool strikeout) {
+        QFont font(QString::fromUtf8(family));
+        font.setPointSizeF(size);
+        font.setBold(bold);
+        font.setItalic(italic);
+        font.setUnderline(underline);
+        font.setStrikeOut(strikeout);
+        ((QWidget*)widget)->setFont(font);
+    }
     
     EXPORT void* QLineEdit_Create(void* parent, const char* text) {
         QLineEdit* widget = new QLineEdit(QString::fromUtf8(text), (QWidget*)parent);
