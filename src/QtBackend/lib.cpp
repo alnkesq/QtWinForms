@@ -745,7 +745,7 @@ extern "C" {
     }
 
     EXPORT void QListWidget_ConnectCurrentRowChanged(void* listWidget, void (*callback)(void*), void* userData) {
-        QObject::connect((QListWidget*)listWidget, &QListWidget::currentRowChanged, [callback, userData](int row) {
+        QObject::connect((QListWidget*)listWidget, &QListWidget::itemSelectionChanged, [callback, userData]() {
             callback(userData);
         });
     }
