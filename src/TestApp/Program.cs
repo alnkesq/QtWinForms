@@ -391,6 +391,22 @@ namespace TestApp
             tabControl.TabPages.Add(tab2);
             tabControl.TabPages.Add(tab3);
 
+            // Update window title when tab changes
+            tabControl.SelectedIndexChanged += (s, e) =>
+            {
+                var selectedTab = tabControl.SelectedTab;
+                if (selectedTab != null)
+                {
+                    form.Text = $"TabControl Test - {selectedTab.Text}";
+                }
+            };
+
+            // Set initial title
+            if (tabControl.SelectedTab != null)
+            {
+                form.Text = $"TabControl Test - {tabControl.SelectedTab.Text}";
+            }
+
             form.Controls.Add(tabControl);
 
             return form;

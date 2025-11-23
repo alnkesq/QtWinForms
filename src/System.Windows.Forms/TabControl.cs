@@ -26,6 +26,9 @@ namespace System.Windows.Forms
                 {
                     AddTabPageToNative(page);
                 }
+
+                // Connect the selected index changed event
+                ConnectCurrentChangedEvent();
             }
         }
 
@@ -144,6 +147,21 @@ namespace System.Windows.Forms
                     SelectedIndex = index;
                 }
             }
+        }
+
+        public event EventHandler? SelectedIndexChanged;
+
+        private unsafe void ConnectCurrentChangedEvent()
+        {
+            delegate* unmanaged[Cdecl]<nint, int, void> callback = &OnCurrentChangedCallback;
+            NativeMethods.QTabWidget_ConnectCurrentChanged(Handle, (IntPtr)callback, GCHandlePtr);
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static void OnCurrentChangedCallback(nint userData, int index)
+        {
+            var tabControl = ObjectFromGCHandle<TabControl>(userData);
+            tabControl.SelectedIndexChanged?.Invoke(tabControl, EventArgs.Empty);
         }
     }
 }

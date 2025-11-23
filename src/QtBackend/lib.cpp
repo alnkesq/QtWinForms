@@ -295,6 +295,12 @@ extern "C" {
         tw->setCurrentIndex(index);
     }
 
+    EXPORT void QTabWidget_ConnectCurrentChanged(void* tabWidget, void (*callback)(void*, int), void* userData) {
+        QObject::connect((QTabWidget*)tabWidget, &QTabWidget::currentChanged, [callback, userData](int index) {
+            callback(userData, index);
+        });
+    }
+
     EXPORT int QMessageBox_Show(void* parent, const char* text, const char* caption, int buttons, int icon, int defaultButton, int options) {
         QWidget* parentWidget = (QWidget*)parent;
         
