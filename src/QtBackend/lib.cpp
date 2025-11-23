@@ -988,11 +988,11 @@ extern "C" {
         }
     }
 
-    EXPORT void QPictureBox_SetImageLocation(void* pictureBox, const char* path) {
-        QPictureBox* pb = (QPictureBox*)pictureBox;
-        QPixmap pixmap(QString::fromUtf8(path));
-        pb->setOriginalPixmap(pixmap);
-    }
+    //EXPORT void QPictureBox_SetImageLocation(void* pictureBox, const char* path) {
+    //    QPictureBox* pb = (QPictureBox*)pictureBox;
+    //    QPixmap pixmap(QString::fromUtf8(path));
+    //    pb->setOriginalPixmap(pixmap);
+    //}
 
     EXPORT void QPictureBox_SetSizeMode(void* pictureBox, int mode) {
         QPictureBox* pb = (QPictureBox*)pictureBox;

@@ -108,10 +108,10 @@ namespace System.Windows.Forms
                     NativeMethods.QPictureBox_SetImage(Handle, data, data.Length);
                 }
             }
-            else if (!string.IsNullOrEmpty(_imageLocation))
-            {
-                 NativeMethods.QPictureBox_SetImageLocation(Handle, _imageLocation);
-            }
+            //else if (!string.IsNullOrEmpty(_imageLocation))
+            //{
+            //     NativeMethods.QPictureBox_SetImageLocation(Handle, _imageLocation);
+            //}
             else
             {
                 NativeMethods.QPictureBox_SetImage(Handle, null, 0);
