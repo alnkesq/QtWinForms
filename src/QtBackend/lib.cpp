@@ -21,6 +21,7 @@
 #include <QFileDialog>
 #include <QDoubleSpinBox>
 #include <QSlider>
+#include <QListWidget>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -674,4 +675,79 @@ extern "C" {
             callback(userData, value);
         });
     }
+
+    EXPORT void* QListWidget_Create(void* parent) {
+        QListWidget* widget = new QListWidget((QWidget*)parent);
+        return widget;
+    }
+
+    EXPORT void QListWidget_AddItem(void* listWidget, const char* text) {
+        ((QListWidget*)listWidget)->addItem(QString::fromUtf8(text));
+    }
+
+    EXPORT void QListWidget_Clear(void* listWidget) {
+        ((QListWidget*)listWidget)->clear();
+    }
+
+    EXPORT void QListWidget_InsertItem(void* listWidget, int index, const char* text) {
+        ((QListWidget*)listWidget)->insertItem(index, QString::fromUtf8(text));
+    }
+
+    EXPORT void QListWidget_RemoveItem(void* listWidget, int index) {
+        QListWidgetItem* item = ((QListWidget*)listWidget)->takeItem(index);
+        delete item;
+    }
+
+    EXPORT void QListWidget_SetSelectionMode(void* listWidget, int mode) {
+        QListWidget* lw = (QListWidget*)listWidget;
+        // Map WinForms SelectionMode to Qt SelectionMode
+        // None = 0, One = 1, MultiSimple = 2, MultiExtended = 3
+        switch (mode) {
+            case 0: // None
+                lw->setSelectionMode(QAbstractItemView::NoSelection);
+                break;
+            case 1: // One
+                lw->setSelectionMode(QAbstractItemView::SingleSelection);
+                break;
+            case 2: // MultiSimple
+                lw->setSelectionMode(QAbstractItemView::MultiSelection);
+                break;
+            case 3: // MultiExtended
+                lw->setSelectionMode(QAbstractItemView::ExtendedSelection);
+                break;
+            default:
+                lw->setSelectionMode(QAbstractItemView::SingleSelection);
+                break;
+        }
+    }
+
+    EXPORT int QListWidget_GetCurrentRow(void* listWidget) {
+        return ((QListWidget*)listWidget)->currentRow();
+    }
+
+    EXPORT void QListWidget_SetCurrentRow(void* listWidget, int row) {
+        ((QListWidget*)listWidget)->setCurrentRow(row);
+    }
+
+    EXPORT void QListWidget_GetSelectedRows(void* listWidget, void (*callback)(int*, int, void*), void* userData) {
+        QListWidget* lw = (QListWidget*)listWidget;
+        QList<QListWidgetItem*> selectedItems = lw->selectedItems();
+        
+        if (selectedItems.isEmpty()) {
+            callback(nullptr, 0, userData);
+        } else {
+            QVector<int> rows;
+            for (QListWidgetItem* item : selectedItems) {
+                rows.append(lw->row(item));
+            }
+            callback(rows.data(), rows.size(), userData);
+        }
+    }
+
+    EXPORT void QListWidget_ConnectCurrentRowChanged(void* listWidget, void (*callback)(void*), void* userData) {
+        QObject::connect((QListWidget*)listWidget, &QListWidget::currentRowChanged, [callback, userData](int row) {
+            callback(userData);
+        });
+    }
 }
+

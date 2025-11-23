@@ -270,5 +270,36 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QSlider_ConnectValueChanged(IntPtr slider, delegate* unmanaged[Cdecl]<IntPtr, int, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QListWidget_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_AddItem(IntPtr listWidget, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_Clear(IntPtr listWidget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_InsertItem(IntPtr listWidget, int index, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_RemoveItem(IntPtr listWidget, int index);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_SetSelectionMode(IntPtr listWidget, int mode);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QListWidget_GetCurrentRow(IntPtr listWidget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_SetCurrentRow(IntPtr listWidget, int row);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QListWidget_GetSelectedRows(IntPtr listWidget, delegate* unmanaged[Cdecl]<int*, int, void*, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QListWidget_ConnectCurrentRowChanged(IntPtr listWidget, IntPtr callback, IntPtr userData);
     }
 }
+

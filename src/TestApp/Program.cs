@@ -27,6 +27,7 @@ namespace TestApp
                 Console.WriteLine("10. FolderBrowserDialog Test");
                 Console.WriteLine("11. FileDialog Test");
                 Console.WriteLine("12. NumericUpDown Test");
+                Console.WriteLine("13. ListBox Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -95,6 +96,11 @@ namespace TestApp
                     case "12":
                         Console.WriteLine("Running NumericUpDown Test...");
                         testForm = CreateNumericUpDownTest();
+                        break;
+
+                    case "13":
+                        Console.WriteLine("Running ListBox Test...");
+                        testForm = CreateListBoxTest();
                         break;
                     
                     default:
@@ -965,6 +971,182 @@ namespace TestApp
                 label.Text = $"Range: {numeric.Minimum} to {numeric.Maximum}, Value: {numeric.Value}";
             };
             form.Controls.Add(btnRange);
+
+            return form;
+        }
+
+        static Form CreateListBoxTest()
+        {
+            var form = new Form();
+            form.Text = "ListBox Test";
+            form.Size = new Size(600, 500);
+
+            // Single selection ListBox
+            var label1 = new Label();
+            label1.Text = "Single Selection ListBox:";
+            label1.Location = new Point(20, 20);
+            label1.Size = new Size(200, 30);
+            form.Controls.Add(label1);
+
+            var listBox1 = new ListBox();
+            listBox1.Location = new Point(20, 50);
+            listBox1.Size = new Size(200, 150);
+            listBox1.SelectionMode = SelectionMode.One;
+            listBox1.Items.Add("Apple");
+            listBox1.Items.Add("Banana");
+            listBox1.Items.Add("Cherry");
+            listBox1.Items.Add("Date");
+            listBox1.Items.Add("Elderberry");
+            form.Controls.Add(listBox1);
+
+            var selectionLabel1 = new Label();
+            selectionLabel1.Text = "Selection: None";
+            selectionLabel1.Location = new Point(20, 210);
+            selectionLabel1.Size = new Size(200, 60);
+            form.Controls.Add(selectionLabel1);
+
+            listBox1.SelectedIndexChanged += (s, e) =>
+            {
+                if (listBox1.SelectedIndex != -1)
+                {
+                    selectionLabel1.Text = $"Selection:\nIndex: {listBox1.SelectedIndex}\nItem: {listBox1.SelectedItem}";
+                }
+                else
+                {
+                    selectionLabel1.Text = "Selection: None";
+                }
+            };
+
+            // Multi-selection ListBox
+            var label2 = new Label();
+            label2.Text = "Multi-Selection ListBox:";
+            label2.Location = new Point(250, 20);
+            label2.Size = new Size(200, 30);
+            form.Controls.Add(label2);
+
+            var listBox2 = new ListBox();
+            listBox2.Location = new Point(250, 50);
+            listBox2.Size = new Size(200, 150);
+            listBox2.SelectionMode = SelectionMode.MultiExtended;
+            listBox2.Items.Add("Red");
+            listBox2.Items.Add("Green");
+            listBox2.Items.Add("Blue");
+            listBox2.Items.Add("Yellow");
+            listBox2.Items.Add("Purple");
+            listBox2.Items.Add("Orange");
+            form.Controls.Add(listBox2);
+
+            var selectionLabel2 = new Label();
+            selectionLabel2.Text = "Selection: None";
+            selectionLabel2.Location = new Point(250, 210);
+            selectionLabel2.Size = new Size(200, 100);
+            form.Controls.Add(selectionLabel2);
+
+            listBox2.SelectedIndexChanged += (s, e) =>
+            {
+                var indices = listBox2.SelectedIndices;
+                var items = listBox2.SelectedItems;
+                
+                if (indices.Count > 0)
+                {
+                    string indicesStr = "";
+                    string itemsStr = "";
+                    
+                    for (int i = 0; i < indices.Count; i++)
+                    {
+                        if (i > 0)
+                        {
+                            indicesStr += ", ";
+                            itemsStr += ", ";
+                        }
+                        indicesStr += indices[i].ToString();
+                        itemsStr += items[i].ToString();
+                    }
+                    
+                    selectionLabel2.Text = $"Count: {indices.Count}\nIndices: {indicesStr}\nItems: {itemsStr}";
+                }
+                else
+                {
+                    selectionLabel2.Text = "Selection: None";
+                }
+            };
+
+            // Buttons for testing
+            var btnAdd = new Button();
+            btnAdd.Text = "Add Item";
+            btnAdd.Location = new Point(20, 280);
+            btnAdd.Size = new Size(100, 30);
+            btnAdd.Click += (s, e) =>
+            {
+                listBox1.Items.Add($"Item {listBox1.Items.Count + 1}");
+            };
+            form.Controls.Add(btnAdd);
+
+            var btnRemove = new Button();
+            btnRemove.Text = "Remove Selected";
+            btnRemove.Location = new Point(130, 280);
+            btnRemove.Size = new Size(120, 30);
+            btnRemove.Click += (s, e) =>
+            {
+                if (listBox1.SelectedIndex != -1)
+                {
+                    listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+                }
+            };
+            form.Controls.Add(btnRemove);
+
+            var btnClear = new Button();
+            btnClear.Text = "Clear All";
+            btnClear.Location = new Point(20, 320);
+            btnClear.Size = new Size(100, 30);
+            btnClear.Click += (s, e) =>
+            {
+                listBox1.Items.Clear();
+                listBox2.Items.Clear();
+            };
+            form.Controls.Add(btnClear);
+
+            var btnToggleMode = new Button();
+            btnToggleMode.Text = "Toggle Mode";
+            btnToggleMode.Location = new Point(250, 280);
+            btnToggleMode.Size = new Size(120, 30);
+            btnToggleMode.Click += (s, e) =>
+            {
+                if (listBox2.SelectionMode == SelectionMode.MultiExtended)
+                {
+                    listBox2.SelectionMode = SelectionMode.One;
+                    label2.Text = "Single Selection ListBox:";
+                }
+                else
+                {
+                    listBox2.SelectionMode = SelectionMode.MultiExtended;
+                    label2.Text = "Multi-Selection ListBox:";
+                }
+            };
+            form.Controls.Add(btnToggleMode);
+
+            var btnSelectFirst = new Button();
+            btnSelectFirst.Text = "Select First";
+            btnSelectFirst.Location = new Point(20, 360);
+            btnSelectFirst.Size = new Size(100, 30);
+            btnSelectFirst.Click += (s, e) =>
+            {
+                if (listBox1.Items.Count > 0)
+                {
+                    listBox1.SelectedIndex = 0;
+                }
+            };
+            form.Controls.Add(btnSelectFirst);
+
+            var btnSelectByItem = new Button();
+            btnSelectByItem.Text = "Select 'Cherry'";
+            btnSelectByItem.Location = new Point(130, 360);
+            btnSelectByItem.Size = new Size(120, 30);
+            btnSelectByItem.Click += (s, e) =>
+            {
+                listBox1.SelectedItem = "Cherry";
+            };
+            form.Controls.Add(btnSelectByItem);
 
             return form;
         }
