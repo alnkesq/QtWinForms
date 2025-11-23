@@ -1589,10 +1589,37 @@ namespace TestApp
             chkTopMost.Checked = form.TopMost;
             chkTopMost.CheckedChanged += (s, e) => form.TopMost = chkTopMost.Checked;
             form.Controls.Add(chkTopMost);
+
+            var lblStyle = new Label();
+            lblStyle.Text = "FormBorderStyle:";
+            lblStyle.Location = new Point(20, 220);
+            lblStyle.Size = new Size(150, 30);
+            form.Controls.Add(lblStyle);
+
+            var cmbStyle = new ComboBox();
+            cmbStyle.Location = new Point(180, 220);
+            cmbStyle.Size = new Size(150, 30);
+            cmbStyle.DropDownStyle = ComboBoxStyle.DropDownList;
+            
+            cmbStyle.Items.Add("None");
+            cmbStyle.Items.Add("FixedSingle");
+            cmbStyle.Items.Add("Fixed3D");
+            cmbStyle.Items.Add("FixedDialog");
+            cmbStyle.Items.Add("Sizable");
+            cmbStyle.Items.Add("FixedToolWindow");
+            cmbStyle.Items.Add("SizableToolWindow");
+            
+            cmbStyle.SelectedIndex = (int)form.FormBorderStyle;
+            
+            cmbStyle.SelectedIndexChanged += (s, e) => 
+            {
+                form.FormBorderStyle = (FormBorderStyle)cmbStyle.SelectedIndex;
+            };
+            form.Controls.Add(cmbStyle);
             
             var label = new Label();
             label.Text = "Toggle properties to see effects.";
-            label.Location = new Point(20, 220);
+            label.Location = new Point(20, 260);
             label.Size = new Size(300, 30);
             form.Controls.Add(label);
 

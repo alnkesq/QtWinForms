@@ -480,38 +480,73 @@ extern "C" {
         return 0;
     }
 
-    EXPORT void QWidget_SetFormProperties(void* widget, bool minimizeBox, bool maximizeBox, bool showInTaskbar, bool showIcon, bool topMost) {
+    EXPORT void QWidget_SetFormProperties(void* widget, bool minimizeBox, bool maximizeBox, bool showInTaskbar, bool showIcon, bool topMost, int formBorderStyle) {
         QWidget* w = (QWidget*)widget;
         
         Qt::WindowFlags flags = w->windowFlags();
         
         // Clear flags we are about to manage
-        flags &= ~(Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint | Qt::Tool | Qt::Window | Qt::Dialog);
+        flags &= ~(Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint | Qt::Tool | Qt::Window | Qt::Dialog | Qt::FramelessWindowHint | Qt::MSWindowsFixedSizeDialogHint | Qt::CustomizeWindowHint);
+        
+        // FormBorderStyle: 
+        // None = 0
+        // FixedSingle = 1
+        // Fixed3D = 2
+        // FixedDialog = 3
+        // Sizable = 4
+        // FixedToolWindow = 5
+        // SizableToolWindow = 6
+        
+        bool isFixed = (formBorderStyle == 1 || formBorderStyle == 2 || formBorderStyle == 3 || formBorderStyle == 5);
+        bool isToolWindow = (formBorderStyle == 5 || formBorderStyle == 6);
+        bool isFrameless = (formBorderStyle == 0);
         
         // Set Window Type
-        if (!showInTaskbar) {
-            flags |= Qt::Tool;
+        if (isFrameless) {
+            flags |= Qt::FramelessWindowHint;
         } else {
-            flags |= Qt::Window;
+            if (isToolWindow) {
+                flags |= Qt::Tool;
+            } else if (!showInTaskbar) {
+                flags |= Qt::Tool; // If not in taskbar, often Tool works best, or we can use Window with specific attributes
+            } else {
+                flags |= Qt::Window;
+            }
         }
         
         // Basic hints
-        flags |= Qt::WindowTitleHint;
-        flags |= Qt::WindowCloseButtonHint; 
-        
-        if (minimizeBox) flags |= Qt::WindowMinimizeButtonHint;
-        if (maximizeBox) flags |= Qt::WindowMaximizeButtonHint;
-        
-        if (showIcon) {
-            flags |= Qt::WindowSystemMenuHint;
-        }
-        
-        if (topMost) {
-            flags |= Qt::WindowStaysOnTopHint;
+        if (!isFrameless) {
+            flags |= Qt::CustomizeWindowHint;
+            flags |= Qt::WindowTitleHint;
+            flags |= Qt::WindowCloseButtonHint; 
+            
+            if (minimizeBox) flags |= Qt::WindowMinimizeButtonHint;
+            if (maximizeBox) flags |= Qt::WindowMaximizeButtonHint;
+            
+            if (showIcon) {
+                flags |= Qt::WindowSystemMenuHint;
+            }
+            
+            if (topMost) {
+                flags |= Qt::WindowStaysOnTopHint;
+            }
+            
+            if (isFixed) {
+                flags |= Qt::MSWindowsFixedSizeDialogHint;
+                // Also need to ensure the widget cannot be resized by user
+                // Qt::MSWindowsFixedSizeDialogHint does this on Windows for the frame
+                // We also need to set size constraint if we want to be strict, but for now rely on the hint
+                // If we use SetFixedSize on layout it might be too restrictive for programmatic resize
+                // But MSWindowsFixedSizeDialogHint is usually enough for the window manager
+            }
         }
         
         bool wasVisible = w->isVisible();
         w->setWindowFlags(flags);
+        // If fixed, we might want to enforce it on the widget level too to be safe, 
+        // but Form.Size setter handles the size. 
+        // The hint mainly affects the border style and user interaction.
+        
         if (wasVisible) {
             w->show();
         }

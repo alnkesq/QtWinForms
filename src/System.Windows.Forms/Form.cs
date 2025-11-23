@@ -247,14 +247,28 @@ namespace System.Windows.Forms
             }
         }
 
-        [Obsolete(NotImplementedWarning)] public FormBorderStyle FormBorderStyle { get; set; }
+        private FormBorderStyle _formBorderStyle = FormBorderStyle.Sizable;
+
+        public FormBorderStyle FormBorderStyle
+        {
+            get => _formBorderStyle;
+            set
+            {
+                if (_formBorderStyle != value)
+                {
+                    _formBorderStyle = value;
+                    UpdateFormStyles();
+                }
+            }
+        }
+
         [Obsolete(NotImplementedWarning)] public Icon Icon { get; set; }
 
         private void UpdateFormStyles()
         {
             if (IsHandleCreated)
             {
-                NativeMethods.QWidget_SetFormProperties(Handle, _minimizeBox, _maximizeBox, _showInTaskbar, _showIcon, _topMost);
+                NativeMethods.QWidget_SetFormProperties(Handle, _minimizeBox, _maximizeBox, _showInTaskbar, _showIcon, _topMost, (int)_formBorderStyle);
             }
         }
     }
