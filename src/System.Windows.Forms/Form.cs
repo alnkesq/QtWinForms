@@ -45,6 +45,13 @@ namespace System.Windows.Forms
                     _mainMenuStrip.EnsureCreated();
                 }
                 NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
+                
+                // QWidget_SetMenuBar calls setParent, which hides the widget.
+                // We must show it again if it's supposed to be visible.
+                if (_mainMenuStrip.Visible)
+                {
+                    NativeMethods.QWidget_Show(_mainMenuStrip.Handle);
+                }
             }
             
             // Connect resize and move events
@@ -140,6 +147,11 @@ namespace System.Windows.Forms
                         _mainMenuStrip.EnsureCreated();
                     }
                     NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
+                    
+                    if (_mainMenuStrip.Visible)
+                    {
+                        NativeMethods.QWidget_Show(_mainMenuStrip.Handle);
+                    }
                 }
             }
         }
