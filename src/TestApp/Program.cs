@@ -704,9 +704,9 @@ namespace TestApp
             var menuStrip = new MenuStrip();
             
             // File menu with submenus
-            var fileMenu = new ToolStripMenuItem { Text = "File" };
+            var fileMenu = new ToolStripMenuItem { Text = "&File" };
             
-            var saveItem = new ToolStripMenuItem { Text = "Save" };
+            var saveItem = new ToolStripMenuItem { Text = "&Save" };
             saveItem.Click += (s, e) => 
             {
                 Console.WriteLine("Save clicked!");
@@ -714,7 +714,7 @@ namespace TestApp
             };
             fileMenu.DropDownItems.Add(saveItem);
             
-            var openItem = new ToolStripMenuItem { Text = "Open" };
+            var openItem = new ToolStripMenuItem { Text = "&Open" };
             openItem.Click += (s, e) => 
             {
                 Console.WriteLine("Open clicked!");
@@ -726,7 +726,7 @@ namespace TestApp
             fileMenu.DropDownItems.Add(new ToolStripSeparator());
             
             // Recent submenu
-            var recentMenu = new ToolStripMenuItem { Text = "Recent" };
+            var recentMenu = new ToolStripMenuItem { Text = "&Recent" };
             
             var recent1 = new ToolStripMenuItem { Text = "1" };
             recent1.Click += (s, e) => 
@@ -757,12 +757,12 @@ namespace TestApp
             menuStrip.Items.Add(fileMenu);
 
             // Edit menu (simple, no submenus)
-            var editMenu = new ToolStripMenuItem { Text = "Edit" };
+            var editMenu = new ToolStripMenuItem { Text = "&Edit" };
             editMenu.Click += (s, e) => Console.WriteLine("Edit menu clicked!");
             menuStrip.Items.Add(editMenu);
 
             // Help menu
-            var helpMenu = new ToolStripMenuItem { Text = "Help" };
+            var helpMenu = new ToolStripMenuItem { Text = "&Help" };
             helpMenu.Click += (s, e) =>
             {
                 MessageBox.Show(
@@ -785,7 +785,7 @@ namespace TestApp
             form.Controls.Add(label);
 
             var button = new Button();
-            button.Text = "Show Message";
+            button.Text = "S&how Message";
             button.Location = new Point(50, 150);
             button.Size = new Size(150, 30);
             button.Click += (s, e) =>
