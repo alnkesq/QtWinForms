@@ -12,20 +12,33 @@ namespace System.Windows.Forms
         internal IntPtr GCHandlePtr => GCHandle<Control>.ToIntPtr((gcHandle ??= new GCHandle<Control>(this)));
         internal static T ObjectFromGCHandle<T>(IntPtr gcHandle) where T : class => GCHandle<T>.FromIntPtr(gcHandle).Target;
 
-        public bool InvokeRequired => _managedThreadId != 0 && Environment.CurrentManagedThreadId != _managedThreadId;
-        private int _managedThreadId = -1;
+        public bool InvokeRequired => Environment.CurrentManagedThreadId != Application._mainThreadId;
 
         public void Invoke(Action action)
         {
-            if (InvokeRequired) throw new NotImplementedException();
+            if (InvokeRequired) Application._synchronizationContext!.Send(a => ((Action)a!)(), action);
             action();
+        }
+        public T Invoke<T>(Func<T> func)
+        {
+            if (InvokeRequired)
+            {
+                T result = default!;
+                Application._synchronizationContext!.Send(_ => result = func(), null);
+                return result;
+            }
+            return func();
         }
 
         public object? Invoke(Delegate d, params object?[]? args)
         {
-            object? result = null;
-            Invoke(() => result = d.DynamicInvoke());
-            return result;
+            if (InvokeRequired)
+            {
+                object? result = null;
+                Application._synchronizationContext!.Send(_ => result = d.DynamicInvoke(args), null);
+                return result;
+            }
+            return d.DynamicInvoke(args);
         }
 
         public Control()
@@ -56,7 +69,7 @@ namespace System.Windows.Forms
 
         protected void SetCommonProperties()
         {
-            _managedThreadId = Environment.CurrentManagedThreadId;
+            Application.SetMainThreadOrEnsureMainThread();
 
             if (_backColor != Color.Empty)
             {

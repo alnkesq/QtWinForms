@@ -14,6 +14,10 @@ namespace System.Windows.Forms
         public static extern void QApplication_Run();
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QApplication_InvokeOnMainThread(delegate* unmanaged[Cdecl]<IntPtr, void> callback, IntPtr userData);
+
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QWidget_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

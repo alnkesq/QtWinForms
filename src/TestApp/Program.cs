@@ -33,6 +33,7 @@ namespace TestApp
                 Console.WriteLine("16. Font Test");
                 Console.WriteLine("17. PictureBox Test");
                 Console.WriteLine("18. Form Properties Test");
+                Console.WriteLine("19. SynchronizationContext Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -131,6 +132,11 @@ namespace TestApp
                     case "18":
                         Console.WriteLine("Running Form Properties Test...");
                         testForm = CreateFormPropertiesTest();
+                        break;
+
+                    case "19":
+                        Console.WriteLine("Running SynchronizationContext Test...");
+                        testForm = CreateSynchronizationContextTest();
                         break;
                     
                     default:
@@ -1623,6 +1629,69 @@ namespace TestApp
             label.Size = new Size(300, 30);
             form.Controls.Add(label);
 
+            return form;
+        }
+        static Form CreateSynchronizationContextTest()
+        {
+            var form = new Form();
+            form.Text = "SynchronizationContext Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Waiting for background update...";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(350, 30);
+            form.Controls.Add(label);
+
+            var button = new Button();
+            button.Text = "Start Background Task";
+            button.Location = new Point(20, 60);
+            button.Size = new Size(200, 30);
+            
+            button.Click += (s, e) =>
+            {
+                button.Enabled = false;
+                label.Text = "Starting background task...";
+                
+                var context = System.Threading.SynchronizationContext.Current!;
+                
+                System.Threading.ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    System.Threading.Thread.Sleep(500);
+                    try
+                    {
+                        context.Send(state =>
+                        {
+                            throw new Exception();
+                        }, null);
+                    }
+                    catch (Exception)
+                    {
+                        Console.Error.WriteLine("Successfully caught exception from SynchronizationContext.Send");
+                    }
+
+                    System.Threading.Thread.Sleep(500);
+                    context.Send(state =>
+                    {
+                        label.Text = "Updated from background thread (Send)!";
+                    }, null);
+
+                    System.Threading.Thread.Sleep(500);
+                    context.Post(state =>
+                    {
+                        label.Text = "Updated from background thread (Post)!";
+                    }, null);
+
+                    System.Threading.Thread.Sleep(500);
+                    button.Invoke(() =>
+                    {
+                        label.Text = "Updated from background thread (Control.Invoke)!";
+                        button.Enabled = true;
+                    });
+                });
+            };
+            
+            form.Controls.Add(button);
             return form;
         }
     }

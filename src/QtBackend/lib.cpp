@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QCoreApplication>
 #include <QWidget>
 #include <QPushButton>
 #include <QLabel>
@@ -43,10 +44,50 @@ extern "C" {
 
     typedef void (*ReadQStringCallback)(const void* dataUtf16, int length, void* userData);
 
+    // Custom event for executing callbacks on the main thread
+    class CallbackEvent : public QEvent {
+    public:
+        static const QEvent::Type Type = static_cast<QEvent::Type>(QEvent::User + 1);
+        typedef void (*Callback)(void*);
+        Callback callback;
+        void* data;
+
+        CallbackEvent(Callback cb, void* d) : QEvent(Type), callback(cb), data(d) {}
+    };
+
+    // Global object to receive events
+    class EventDispatcher : public QObject {
+    protected:
+        bool event(QEvent* e) override {
+            if (e->type() == CallbackEvent::Type) {
+                CallbackEvent* ce = static_cast<CallbackEvent*>(e);
+                if (ce->callback) {
+                    ce->callback(ce->data);
+                }
+                return true;
+            }
+            return QObject::event(e);
+        }
+    };
+
+    static EventDispatcher* g_dispatcher = nullptr;
+
     EXPORT void* QApplication_Create() {
         static int argc = 1;
         static char* argv[] = { (char*)"TestApp", nullptr };
-        return new QApplication(argc, argv);
+        QApplication* app = new QApplication(argc, argv);
+        
+        if (!g_dispatcher) {
+            g_dispatcher = new EventDispatcher();
+        }
+        
+        return app;
+    }
+    
+    EXPORT void QApplication_InvokeOnMainThread(void (*callback)(void*), void* userData) {
+        if (g_dispatcher) {
+            QCoreApplication::postEvent(g_dispatcher, new CallbackEvent(callback, userData));
+        }
     }
     
     EXPORT void QApplication_Run() {
