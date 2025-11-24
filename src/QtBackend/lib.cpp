@@ -637,6 +637,22 @@ extern "C" {
         return separator;
     }
 
+    EXPORT void QAction_SetIcon(void* action, const unsigned char* data, int length) {
+        QAction* qAction = (QAction*)action;
+        if (data != nullptr && length > 0) {
+            QPixmap pixmap;
+            pixmap.loadFromData(data, length);
+            qAction->setIcon(QIcon(pixmap));
+        } else {
+            qAction->setIcon(QIcon());
+        }
+    }
+
+    EXPORT void QAction_SetToolTip(void* action, const char* toolTip) {
+        ((QAction*)action)->setToolTip(QString::fromUtf8(toolTip));
+    }
+
+
 
     EXPORT void QWidget_SetMenuBar(void* widget, void* menuBar) {
         QWidget* w = (QWidget*)widget;
@@ -1120,6 +1136,27 @@ extern "C" {
 
     EXPORT void QToolBar_AddAction(void* toolBar, void* action) {
         ((QToolBar*)toolBar)->addAction((QAction*)action);
+    }
+
+    EXPORT void QToolBar_SetToolButtonStyle(void* toolBar, int style) {
+        // Map from ToolStripItemDisplayStyle to Qt::ToolButtonStyle
+        // None = 0, Text = 1, Image = 2, ImageAndText = 3
+        Qt::ToolButtonStyle qtStyle;
+        switch (style) {
+            case 1: // Text
+                qtStyle = Qt::ToolButtonTextOnly;
+                break;
+            case 2: // Image
+                qtStyle = Qt::ToolButtonIconOnly;
+                break;
+            case 3: // ImageAndText
+                qtStyle = Qt::ToolButtonTextBesideIcon;
+                break;
+            default: // None
+                qtStyle = Qt::ToolButtonFollowStyle;
+                break;
+        }
+        ((QToolBar*)toolBar)->setToolButtonStyle(qtStyle);
     }
     }
 

@@ -191,6 +191,12 @@ namespace System.Windows.Forms
         public static extern IntPtr QAction_CreateSeparator();
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QAction_SetIcon(IntPtr action, byte[]? data, int length);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QAction_SetToolTip(IntPtr action, [MarshalAs(UnmanagedType.LPStr)] string toolTip);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetMenuBar(IntPtr widget, IntPtr menuBar);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -374,6 +380,9 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QToolBar_AddAction(IntPtr toolBar, IntPtr action);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QToolBar_SetToolButtonStyle(IntPtr toolBar, int style);
     }
 }
 

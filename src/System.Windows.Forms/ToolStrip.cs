@@ -12,6 +12,8 @@ namespace System.Windows.Forms
             if (!IsHandleCreated)
             {
                 Handle = NativeMethods.QToolBar_Create(IntPtr.Zero);
+                if (_items.Any(x => x.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText))
+                    NativeMethods.QToolBar_SetToolButtonStyle(Handle, (int)ToolStripItemDisplayStyle.ImageAndText);
                 SetCommonProperties();
                 
                 foreach (var item in _items)

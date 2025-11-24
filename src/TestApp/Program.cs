@@ -1741,6 +1741,15 @@ namespace TestApp
 
             var btnOpen = new ToolStripButton();
             btnOpen.Text = "Open";
+            var icon = new Bitmap(24, 24);
+            using (var g = Graphics.FromImage(icon))
+            {
+                g.Clear(Color.Transparent);
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                g.FillEllipse(Brushes.Blue, 2, 2, 20, 20);
+            }
+            btnOpen.Image = icon;
+            btnOpen.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             btnOpen.Click += (s, e) =>
             {
                 label.Text = "Open button clicked!";
@@ -1756,6 +1765,8 @@ namespace TestApp
 
             var btnSave = new ToolStripButton();
             btnSave.Text = "Save";
+            btnSave.Image = icon;
+            btnSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
             btnSave.Click += (s, e) =>
             {
                 label.Text = "Save button clicked!";

@@ -4,32 +4,19 @@ using System.Runtime.InteropServices;
 namespace System.Windows.Forms
 {
     /// <summary>
-    /// Represents a button on a ToolStrip. Text-only, no icon handling for now.
+    /// Represents a button on a ToolStrip.
     /// </summary>
     public class ToolStripButton : ToolStripItem
     {
-        private string _text = string.Empty;
-
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
             {
                 // Create a QAction for the button
-                Handle = NativeMethods.QAction_Create(_text);
+                Handle = NativeMethods.QAction_Create(string.Empty);
+                UpdateImage();
+                UpdateTextAndTooltip();
                 ConnectClickEvent();
-            }
-        }
-
-        public new string Text
-        {
-            get => _text;
-            set
-            {
-                _text = value ?? string.Empty;
-                if (IsHandleCreated)
-                {
-                    NativeMethods.QAction_SetText(Handle, _text);
-                }
             }
         }
 
@@ -49,3 +36,4 @@ namespace System.Windows.Forms
         }
     }
 }
+
