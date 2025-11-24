@@ -13,7 +13,7 @@ namespace System.Windows.Forms
             {
                 Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
-                
+
                 // Connect click event if handler is already attached
                 if (_clickHandler != null)
                 {

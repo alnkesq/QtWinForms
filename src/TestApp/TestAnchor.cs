@@ -77,13 +77,13 @@ namespace TestApp
             allStretchPanel.Location = new Point(150, 150);
             allStretchPanel.Size = new Size(500, 350);
             allStretchPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            
+
             var centerLabel = new Label();
             centerLabel.Text = "All Sides Anchored - Stretches in all directions";
             centerLabel.Location = new Point(50, 150);
             centerLabel.Size = new Size(400, 30);
             allStretchPanel.Controls.Add(centerLabel);
-            
+
             form.Controls.Add(allStretchPanel);
 
             return form;

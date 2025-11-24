@@ -14,7 +14,7 @@ namespace System.Windows.Forms
             {
                 Handle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
-                
+
                 if (_checked)
                 {
                     NativeMethods.QCheckBox_SetChecked(Handle, _checked);

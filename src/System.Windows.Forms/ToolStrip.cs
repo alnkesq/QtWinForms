@@ -13,7 +13,7 @@ namespace System.Windows.Forms
             {
                 Handle = CreateNativeControlCore();
                 SetCommonProperties();
-                
+
                 foreach (var item in _items)
                 {
                     if (!item.IsHandleCreated)
@@ -52,7 +52,7 @@ namespace System.Windows.Forms
             public void Add(ToolStripItem item)
             {
                 _owner._items.Add(item);
-                
+
                 if (_owner.IsHandleCreated)
                 {
                     item.EnsureCreated();

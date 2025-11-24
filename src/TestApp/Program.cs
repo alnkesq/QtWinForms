@@ -43,24 +43,24 @@ namespace TestApp
                 if (string.IsNullOrWhiteSpace(choice)) choice = "1";
 
                 Form testForm;
-                
+
                 switch (choice.Trim())
                 {
                     case "1":
                         Console.WriteLine("Running Dock Test...");
                         testForm = TestDock.CreateDockTestForm();
                         break;
-                    
+
                     case "2":
                         Console.WriteLine("Running Anchor Test...");
                         testForm = TestAnchor.CreateAnchorTestForm();
                         break;
-                    
+
                     case "3":
                         Console.WriteLine("Running Original Test...");
                         testForm = CreateOriginalTest();
                         break;
-                    
+
                     case "4":
                         Console.WriteLine("Running TabControl Test...");
                         testForm = CreateTabControlTest();
@@ -150,7 +150,7 @@ namespace TestApp
                         Console.WriteLine("Running ContextMenu Test...");
                         testForm = CreateContextMenuTest();
                         break;
-                    
+
                     default:
                         Console.WriteLine("Invalid choice, running Dock Test...");
                         testForm = TestDock.CreateDockTestForm();
@@ -179,12 +179,13 @@ namespace TestApp
 
             var lbl = new Label();
             form.Text = "Hello Qt from C#";
-            
+
             var button = new Button();
             button.Text = "Click Me!";
             button.Location = new Point(10, 10);
             button.Size = new Size(120, 30);
-            button.Click += (s, e) => {
+            button.Click += (s, e) =>
+            {
                 Console.WriteLine("Button clicked!");
                 var result = MessageBox.Show(
                     form,
@@ -196,12 +197,12 @@ namespace TestApp
                     0);
                 Console.WriteLine($"MessageBox result: {result}");
             };
-            
+
             var button2 = new Button();
             button2.Text = "Show Info";
             button2.Location = new Point(10, 50);
             button2.Size = new Size(120, 30);
-            button2.Click += (s, e) => 
+            button2.Click += (s, e) =>
             {
                 Console.WriteLine("Button2 clicked!");
                 var result = MessageBox.Show(
@@ -211,7 +212,7 @@ namespace TestApp
                     MessageBoxIcon.Information);
                 Console.WriteLine($"MessageBox result: {result}");
             };
-            
+
             var panel = new Panel();
             panel.Location = new Point(500, 90);
             panel.Size = new Size(200, 100);
@@ -220,22 +221,23 @@ namespace TestApp
             panel.Controls.Add(button);
             panel.Controls.Add(button2);
 
-            
+
             var checkBox = new CheckBox();
             checkBox.Text = "Enable Feature";
             checkBox.Location = new Point(10, 50);
             checkBox.Size = new Size(150, 30);
             checkBox.Checked = true;
-            checkBox.CheckedChanged += (s, e) => {
+            checkBox.CheckedChanged += (s, e) =>
+            {
                 lbl.Text = $"CheckBox: {checkBox.Checked}";
                 button.Enabled = checkBox.Checked;
             };
             form.Controls.Add(checkBox);
-            
+
             textBox.Text = "Enter text here...";
             textBox.Location = new Point(10, 90);
             textBox.Size = new Size(200, 30);
-            
+
             multiline.Text = "Multiline\nText";
             multiline.Location = new Point(10, 450);
             multiline.Size = new Size(200, 100);
@@ -259,7 +261,8 @@ namespace TestApp
             chkPassword.Text = "Password Char";
             chkPassword.Location = new Point(220, 90);
             chkPassword.Size = new Size(150, 30);
-            chkPassword.CheckedChanged += (s, e) => {
+            chkPassword.CheckedChanged += (s, e) =>
+            {
                 textBox.UseSystemPasswordChar = chkPassword.Checked;
             };
             form.Controls.Add(chkPassword);
@@ -269,17 +272,19 @@ namespace TestApp
             chkVisible.Location = new Point(220, 130);
             chkVisible.Size = new Size(150, 30);
             chkVisible.Checked = true;
-            chkVisible.CheckedChanged += (s, e) => {
+            chkVisible.CheckedChanged += (s, e) =>
+            {
                 button2.Visible = chkVisible.Checked;
             };
             form.Controls.Add(chkVisible);
-            
-            
+
+
             var btnState = new Button();
             btnState.Text = "Toggle State";
             btnState.Location = new Point(10, 130);
             btnState.Size = new Size(120, 30);
-            btnState.Click += (s, e) => {
+            btnState.Click += (s, e) =>
+            {
                 if (form.WindowState == FormWindowState.Normal)
                     form.WindowState = FormWindowState.Maximized;
                 else if (form.WindowState == FormWindowState.Maximized)
@@ -293,7 +298,8 @@ namespace TestApp
             linkLabel.Text = "LinkLabel";
             linkLabel.Location = new Point(10, 170);
             linkLabel.Size = new Size(100, 30);
-            linkLabel.LinkClicked += (s, e) => {
+            linkLabel.LinkClicked += (s, e) =>
+            {
                 MessageBox.Show($"Link clicked!");
             };
             form.Controls.Add(linkLabel);
@@ -303,7 +309,7 @@ namespace TestApp
             grp.ForeColor = Color.Blue;
             var f2 = new Form1();
             f2.Visible = true;
-            
+
             return form;
         }
 
@@ -363,7 +369,8 @@ namespace TestApp
             label.Size = new Size(300, 30);
             form.Controls.Add(label);
 
-            EventHandler updateLabel = (s, e) => {
+            EventHandler updateLabel = (s, e) =>
+            {
                 string g1 = rb1.Checked ? "Option 1" : (rb2.Checked ? "Option 2" : "Option 3");
                 string g2 = rb4.Checked ? "Choice A" : "Choice B";
                 label.Text = $"Selection: {g1}, {g2}";
@@ -421,7 +428,7 @@ namespace TestApp
             greetButton.Text = "Greet";
             greetButton.Location = new Point(20, 90);
             greetButton.Size = new Size(100, 30);
-            greetButton.Click += (s, e) => 
+            greetButton.Click += (s, e) =>
             {
                 label.Text = $"Hello, {textBox.Text}!";
             };
@@ -433,7 +440,7 @@ namespace TestApp
             checkBox1.Text = "Option 1";
             checkBox1.Location = new Point(20, 20);
             checkBox1.Size = new Size(150, 30);
-            checkBox1.CheckedChanged += (s, e) => 
+            checkBox1.CheckedChanged += (s, e) =>
                 Console.WriteLine($"Option 1: {checkBox1.Checked}");
             tab3.Controls.Add(checkBox1);
 
@@ -442,7 +449,7 @@ namespace TestApp
             checkBox2.Location = new Point(20, 60);
             checkBox2.Size = new Size(150, 30);
             checkBox2.Checked = true;
-            checkBox2.CheckedChanged += (s, e) => 
+            checkBox2.CheckedChanged += (s, e) =>
                 Console.WriteLine($"Option 2: {checkBox2.Checked}");
             tab3.Controls.Add(checkBox2);
 
@@ -450,13 +457,13 @@ namespace TestApp
             groupBox.Text = "Settings";
             groupBox.Location = new Point(20, 100);
             groupBox.Size = new Size(200, 100);
-            
+
             var checkBox3 = new CheckBox();
             checkBox3.Text = "Advanced Mode";
             checkBox3.Location = new Point(10, 20);
             checkBox3.Size = new Size(150, 30);
             groupBox.Controls.Add(checkBox3);
-            
+
             tab3.Controls.Add(groupBox);
 
             // Add tabs to TabControl
@@ -658,7 +665,7 @@ namespace TestApp
             form.FormClosing += (s, e) =>
             {
                 Console.WriteLine($"FormClosing event fired! CloseReason: {e.CloseReason}");
-                
+
                 if (!checkBox.Checked)
                 {
                     var result = MessageBox.Show(
@@ -702,58 +709,58 @@ namespace TestApp
 
             // Create menu strip
             var menuStrip = new MenuStrip();
-            
+
             // File menu with submenus
             var fileMenu = new ToolStripMenuItem { Text = "&File" };
-            
+
             var saveItem = new ToolStripMenuItem { Text = "&Save" };
-            saveItem.Click += (s, e) => 
+            saveItem.Click += (s, e) =>
             {
                 Console.WriteLine("Save clicked!");
                 MessageBox.Show(form, "Save file", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             fileMenu.DropDownItems.Add(saveItem);
-            
+
             var openItem = new ToolStripMenuItem { Text = "&Open" };
-            openItem.Click += (s, e) => 
+            openItem.Click += (s, e) =>
             {
                 Console.WriteLine("Open clicked!");
                 MessageBox.Show(form, "Open file", "Open", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             fileMenu.DropDownItems.Add(openItem);
-            
+
             // Add separator
             fileMenu.DropDownItems.Add(new ToolStripSeparator());
-            
+
             // Recent submenu
             var recentMenu = new ToolStripMenuItem { Text = "&Recent" };
-            
+
             var recent1 = new ToolStripMenuItem { Text = "1" };
-            recent1.Click += (s, e) => 
+            recent1.Click += (s, e) =>
             {
                 Console.WriteLine("Recent 1 clicked!");
                 MessageBox.Show(form, "Opening recent file 1", "Recent", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             recentMenu.DropDownItems.Add(recent1);
-            
+
             var recent2 = new ToolStripMenuItem { Text = "2" };
-            recent2.Click += (s, e) => 
+            recent2.Click += (s, e) =>
             {
                 Console.WriteLine("Recent 2 clicked!");
                 MessageBox.Show(form, "Opening recent file 2", "Recent", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             recentMenu.DropDownItems.Add(recent2);
-            
+
             var recent3 = new ToolStripMenuItem { Text = "3" };
-            recent3.Click += (s, e) => 
+            recent3.Click += (s, e) =>
             {
                 Console.WriteLine("Recent 3 clicked!");
                 MessageBox.Show(form, "Opening recent file 3", "Recent", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             recentMenu.DropDownItems.Add(recent3);
-            
+
             fileMenu.DropDownItems.Add(recentMenu);
-            
+
             menuStrip.Items.Add(fileMenu);
 
             // Edit menu (simple, no submenus)
@@ -918,7 +925,7 @@ namespace TestApp
                 var dialog = new FolderBrowserDialog();
                 dialog.Description = "Select a folder for testing";
                 dialog.ShowNewFolderButton = true;
-                
+
                 if (dialog.ShowDialog(form) == DialogResult.OK)
                 {
                     label.Text = $"Selected Path: {dialog.SelectedPath}";
@@ -977,7 +984,7 @@ namespace TestApp
                 dialog.Title = "Save a file";
                 dialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
                 dialog.FileName = "test.txt";
-                
+
                 if (dialog.ShowDialog(form) == DialogResult.OK)
                 {
                     label.Text = $"Saved: {dialog.FileName}";
@@ -1113,12 +1120,12 @@ namespace TestApp
             {
                 var indices = listBox2.SelectedIndices;
                 var items = listBox2.SelectedItems;
-                
+
                 if (indices.Count > 0)
                 {
                     string indicesStr = "";
                     string itemsStr = "";
-                    
+
                     for (int i = 0; i < indices.Count; i++)
                     {
                         if (i > 0)
@@ -1129,7 +1136,7 @@ namespace TestApp
                         indicesStr += indices[i].ToString();
                         itemsStr += items[i].ToString();
                     }
-                    
+
                     selectionLabel2.Text = $"Count: {indices.Count}\nIndices: {indicesStr}\nItems: {itemsStr}";
                 }
                 else
@@ -1618,7 +1625,7 @@ namespace TestApp
             cmbStyle.Location = new Point(180, 220);
             cmbStyle.Size = new Size(150, 30);
             cmbStyle.DropDownStyle = ComboBoxStyle.DropDownList;
-            
+
             cmbStyle.Items.Add("None");
             cmbStyle.Items.Add("FixedSingle");
             cmbStyle.Items.Add("Fixed3D");
@@ -1626,15 +1633,15 @@ namespace TestApp
             cmbStyle.Items.Add("Sizable");
             cmbStyle.Items.Add("FixedToolWindow");
             cmbStyle.Items.Add("SizableToolWindow");
-            
+
             cmbStyle.SelectedIndex = (int)form.FormBorderStyle;
-            
-            cmbStyle.SelectedIndexChanged += (s, e) => 
+
+            cmbStyle.SelectedIndexChanged += (s, e) =>
             {
                 form.FormBorderStyle = (FormBorderStyle)cmbStyle.SelectedIndex;
             };
             form.Controls.Add(cmbStyle);
-            
+
             var label = new Label();
             label.Text = "Toggle properties to see effects.";
             label.Location = new Point(20, 260);
@@ -1659,14 +1666,14 @@ namespace TestApp
             button.Text = "Start Background Task";
             button.Location = new Point(20, 60);
             button.Size = new Size(200, 30);
-            
+
             button.Click += (s, e) =>
             {
                 button.Enabled = false;
                 label.Text = "Starting background task...";
-                
+
                 var context = System.Threading.SynchronizationContext.Current!;
-                
+
                 System.Threading.ThreadPool.QueueUserWorkItem(_ =>
                 {
                     System.Threading.Thread.Sleep(500);
@@ -1702,7 +1709,7 @@ namespace TestApp
                     });
                 });
             };
-            
+
             form.Controls.Add(button);
             return form;
         }
@@ -1841,32 +1848,32 @@ namespace TestApp
             };
 
             var contextMenu = new ContextMenuStrip();
-            
+
             var item1 = new ToolStripMenuItem { Text = "Item 1" };
             item1.Click += (s, e) => MessageBox.Show("Item 1 clicked");
             contextMenu.Items.Add(item1);
-            
+
             var item2 = new ToolStripMenuItem { Text = "Item 2" };
             item2.Click += (s, e) => MessageBox.Show("Item 2 clicked");
             contextMenu.Items.Add(item2);
-            
+
             contextMenu.Items.Add(new ToolStripSeparator());
-            
+
             var subMenu = new ToolStripMenuItem { Text = "SubMenu" };
             var subItem1 = new ToolStripMenuItem { Text = "SubItem 1" };
             subItem1.Click += (s, e) => MessageBox.Show("SubItem 1 clicked");
             subMenu.DropDownItems.Add(subItem1);
-            
+
             var subItem2 = new ToolStripMenuItem { Text = "SubItem 2" };
             subItem2.Click += (s, e) => MessageBox.Show("SubItem 2 clicked");
             subMenu.DropDownItems.Add(subItem2);
-            
+
             contextMenu.Items.Add(subMenu);
-            
+
             label.ContextMenuStrip = contextMenu;
-            
+
             form.Controls.Add(label);
-            
+
             var label2 = new Label
             {
                 Text = "I have no context menu",

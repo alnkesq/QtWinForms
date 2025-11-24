@@ -27,7 +27,7 @@ namespace System.Windows.Forms
             // Qt: "Text files (*.txt);;All files (*.*)"
             // Note: Qt expects the pattern to be in parentheses at the end of the description string.
             // "Images (*.png *.xpm *.jpg);;Text files (*.txt);;XML files (*.xml)"
-            
+
             var parts = filter.Split('|');
             var qtFilters = new System.Collections.Generic.List<string>();
 

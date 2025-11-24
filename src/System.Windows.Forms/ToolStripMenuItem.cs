@@ -22,7 +22,7 @@ namespace System.Windows.Forms
                     _menuHandle = NativeMethods.QMenu_Create(Text);
                     Handle = NativeMethods.QAction_Create(Text);
                     NativeMethods.QAction_SetMenu(Handle, _menuHandle);
-                    
+
                     // Add any items that were added before handle creation
                     foreach (var item in _dropDownItems)
                     {
@@ -36,7 +36,7 @@ namespace System.Windows.Forms
                 else
                 {
                     Handle = NativeMethods.QAction_Create(Text);
-                    
+
                     // Connect click event if handler is already attached
                     if (_clickHandler != null)
                     {

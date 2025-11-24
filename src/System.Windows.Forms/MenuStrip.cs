@@ -15,7 +15,7 @@ namespace System.Windows.Forms
                 // We'll create a QMenuBar when this is added to a form
                 Handle = NativeMethods.QMenuBar_Create(IntPtr.Zero);
                 SetCommonProperties();
-                
+
                 // Add any items that were added before handle creation
                 foreach (var item in _items)
                 {
@@ -55,7 +55,7 @@ namespace System.Windows.Forms
             public void Add(ToolStripMenuItem item)
             {
                 _owner._items.Add(item);
-                
+
                 if (_owner.IsHandleCreated)
                 {
                     if (!item.IsHandleCreated)

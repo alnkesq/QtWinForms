@@ -83,7 +83,7 @@ namespace System.Windows.Forms
 
                 base.InsertItem(index, value);
             }
-            
+
             protected override void PerformQtParenting(Control item)
             {
                 // TabPages need special handling - they're added to the TabWidget

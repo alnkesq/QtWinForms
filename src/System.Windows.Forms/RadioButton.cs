@@ -14,7 +14,7 @@ namespace System.Windows.Forms
             {
                 Handle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
-                
+
                 if (_checked)
                 {
                     NativeMethods.QRadioButton_SetChecked(Handle, _checked);
@@ -79,7 +79,7 @@ namespace System.Windows.Forms
                 radioButton._checked = isChecked;
                 radioButton.OnCheckedChanged(EventArgs.Empty);
             }
-            
+
         }
     }
 }

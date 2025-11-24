@@ -19,41 +19,41 @@ namespace System.Windows.Forms
             Description = string.Empty;
             ShowNewFolderButton = true;
         }
-        
+
         public override unsafe DialogResult ShowDialog(IWin32Window? owner)
         {
-             Utils.EnsureSTAThread();
+            Utils.EnsureSTAThread();
 
-             IntPtr ownerHandle = owner?.Handle ?? IntPtr.Zero;
-             
-             using var box = new GCHandle<string?>(null);
+            IntPtr ownerHandle = owner?.Handle ?? IntPtr.Zero;
 
-             [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
-             static void Callback(void* utf16, int length, IntPtr userData)
-             {
-                 var box = GCHandle<string?>.FromIntPtr(userData);
-                 string s = Marshal.PtrToStringUni((nint)utf16, length);
-                 box.Target = s;
-             }
+            using var box = new GCHandle<string?>(null);
 
-             NativeMethods.QFileDialog_GetExistingDirectory(
-                 ownerHandle, 
-                 InitialDirectory ?? "", 
-                 Description ?? "", 
-                 ShowNewFolderButton, 
-                 &Callback, 
-                 GCHandle<string?>.ToIntPtr(box)
-             );
+            [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+            static void Callback(void* utf16, int length, IntPtr userData)
+            {
+                var box = GCHandle<string?>.FromIntPtr(userData);
+                string s = Marshal.PtrToStringUni((nint)utf16, length);
+                box.Target = s;
+            }
 
-             string? result = box.Target;
+            NativeMethods.QFileDialog_GetExistingDirectory(
+                ownerHandle,
+                InitialDirectory ?? "",
+                Description ?? "",
+                ShowNewFolderButton,
+                &Callback,
+                GCHandle<string?>.ToIntPtr(box)
+            );
 
-             if (!string.IsNullOrEmpty(result))
-             {
-                 SelectedPath = Path.GetFullPath(result); // normalizes backlashes on Windows
-                 return DialogResult.OK;
-             }
-             
-             return DialogResult.Cancel;
+            string? result = box.Target;
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                SelectedPath = Path.GetFullPath(result); // normalizes backlashes on Windows
+                return DialogResult.OK;
+            }
+
+            return DialogResult.Cancel;
         }
     }
 }

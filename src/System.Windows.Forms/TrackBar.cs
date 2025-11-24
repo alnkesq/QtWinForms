@@ -61,7 +61,7 @@ namespace System.Windows.Forms
             {
                 if (value < _minimum || value > _maximum)
                     throw new ArgumentOutOfRangeException(nameof(value), $"Value of '{value}' is not valid for 'Value'. 'Value' should be between 'Minimum' and 'Maximum'.");
-                
+
                 if (_value != value)
                 {
                     _value = value;

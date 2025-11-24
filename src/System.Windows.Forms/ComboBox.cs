@@ -34,10 +34,10 @@ namespace System.Windows.Forms
                 // We only support DropDownList as per request, but we can set editable state based on it.
                 // DropDownList -> Not Editable
                 // DropDown -> Editable
-                bool editable = _dropDownStyle == ComboBoxStyle.DropDown; 
+                bool editable = _dropDownStyle == ComboBoxStyle.DropDown;
                 // However, user said "you only need to implement the ComboBoxStyle.DropDownList mode".
                 // So I will ensure it behaves as DropDownList (not editable) if that style is set.
-                
+
                 if (_dropDownStyle == ComboBoxStyle.DropDownList)
                 {
                     NativeMethods.QComboBox_SetEditable(Handle, false);

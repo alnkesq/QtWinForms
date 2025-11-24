@@ -21,7 +21,7 @@ namespace System.Windows.Forms
             if (IsHandleCreated) return;
 
             Handle = NativeMethods.QDateTimeEdit_Create(Parent?.Handle ?? IntPtr.Zero);
-            
+
             // Set initial values
             UpdateValue();
             UpdateMinDate();

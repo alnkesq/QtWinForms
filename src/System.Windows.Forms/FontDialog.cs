@@ -15,7 +15,7 @@ namespace System.Windows.Forms
         public bool ShowHelp { get; set; } = false;
         public int MaxSize { get; set; } = 0;
         public int MinSize { get; set; } = 0;
-        
+
         // Event for Apply button (not fully supported by Qt's static method, but we add the event for API compatibility)
         public event EventHandler? Apply;
 
@@ -41,7 +41,7 @@ namespace System.Windows.Forms
             // Font family name max length
             const int MaxFamilyLen = 256;
             IntPtr familyBuffer = Marshal.AllocHGlobal(MaxFamilyLen);
-            
+
             float size = Font.SizeInPoints;
             bool bold = Font.Bold;
             bool italic = Font.Italic;

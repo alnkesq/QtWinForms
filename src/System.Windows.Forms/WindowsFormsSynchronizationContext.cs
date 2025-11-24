@@ -9,11 +9,11 @@ namespace System.Windows.Forms
     {
         public unsafe override void Post(SendOrPostCallback d, object? state)
         {
-            var info = new CallbackInfo{ Callback = d, State = state, CatchException = false };
+            var info = new CallbackInfo { Callback = d, State = state, CatchException = false };
             var handle = new GCHandle<CallbackInfo>(info);
             NativeMethods.QApplication_InvokeOnMainThread(&InvokeCallback, GCHandle<CallbackInfo>.ToIntPtr(handle));
         }
-        
+
         public unsafe override void Send(SendOrPostCallback d, object? state)
         {
             if (Environment.CurrentManagedThreadId == Application._mainThreadId)
@@ -46,7 +46,7 @@ namespace System.Windows.Forms
             var info = handle.Target;
             try
             {
-                 info.Callback(info.State);
+                info.Callback(info.State);
             }
             catch (Exception ex) when (info.CatchException)
             {

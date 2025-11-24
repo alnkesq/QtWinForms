@@ -93,7 +93,7 @@ namespace System.Windows.Forms
             }
 
             NativeMethods.QAction_SetText(Handle, displayText);
-            
+
             // Only show tooltip if text is not already visible (Image or None mode)
             // or if tooltip was explicitly set
             string tooltipText = string.Empty;
@@ -107,7 +107,7 @@ namespace System.Windows.Forms
                 // Automatic tooltip when text is not visible
                 tooltipText = _text;
             }
-            
+
             NativeMethods.QAction_SetToolTip(Handle, tooltipText);
         }
     }

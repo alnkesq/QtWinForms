@@ -36,7 +36,7 @@ namespace System.Windows.Forms
                 NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
             }
             UpdateFormStyles();
-            
+
             // Attach menu bar if set
             if (_mainMenuStrip != null)
             {
@@ -45,7 +45,7 @@ namespace System.Windows.Forms
                     _mainMenuStrip.EnsureCreated();
                 }
                 NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
-                
+
                 // QWidget_SetMenuBar calls setParent, which hides the widget.
                 // We must show it again if it's supposed to be visible.
                 if (_mainMenuStrip.Visible)
@@ -53,7 +53,7 @@ namespace System.Windows.Forms
                     NativeMethods.QWidget_Show(_mainMenuStrip.Handle);
                 }
             }
-            
+
             // Connect resize and move events
             ConnectResizeEvent();
             ConnectCloseEvent();
@@ -120,7 +120,7 @@ namespace System.Windows.Forms
             get => Size;
             set => Size = value;
         }
-        public override string Text 
+        public override string Text
         {
             get => _text;
             set
@@ -131,7 +131,7 @@ namespace System.Windows.Forms
                     NativeMethods.QWidget_SetTitle(Handle, _text);
                 }
             }
-            }
+        }
 
 
         public MenuStrip? MainMenuStrip
@@ -147,7 +147,7 @@ namespace System.Windows.Forms
                         _mainMenuStrip.EnsureCreated();
                     }
                     NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
-                    
+
                     if (_mainMenuStrip.Visible)
                     {
                         NativeMethods.QWidget_Show(_mainMenuStrip.Handle);

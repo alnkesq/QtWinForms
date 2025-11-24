@@ -12,6 +12,6 @@ namespace System.Windows.Forms
 
         public DialogResult ShowDialog() => ShowDialog(null);
         public abstract DialogResult ShowDialog(IWin32Window? owner);
-        
+
     }
 }

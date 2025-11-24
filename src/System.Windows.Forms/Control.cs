@@ -67,7 +67,7 @@ namespace System.Windows.Forms
         {
             Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
             SetCommonProperties();
-            
+
             // Create handles for any child controls that were added before this control was created
             foreach (Control child in Controls)
             {
@@ -75,24 +75,24 @@ namespace System.Windows.Forms
                 {
                     child.EnsureCreated();
                 }
-                
+
                 // Set parent relationship in Qt
                 NativeMethods.QWidget_SetParent(child.Handle, Handle);
-                
+
                 // Apply position and size (Qt needs this after setParent)
                 NativeMethods.QWidget_Move(child.Handle, child.Location.X, child.Location.Y);
                 NativeMethods.QWidget_Resize(child.Handle, child.Size.Width, child.Size.Height);
-                
+
                 // Initialize anchor bounds now that parent is set
                 child.InitializeAnchorBounds();
-                
+
                 // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
                 if (child.Visible)
                 {
                     NativeMethods.QWidget_Show(child.Handle);
                 }
             }
-            
+
             // Trigger layout to handle docking/anchoring
             PerformLayout();
         }
@@ -332,7 +332,7 @@ namespace System.Windows.Forms
             if (Parent != null && _anchorBounds.IsEmpty)
             {
                 _anchorBounds = new Rectangle(Location, Size);
-                
+
                 // Calculate and store distances from parent edges
                 _anchorDistLeft = Location.X;
                 _anchorDistTop = Location.Y;
@@ -345,10 +345,10 @@ namespace System.Windows.Forms
         {
             bool sizeChanged = _size.Width != width || _size.Height != height;
             var positionChanged = _location.X != x || _location.Y != y;
-            
+
             _location = new Point(x, y);
             _size = new Size(width, height);
-            
+
             if (IsHandleCreated)
             {
                 if (positionChanged)
@@ -356,7 +356,7 @@ namespace System.Windows.Forms
                 if (sizeChanged)
                     NativeMethods.QWidget_Resize(Handle, width, height);
             }
-            
+
             if (sizeChanged)
             {
                 OnResize(EventArgs.Empty);
@@ -370,14 +370,14 @@ namespace System.Windows.Forms
 
         public void SuspendLayout() { }
         public void ResumeLayout(bool performLayout) { }
-        
+
         public void PerformLayout()
         {
             if (!IsHandleCreated) return;
-            
+
             // Perform dock layout
             PerformDockLayout();
-            
+
             // Perform anchor layout (for controls that aren't docked)
             foreach (Control child in Controls)
             {
@@ -398,7 +398,7 @@ namespace System.Windows.Forms
             // Process docked controls in Z-order (order they were added)
             // We need to process them in the order: Top, Bottom, Left, Right, Fill
             // But respect the order they were added for controls with the same dock style
-            
+
             var dockedControls = new System.Collections.Generic.List<Control>();
             foreach (Control child in Controls)
             {
@@ -601,8 +601,8 @@ namespace System.Windows.Forms
 
         private unsafe void ConnectCustomContextMenuRequested()
         {
-             delegate* unmanaged[Cdecl]<nint, int, int, void> callback = &OnCustomContextMenuRequestedCallback;
-             NativeMethods.QWidget_ConnectCustomContextMenuRequested(Handle, (IntPtr)callback, GCHandlePtr);
+            delegate* unmanaged[Cdecl]<nint, int, int, void> callback = &OnCustomContextMenuRequestedCallback;
+            NativeMethods.QWidget_ConnectCustomContextMenuRequested(Handle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

@@ -54,7 +54,7 @@ namespace System.Windows.Forms
                 // Try to load into _image
                 if (!string.IsNullOrEmpty(value))
                 {
-                    try 
+                    try
                     {
                         if (File.Exists(value))
                         {

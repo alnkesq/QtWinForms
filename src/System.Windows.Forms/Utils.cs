@@ -8,7 +8,7 @@ namespace System.Windows.Forms
     {
         public static void EnsureSTAThread()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && 
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
                 Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
             {
                 throw new ThreadStateException("The current thread must be set to Single Thread Apartment (STA) mode before OLE calls can be made. Ensure that your Main function has STAThreadAttribute marked on it.");
