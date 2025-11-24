@@ -589,12 +589,12 @@ namespace System.Windows.Forms
             {
                 if (_contextMenuStrip != null)
                 {
-                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 2); // Qt::CustomContextMenu = 2
+                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 3); // Qt::CustomContextMenu
                     ConnectCustomContextMenuRequested();
                 }
                 else
                 {
-                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 0); // Qt::DefaultContextMenu = 0
+                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 0); // Qt::DefaultContextMenu
                 }
             }
         }

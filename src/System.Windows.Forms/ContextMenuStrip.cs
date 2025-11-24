@@ -9,7 +9,7 @@ namespace System.Windows.Forms
         {
         }
 
-        protected override IntPtr CreateNativeControl()
+        protected override IntPtr CreateNativeControlCore()
         {
             return NativeMethods.QMenu_Create(string.Empty);
         }
@@ -24,10 +24,7 @@ namespace System.Windows.Forms
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
 
-            if (!IsHandleCreated)
-            {
-                CreateNativeControl();
-            }
+            EnsureCreated();
 
             // Map client point to screen point
             Point screenPoint = control.PointToScreen(position);
@@ -36,10 +33,7 @@ namespace System.Windows.Forms
 
         public void Show(Point screenPos)
         {
-            if (!IsHandleCreated)
-            {
-                CreateNativeControl();
-            }
+            EnsureCreated();
             NativeMethods.QMenu_Popup(Handle, screenPos.X, screenPos.Y);
         }
     }

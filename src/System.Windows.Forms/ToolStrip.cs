@@ -11,7 +11,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = CreateNativeControl();
+                Handle = CreateNativeControlCore();
                 SetCommonProperties();
                 
                 foreach (var item in _items)
@@ -25,7 +25,7 @@ namespace System.Windows.Forms
             }
         }
 
-        protected virtual IntPtr CreateNativeControl()
+        protected virtual IntPtr CreateNativeControlCore()
         {
             var handle = NativeMethods.QToolBar_Create(IntPtr.Zero);
             if (_items.Any(x => x.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText && x.Image != null && !string.IsNullOrEmpty(x.Text)))
