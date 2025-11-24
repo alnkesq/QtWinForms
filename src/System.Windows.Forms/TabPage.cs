@@ -34,6 +34,34 @@ namespace System.Windows.Forms
             {
                 Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
                 SetCommonProperties();
+                
+                // Create handles for any child controls that were added before this control was created
+                foreach (Control child in Controls)
+                {
+                    if (!child.IsHandleCreated)
+                    {
+                        child.EnsureCreated();
+                    }
+                    
+                    // Set parent relationship in Qt
+                    NativeMethods.QWidget_SetParent(child.Handle, Handle);
+                    
+                    // Apply position and size (Qt needs this after setParent)
+                    NativeMethods.QWidget_Move(child.Handle, child.Location.X, child.Location.Y);
+                    NativeMethods.QWidget_Resize(child.Handle, child.Size.Width, child.Size.Height);
+                    
+                    // Initialize anchor bounds now that parent is set
+                    child.InitializeAnchorBounds();
+                    
+                    // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
+                    if (child.Visible)
+                    {
+                        NativeMethods.QWidget_Show(child.Handle);
+                    }
+                }
+                
+                // Trigger layout to handle docking/anchoring
+                PerformLayout();
             }
         }
     }

@@ -45,7 +45,7 @@ namespace System.Windows.Forms
             }
         }
 
-        public new string Text
+        public override string Text
         {
             get => _text;
             set
@@ -84,7 +84,7 @@ namespace System.Windows.Forms
                 {
                     // This shouldn't happen in normal usage, but handle it just in case
                     // We'd need to recreate the handle as a menu
-                    Console.WriteLine("Warning: Adding dropdown items after handle creation requires recreation");
+                    Console.Error.WriteLine("Warning: Adding dropdown items after handle creation requires recreation");
                 }
 
                 if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
@@ -143,7 +143,7 @@ namespace System.Windows.Forms
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static unsafe void OnClickedCallback(nint userData)
+        private static void OnClickedCallback(nint userData)
         {
             var menuItem = ObjectFromGCHandle<ToolStripMenuItem>(userData);
             menuItem._clickHandler?.Invoke(menuItem, EventArgs.Empty);

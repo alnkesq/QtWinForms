@@ -1749,7 +1749,6 @@ namespace TestApp
                 g.FillEllipse(Brushes.Blue, 2, 2, 20, 20);
             }
             btnOpen.Image = icon;
-            btnOpen.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             btnOpen.Click += (s, e) =>
             {
                 label.Text = "Open button clicked!";

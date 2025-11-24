@@ -22,6 +22,8 @@ namespace System.Windows.Forms
                 SetCommonProperties();
 
                 // Add any existing tab pages
+                // Note: We don't call base.CreateHandle() because TabPages need special handling
+                // via QTabWidget_AddTab, not regular QWidget_SetParent
                 foreach (TabPage page in _tabPages)
                 {
                     AddTabPageToNative(page);
@@ -80,7 +82,13 @@ namespace System.Windows.Forms
                 }
 
                 base.InsertItem(index, value);
-                _owner.AddTabPageToNative((TabPage)value);
+            }
+            
+            protected override void PerformQtParenting(Control item)
+            {
+                // TabPages need special handling - they're added to the TabWidget
+                // using QTabWidget_AddTab, not regular QWidget_SetParent
+                _owner.AddTabPageToNative((TabPage)item);
             }
 
             public void Add(TabPage page)

@@ -26,7 +26,7 @@ namespace System.Windows.Forms
             }
         }
 
-        public new string Text
+        public override string Text
         {
             get => _text;
             set

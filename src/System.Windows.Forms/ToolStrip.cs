@@ -12,7 +12,7 @@ namespace System.Windows.Forms
             if (!IsHandleCreated)
             {
                 Handle = NativeMethods.QToolBar_Create(IntPtr.Zero);
-                if (_items.Any(x => x.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText))
+                if (_items.Any(x => x.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText && x.Image != null && !string.IsNullOrEmpty(x.Text)))
                     NativeMethods.QToolBar_SetToolButtonStyle(Handle, (int)ToolStripItemDisplayStyle.ImageAndText);
                 SetCommonProperties();
                 
@@ -49,10 +49,7 @@ namespace System.Windows.Forms
                 
                 if (_owner.IsHandleCreated)
                 {
-                    if (!item.IsHandleCreated)
-                    {
-                        item.EnsureCreated();
-                    }
+                    item.EnsureCreated();
                     _owner.AddItemToToolBar(item);
                 }
             }

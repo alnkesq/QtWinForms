@@ -19,8 +19,20 @@ namespace System.Windows.Forms
             // Set parent relationship
             item.Parent = _owner;
             
-            // Ensure both owner and child widgets are created
-            _owner.EnsureCreated();
+            // Only perform Qt operations if the owner control already has a handle
+            if (_owner.IsHandleCreated)
+            {
+                PerformQtParenting(item);
+            }
+        }
+        
+        /// <summary>
+        /// Performs Qt-specific parenting operations when a control is added to the collection.
+        /// Can be overridden by derived classes to customize the parenting behavior.
+        /// </summary>
+        protected virtual void PerformQtParenting(Control item)
+        {
+            // Ensure child widget is created
             item.EnsureCreated();
             
             // Set parent relationship in Qt
