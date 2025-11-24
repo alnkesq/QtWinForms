@@ -162,6 +162,7 @@ namespace System.Windows.Forms
             control.OnSelectedIndexChanged(EventArgs.Empty);
         }
 
+#pragma warning disable CS8767
         public class ObjectCollection : IList
         {
             private ListBox _owner;
@@ -243,7 +244,7 @@ namespace System.Windows.Forms
             public void CopyTo(Array array, int index) => _innerList.CopyTo(array, index);
             public IEnumerator GetEnumerator() => _innerList.GetEnumerator();
         }
-
+#pragma warning restore CS8767
         public class SelectedIndexCollection : IList
         {
             private int[] _indices;

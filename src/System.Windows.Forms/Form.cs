@@ -274,7 +274,7 @@ namespace System.Windows.Forms
             }
         }
 
-        [Obsolete(NotImplementedWarning)] public Icon Icon { get; set; }
+        [Obsolete(NotImplementedWarning)] public Icon? Icon { get; set; }
 
         private void UpdateFormStyles()
         {

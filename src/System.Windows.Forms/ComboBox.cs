@@ -184,6 +184,7 @@ namespace System.Windows.Forms
             control.OnSelectedIndexChanged(EventArgs.Empty);
         }
 
+#pragma warning disable CS8767
         public class ObjectCollection : IList
         {
             private ComboBox _owner;
@@ -196,6 +197,7 @@ namespace System.Windows.Forms
 
             public int Add(object item)
             {
+                ArgumentNullException.ThrowIfNull(item);
                 int index = _innerList.Add(item);
                 if (_owner.IsHandleCreated)
                 {
@@ -247,7 +249,7 @@ namespace System.Windows.Forms
 
             public object this[int index]
             {
-                get => _innerList[index];
+                get => _innerList[index]!;
                 set
                 {
                     _innerList[index] = value;
@@ -270,5 +272,6 @@ namespace System.Windows.Forms
             public void CopyTo(Array array, int index) => _innerList.CopyTo(array, index);
             public IEnumerator GetEnumerator() => _innerList.GetEnumerator();
         }
+#pragma warning restore CS8767
     }
 }
