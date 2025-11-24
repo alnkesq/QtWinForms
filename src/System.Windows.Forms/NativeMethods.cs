@@ -368,6 +368,12 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QPictureBox_SetSizeMode(IntPtr pictureBox, int mode);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QToolBar_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QToolBar_AddAction(IntPtr toolBar, IntPtr action);
     }
 }
 

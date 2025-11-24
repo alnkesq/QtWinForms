@@ -34,6 +34,7 @@ namespace TestApp
                 Console.WriteLine("17. PictureBox Test");
                 Console.WriteLine("18. Form Properties Test");
                 Console.WriteLine("19. SynchronizationContext Test");
+                Console.WriteLine("20. ToolStrip Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -137,6 +138,11 @@ namespace TestApp
                     case "19":
                         Console.WriteLine("Running SynchronizationContext Test...");
                         testForm = CreateSynchronizationContextTest();
+                        break;
+
+                    case "20":
+                        Console.WriteLine("Running ToolStrip Test...");
+                        testForm = CreateToolStripTest();
                         break;
                     
                     default:
@@ -1692,6 +1698,116 @@ namespace TestApp
             };
             
             form.Controls.Add(button);
+            return form;
+        }
+
+        static Form CreateToolStripTest()
+        {
+            var form = new Form();
+            form.Text = "ToolStrip Test";
+            form.Size = new Size(600, 400);
+
+            // Create ToolStrip
+            var toolStrip = new ToolStrip();
+            toolStrip.Location = new Point(0, 0);
+            toolStrip.Size = new Size(600, 40);
+            form.Controls.Add(toolStrip);
+
+            // Create a label to show button click feedback
+            var label = new Label();
+            label.Text = "Click a toolbar button...";
+            label.Location = new Point(20, 60);
+            label.Size = new Size(500, 30);
+            form.Controls.Add(label);
+
+            // Create a multiline textbox for content
+            var textBox = new TextBox();
+            textBox.Multiline = true;
+            textBox.Location = new Point(20, 100);
+            textBox.Size = new Size(550, 250);
+            textBox.Text = "This is a test application with a ToolStrip.\n\nTry clicking the toolbar buttons above!";
+            form.Controls.Add(textBox);
+
+            // Add toolbar buttons
+            var btnNew = new ToolStripButton();
+            btnNew.Text = "New";
+            btnNew.Click += (s, e) =>
+            {
+                label.Text = "New button clicked!";
+                textBox.Text = "";
+                Console.WriteLine("New button clicked!");
+            };
+            toolStrip.Items.Add(btnNew);
+
+            var btnOpen = new ToolStripButton();
+            btnOpen.Text = "Open";
+            btnOpen.Click += (s, e) =>
+            {
+                label.Text = "Open button clicked!";
+                var result = MessageBox.Show(
+                    form,
+                    "Open file dialog would appear here.",
+                    "Open",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Console.WriteLine("Open button clicked!");
+            };
+            toolStrip.Items.Add(btnOpen);
+
+            var btnSave = new ToolStripButton();
+            btnSave.Text = "Save";
+            btnSave.Click += (s, e) =>
+            {
+                label.Text = "Save button clicked!";
+                MessageBox.Show(
+                    form,
+                    "File saved successfully!",
+                    "Save",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Console.WriteLine("Save button clicked!");
+            };
+            toolStrip.Items.Add(btnSave);
+
+            // Add separator
+            toolStrip.Items.AddSeparator();
+
+            var btnCopy = new ToolStripButton();
+            btnCopy.Text = "Copy";
+            btnCopy.Click += (s, e) =>
+            {
+                label.Text = "Copy button clicked!";
+                Console.WriteLine("Copy button clicked!");
+            };
+            toolStrip.Items.Add(btnCopy);
+
+            var btnPaste = new ToolStripButton();
+            btnPaste.Text = "Paste";
+            btnPaste.Click += (s, e) =>
+            {
+                label.Text = "Paste button clicked!";
+                Console.WriteLine("Paste button clicked!");
+            };
+            toolStrip.Items.Add(btnPaste);
+
+            // Add separator
+            toolStrip.Items.AddSeparator();
+
+            var btnHelp = new ToolStripButton();
+            btnHelp.Text = "Help";
+            btnHelp.Click += (s, e) =>
+            {
+                label.Text = "Help button clicked!";
+                MessageBox.Show(
+                    form,
+                    "ToolStrip Test Application\nVersion 1.0\n\nThis demonstrates a ToolStrip with text-only buttons.",
+                    "Help",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                Console.WriteLine("Help button clicked!");
+            };
+            toolStrip.Items.Add(btnHelp);
+
             return form;
         }
     }

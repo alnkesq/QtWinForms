@@ -32,6 +32,7 @@
 #include <QPixmap>
 #include <QBuffer>
 #include <QPainter>
+#include <QToolBar>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -1110,6 +1111,15 @@ extern "C" {
     EXPORT void QPictureBox_SetSizeMode(void* pictureBox, int mode) {
         QPictureBox* pb = (QPictureBox*)pictureBox;
         pb->setMode(mode);
+    }
+
+    EXPORT void* QToolBar_Create(void* parent) {
+        QToolBar* toolBar = new QToolBar((QWidget*)parent);
+        return toolBar;
+    }
+
+    EXPORT void QToolBar_AddAction(void* toolBar, void* action) {
+        ((QToolBar*)toolBar)->addAction((QAction*)action);
     }
     }
 
