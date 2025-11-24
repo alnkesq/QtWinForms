@@ -628,5 +628,11 @@ namespace System.Windows.Forms
             NativeMethods.QWidget_MapToGlobal(Handle, p.X, p.Y, out sx, out sy);
             return new Point(sx, sy);
         }
+
+        public override string ToString()
+        {
+            var text = Text;
+            return string.IsNullOrEmpty(text) ? base.ToString()! : text;
+        }
     }
 }
