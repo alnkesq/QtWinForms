@@ -1,11 +1,13 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
     public class Control : IWin32Window, IDisposable
     {
+        // ... (existing code)
         public IntPtr Handle { get; protected set; }
         internal GCHandle<Control>? gcHandle;
 
@@ -98,6 +100,7 @@ namespace System.Windows.Forms
         protected void SetCommonProperties()
         {
             Application.SetMainThreadOrEnsureMainThread();
+            UpdateContextMenuPolicy();
 
             if (_backColor != Color.Empty)
             {
@@ -565,6 +568,65 @@ namespace System.Windows.Forms
 
         public virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
 
+        private ContextMenuStrip? _contextMenuStrip;
 
+        public ContextMenuStrip? ContextMenuStrip
+        {
+            get => _contextMenuStrip;
+            set
+            {
+                if (_contextMenuStrip != value)
+                {
+                    _contextMenuStrip = value;
+                    UpdateContextMenuPolicy();
+                }
+            }
+        }
+
+        private void UpdateContextMenuPolicy()
+        {
+            if (IsHandleCreated)
+            {
+                if (_contextMenuStrip != null)
+                {
+                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 2); // Qt::CustomContextMenu = 2
+                    ConnectCustomContextMenuRequested();
+                }
+                else
+                {
+                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 0); // Qt::DefaultContextMenu = 0
+                }
+            }
+        }
+
+        private unsafe void ConnectCustomContextMenuRequested()
+        {
+             delegate* unmanaged[Cdecl]<nint, int, int, void> callback = &OnCustomContextMenuRequestedCallback;
+             NativeMethods.QWidget_ConnectCustomContextMenuRequested(Handle, (IntPtr)callback, GCHandlePtr);
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe void OnCustomContextMenuRequestedCallback(nint userData, int x, int y)
+        {
+            var control = ObjectFromGCHandle<Control>(userData);
+            control.OnContextMenuRequested(x, y);
+        }
+
+        private void OnContextMenuRequested(int x, int y)
+        {
+            if (_contextMenuStrip != null)
+            {
+                var screenPoint = PointToScreen(new Point(x, y));
+                _contextMenuStrip.Show(screenPoint);
+            }
+        }
+
+        public Point PointToScreen(Point p)
+        {
+            if (!IsHandleCreated) return p;
+            int sx = 0, sy = 0;
+            NativeMethods.QWidget_MapToGlobal(Handle, p.X, p.Y, out sx, out sy);
+            return new Point(sx, sy);
+        }
     }
 }

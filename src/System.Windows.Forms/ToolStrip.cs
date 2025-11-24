@@ -11,9 +11,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QToolBar_Create(IntPtr.Zero);
-                if (_items.Any(x => x.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText && x.Image != null && !string.IsNullOrEmpty(x.Text)))
-                    NativeMethods.QToolBar_SetToolButtonStyle(Handle, (int)ToolStripItemDisplayStyle.ImageAndText);
+                Handle = CreateNativeControl();
                 SetCommonProperties();
                 
                 foreach (var item in _items)
@@ -22,12 +20,20 @@ namespace System.Windows.Forms
                     {
                         item.EnsureCreated();
                     }
-                    AddItemToToolBar(item);
+                    AddNativeItem(item);
                 }
             }
         }
 
-        private void AddItemToToolBar(ToolStripItem item)
+        protected virtual IntPtr CreateNativeControl()
+        {
+            var handle = NativeMethods.QToolBar_Create(IntPtr.Zero);
+            if (_items.Any(x => x.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText && x.Image != null && !string.IsNullOrEmpty(x.Text)))
+                NativeMethods.QToolBar_SetToolButtonStyle(handle, (int)ToolStripItemDisplayStyle.ImageAndText);
+            return handle;
+        }
+
+        protected virtual void AddNativeItem(ToolStripItem item)
         {
             NativeMethods.QToolBar_AddAction(Handle, item.Handle);
         }
@@ -50,7 +56,7 @@ namespace System.Windows.Forms
                 if (_owner.IsHandleCreated)
                 {
                     item.EnsureCreated();
-                    _owner.AddItemToToolBar(item);
+                    _owner.AddNativeItem(item);
                 }
             }
 

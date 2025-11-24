@@ -35,6 +35,7 @@ namespace TestApp
                 Console.WriteLine("18. Form Properties Test");
                 Console.WriteLine("19. SynchronizationContext Test");
                 Console.WriteLine("20. ToolStrip Test");
+                Console.WriteLine("21. ContextMenu Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -143,6 +144,11 @@ namespace TestApp
                     case "20":
                         Console.WriteLine("Running ToolStrip Test...");
                         testForm = CreateToolStripTest();
+                        break;
+
+                    case "21":
+                        Console.WriteLine("Running ContextMenu Test...");
+                        testForm = CreateContextMenuTest();
                         break;
                     
                     default:
@@ -1817,6 +1823,57 @@ namespace TestApp
                 Console.WriteLine("Help button clicked!");
             };
             toolStrip.Items.Add(btnHelp);
+
+            return form;
+        }
+
+        static Form CreateContextMenuTest()
+        {
+            var form = new Form();
+            form.Text = "ContextMenuStrip Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label
+            {
+                Text = "Right-click me for Context Menu",
+                Location = new Point(50, 50),
+                AutoSize = true
+            };
+
+            var contextMenu = new ContextMenuStrip();
+            
+            var item1 = new ToolStripMenuItem { Text = "Item 1" };
+            item1.Click += (s, e) => MessageBox.Show("Item 1 clicked");
+            contextMenu.Items.Add(item1);
+            
+            var item2 = new ToolStripMenuItem { Text = "Item 2" };
+            item2.Click += (s, e) => MessageBox.Show("Item 2 clicked");
+            contextMenu.Items.Add(item2);
+            
+            contextMenu.Items.Add(new ToolStripSeparator());
+            
+            var subMenu = new ToolStripMenuItem { Text = "SubMenu" };
+            var subItem1 = new ToolStripMenuItem { Text = "SubItem 1" };
+            subItem1.Click += (s, e) => MessageBox.Show("SubItem 1 clicked");
+            subMenu.DropDownItems.Add(subItem1);
+            
+            var subItem2 = new ToolStripMenuItem { Text = "SubItem 2" };
+            subItem2.Click += (s, e) => MessageBox.Show("SubItem 2 clicked");
+            subMenu.DropDownItems.Add(subItem2);
+            
+            contextMenu.Items.Add(subMenu);
+            
+            label.ContextMenuStrip = contextMenu;
+            
+            form.Controls.Add(label);
+            
+            var label2 = new Label
+            {
+                Text = "I have no context menu",
+                Location = new Point(50, 100),
+                AutoSize = true
+            };
+            form.Controls.Add(label2);
 
             return form;
         }

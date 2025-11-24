@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
@@ -28,7 +29,7 @@ namespace System.Windows.Forms
             NativeMethods.QAction_ConnectTriggered(Handle, (IntPtr)callback, GCHandlePtr);
         }
 
-        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe void OnClickedCallback(nint userData)
         {
             var button = ObjectFromGCHandle<ToolStripButton>(userData);

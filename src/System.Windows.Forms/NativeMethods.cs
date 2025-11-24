@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using Cdecl = System.Runtime.CompilerServices.CallConvCdecl;
 
 namespace System.Windows.Forms
 {
@@ -171,6 +172,18 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_Close(IntPtr widget);
+
+        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetContextMenuPolicy(IntPtr widget, int policy);
+
+        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_ConnectCustomContextMenuRequested(IntPtr widget, IntPtr callback, IntPtr userData);
+
+        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QMenu_Popup(IntPtr menu, int x, int y);
+
+        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_MapToGlobal(IntPtr widget, int x, int y, out int rx, out int ry);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QMenuBar_Create(IntPtr parent);

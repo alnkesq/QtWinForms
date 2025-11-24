@@ -1158,6 +1158,28 @@ extern "C" {
         }
         ((QToolBar*)toolBar)->setToolButtonStyle(qtStyle);
     }
+
+
+    EXPORT void QWidget_SetContextMenuPolicy(void* widget, int policy) {
+        ((QWidget*)widget)->setContextMenuPolicy((Qt::ContextMenuPolicy)policy);
+    }
+
+    EXPORT void QWidget_ConnectCustomContextMenuRequested(void* widget, void (*callback)(void*, int, int), void* userData) {
+        QObject::connect((QWidget*)widget, &QWidget::customContextMenuRequested, [callback, userData](const QPoint &pos) {
+            callback(userData, pos.x(), pos.y());
+        });
+    }
+
+    EXPORT void QMenu_Popup(void* menu, int x, int y) {
+        ((QMenu*)menu)->popup(QPoint(x, y));
+    }
+
+    EXPORT void QWidget_MapToGlobal(void* widget, int x, int y, int* rx, int* ry) {
+        QPoint p = ((QWidget*)widget)->mapToGlobal(QPoint(x, y));
+        *rx = p.x();
+        *ry = p.y();
+    }
+
     }
 
 
