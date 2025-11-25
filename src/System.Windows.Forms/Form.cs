@@ -38,6 +38,7 @@ namespace System.Windows.Forms
                 NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
             }
             UpdateFormStyles();
+            UpdateIcon();
 
             // Attach menu bar if set
             if (_mainMenuStrip != null)
@@ -277,7 +278,34 @@ namespace System.Windows.Forms
             }
         }
 
-        [Obsolete(NotImplementedWarning)] public Icon? Icon { get; set; }
+        private Icon? _icon;
+        public Icon? Icon
+        {
+            get => _icon;
+            set
+            {
+                if (_icon != value)
+                {
+                    _icon = value;
+                    if (IsHandleCreated)
+                    {
+                        UpdateIcon();
+                    }
+                }
+            }
+        }
+
+        private void UpdateIcon()
+        {
+            if (_icon != null && _icon.IcoBytes != null)
+            {
+                NativeMethods.QWidget_SetIcon(Handle, _icon.IcoBytes, _icon.IcoBytes.Length);
+            }
+            else
+            {
+                NativeMethods.QWidget_SetIcon(Handle, null, 0);
+            }
+        }
 
         private void UpdateFormStyles()
         {

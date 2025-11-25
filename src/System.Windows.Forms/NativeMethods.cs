@@ -46,6 +46,9 @@ namespace System.Windows.Forms
         public static extern void QWidget_SetTitle(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetIcon(IntPtr widget, byte[]? data, int length);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QPushButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

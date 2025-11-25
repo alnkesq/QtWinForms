@@ -131,6 +131,17 @@ extern "C" {
     EXPORT void QWidget_SetTitle(void* widget, const char* title) {
         ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
     }
+
+    EXPORT void QWidget_SetIcon(void* widget, const unsigned char* data, int length) {
+        QWidget* w = (QWidget*)widget;
+        if (data != nullptr && length > 0) {
+            QPixmap pixmap;
+            pixmap.loadFromData(data, length);
+            w->setWindowIcon(QIcon(pixmap));
+        } else {
+            w->setWindowIcon(QIcon());
+        }
+    }
     
     EXPORT void* QPushButton_Create(void* parent, const char* text) {
         QPushButton* widget = new QPushButton(QString::fromUtf8(text), (QWidget*)parent);
