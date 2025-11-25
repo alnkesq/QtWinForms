@@ -6,7 +6,7 @@ namespace System.Windows.Forms
 {
     internal static class NativeMethods
     {
-        private const string LibName = "QtBackend";
+        private const string LibName = "QtWinFormsNative";
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QApplication_Create();
@@ -173,16 +173,16 @@ namespace System.Windows.Forms
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_Close(IntPtr widget);
 
-        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetContextMenuPolicy(IntPtr widget, int policy);
 
-        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_ConnectCustomContextMenuRequested(IntPtr widget, IntPtr callback, IntPtr userData);
 
-        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QMenu_Popup(IntPtr menu, int x, int y);
 
-        [DllImport("QtBackend", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_MapToGlobal(IntPtr widget, int x, int y, out int rx, out int ry);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

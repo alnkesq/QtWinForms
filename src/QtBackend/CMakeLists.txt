@@ -1,15 +1,32 @@
 cmake_minimum_required(VERSION 3.16)
-project(QtBackend LANGUAGES CXX)
+project(QtWinFormsNative LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+# Tell CMake where Qt is installed
 
-add_library(QtBackend SHARED lib.cpp)
+# Find the Qt6 components you need
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
 
-target_link_libraries(QtBackend PRIVATE Qt6::Widgets)
+# Build your DLL
+add_library(QtWinFormsNative SHARED
+    lib.cpp
+)
 
+target_compile_options(QtWinFormsNative PRIVATE /Gy)
+target_link_options(QtWinFormsNative PRIVATE /OPT:REF /OPT:ICF)
+
+# Link Qt statically
+target_link_libraries(QtWinFormsNative
+    PRIVATE
+        Qt6::Core
+        Qt6::Widgets
+        Qt6::Gui
+)
+
+# Needed for static Qt builds on Windows
 if(WIN32)
-    target_compile_definitions(QtBackend PRIVATE QTBACKEND_EXPORT)
+    # Disable DLL runtime linkage (static build)
+    add_definitions(-DQT_STATIC)
 endif()
