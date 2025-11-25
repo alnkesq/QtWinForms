@@ -4,8 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<RootNamespace>System.Drawing</RootNamespace>
-	<AssemblyName>QtWinForms.Drawing</AssemblyName>
+    <RootNamespace>System.Drawing</RootNamespace>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Open.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>10.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

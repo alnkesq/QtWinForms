@@ -4,16 +4,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\ECMA.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\MSFT.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
     <AssemblyVersion>10.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\System.Drawing.Common\System.Drawing.Common.csproj" />
-    <PackageReference Include="System.Resources.Extensions" Version="10.0.0" />
   </ItemGroup>
 
 </Project>
