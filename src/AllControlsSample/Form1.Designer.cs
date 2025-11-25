@@ -218,7 +218,7 @@ partial class Form1
         // messageBoxToolStripMenuItem
         // 
         messageBoxToolStripMenuItem.Name = "messageBoxToolStripMenuItem";
-        messageBoxToolStripMenuItem.Size = new Size(180, 22);
+        messageBoxToolStripMenuItem.Size = new Size(140, 22);
         messageBoxToolStripMenuItem.Text = "MessageBox";
         messageBoxToolStripMenuItem.Click += messageBoxToolStripMenuItem_Click;
         // 
@@ -486,6 +486,7 @@ partial class Form1
         Controls.Add(button1);
         Controls.Add(toolStrip1);
         Controls.Add(menuStrip1);
+        Icon = (Icon)resources.GetObject("$this.Icon");
         MainMenuStrip = menuStrip1;
         Name = "Form1";
         Text = "Form1";
