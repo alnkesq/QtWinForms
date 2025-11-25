@@ -567,8 +567,10 @@ namespace System.Windows.Forms
         private Font? _font;
         [Obsolete(NotImplementedWarning)] public ContentAlignment TextAlign { get; set; }
         [Obsolete(NotImplementedWarning)] public event PreviewKeyDownEventHandler? PreviewKeyDown;
+        [Obsolete(NotImplementedWarning)] public event KeyEventHandler? KeyDown;
 
         public virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
+        public virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);
 
         private ContextMenuStrip? _contextMenuStrip;
 
