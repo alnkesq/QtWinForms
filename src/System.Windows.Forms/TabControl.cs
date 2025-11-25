@@ -11,6 +11,7 @@ namespace System.Windows.Forms
         public TabControl() : base()
         {
             _tabPages = new TabPageCollection(this);
+            base.Controls = _tabPages;
             Size = new Size(300, 200);
         }
 
@@ -71,7 +72,7 @@ namespace System.Windows.Forms
 
             public new TabPage this[int index]
             {
-                get => (TabPage)base[index];
+                get => (TabPage)_owner.Controls[index];
             }
 
             protected override void InsertItem(int index, Control value)

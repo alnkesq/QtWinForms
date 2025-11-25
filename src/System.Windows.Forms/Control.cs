@@ -52,7 +52,7 @@ namespace System.Windows.Forms
 
         public bool IsHandleCreated => Handle != default;
 
-        public ControlCollection Controls { get; }
+        public ControlCollection Controls { get; protected set; }
 
         internal void EnsureCreated()
         {
