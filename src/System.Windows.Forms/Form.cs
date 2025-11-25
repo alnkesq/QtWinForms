@@ -28,6 +28,8 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
+            var prevVisible = Visible;
+            Visible = false;
             base.CreateHandle();
             NativeMethods.QWidget_Resize(Handle, Size.Width, Size.Height);
             NativeMethods.QWidget_SetTitle(Handle, _text);
@@ -57,6 +59,7 @@ namespace System.Windows.Forms
             // Connect resize and move events
             ConnectResizeEvent();
             ConnectCloseEvent();
+            Visible = prevVisible;
             OnLoad(EventArgs.Empty);
         }
 

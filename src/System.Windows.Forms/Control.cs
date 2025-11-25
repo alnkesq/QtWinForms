@@ -125,7 +125,7 @@ namespace System.Windows.Forms
 
             if (_visible)
             {
-                NativeMethods.QWidget_Show(Handle);
+                // NativeMethods.QWidget_Show(Handle);
             }
             else
             {
