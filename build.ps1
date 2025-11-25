@@ -23,7 +23,7 @@ if($Run){
     dotnet run --project src/TestApp
 }else{
     Write-Host "`nBuilding C# projects..." -ForegroundColor Yellow
-    dotnet build
+    dotnet build src/TestApp
     if ($LASTEXITCODE -ne 0) {
         Write-Host "ERROR: C# build failed!" -ForegroundColor Red
         exit 1
