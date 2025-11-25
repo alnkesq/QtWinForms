@@ -10,6 +10,9 @@ namespace System.Windows.Forms
         private SelectionMode _selectionMode = SelectionMode.One;
         private EventHandler? _selectedIndexChanged;
 
+
+        [Obsolete(NotImplementedWarning)] public bool FormattingEnabled { get; set; }
+
         public ListBox()
         {
             _items = new ObjectCollection(this);
@@ -183,6 +186,13 @@ namespace System.Windows.Forms
                 return index;
             }
 
+            public void AddRange(IEnumerable items)
+            {
+                foreach (var item in items)
+                {
+                    Add(item);
+                }
+            }
             public void Clear()
             {
                 _innerList.Clear();

@@ -40,21 +40,23 @@ namespace System.Windows.Forms
                 NativeMethods.QMenuBar_AddAction(Handle, item.Handle);
             }
         }
+        
+        public ToolStripItemCollection Items => new ToolStripItemCollectionImpl(this);
+        
 
-        public ToolStripMenuItemCollection Items => new ToolStripMenuItemCollection(this);
-
-        public class ToolStripMenuItemCollection
+        private class ToolStripItemCollectionImpl : ToolStripItemCollection
         {
             private readonly MenuStrip _owner;
 
-            internal ToolStripMenuItemCollection(MenuStrip owner)
+            internal ToolStripItemCollectionImpl(MenuStrip owner)
             {
                 _owner = owner;
             }
 
-            public void Add(ToolStripMenuItem item)
+            public override void Add(ToolStripItem item)
             {
-                _owner._items.Add(item);
+                var menuItem = (ToolStripMenuItem)item;
+                _owner._items.Add(menuItem);
 
                 if (_owner.IsHandleCreated)
                 {
@@ -62,11 +64,11 @@ namespace System.Windows.Forms
                     {
                         item.EnsureCreated();
                     }
-                    _owner.AddItemToMenuBar(item);
+                    _owner.AddItemToMenuBar(menuItem);
                 }
             }
 
-            public ToolStripMenuItem Add(string text)
+            public override ToolStripMenuItem Add(string text)
             {
                 var item = new ToolStripMenuItem { Text = text };
                 Add(item);

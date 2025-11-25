@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace AllControlsSample;
 
 public partial class Form1 : Form
@@ -40,5 +42,10 @@ public partial class Form1 : Form
     {
         using var dialog = new FolderBrowserDialog();
         dialog.ShowDialog(this);
+    }
+
+    private void messageBoxToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        MessageBox.Show("test", "title", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
     }
 }

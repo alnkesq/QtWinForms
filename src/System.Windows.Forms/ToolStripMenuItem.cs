@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -64,22 +65,28 @@ namespace System.Windows.Forms
         public bool HasMenu => _hasChildren;
         public IntPtr MenuHandle => _menuHandle;
 
-        public ToolStripItemCollection DropDownItems => new ToolStripItemCollection(this);
+        public ToolStripItemCollection DropDownItems => new ToolStripItemCollectionImpl(this);
 
-        public class ToolStripItemCollection
+
+
+        private class ToolStripItemCollectionImpl : ToolStripItemCollection
         {
             private readonly ToolStripMenuItem _owner;
 
-            internal ToolStripItemCollection(ToolStripMenuItem owner)
+            internal ToolStripItemCollectionImpl(ToolStripMenuItem owner)
             {
                 _owner = owner;
             }
 
-            public void Add(ToolStripMenuItem item)
+            public override void Add(ToolStripItem item)
             {
-                _owner._dropDownItems.Add(item);
-                _owner._hasChildren = true;
-
+                if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
+                {
+                    if (!item.IsHandleCreated)
+                    {
+                        item.EnsureCreated();
+                    }
+                }
                 // If handle is already created, we need to recreate it as a menu
                 if (_owner.IsHandleCreated && _owner._menuHandle == IntPtr.Zero)
                 {
@@ -88,32 +95,24 @@ namespace System.Windows.Forms
                     Console.Error.WriteLine("Warning: Adding dropdown items after handle creation requires recreation");
                 }
 
-                if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
-                {
-                    if (!item.IsHandleCreated)
-                    {
-                        item.EnsureCreated();
-                    }
-                    NativeMethods.QMenu_AddAction(_owner._menuHandle, item.Handle);
-                }
-            }
-
-            public void Add(ToolStripSeparator separator)
-            {
-                _owner._dropDownItems.Add(separator);
+                _owner._dropDownItems.Add(item);
                 _owner._hasChildren = true;
-
                 if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
                 {
-                    if (!separator.IsHandleCreated)
+                    if (item is ToolStripSeparator separator)
                     {
-                        separator.EnsureCreated();
+                        NativeMethods.QMenu_AddAction(_owner._menuHandle, separator.Handle);
                     }
-                    NativeMethods.QMenu_AddAction(_owner._menuHandle, separator.Handle);
+                    else
+                    {
+                        NativeMethods.QMenu_AddAction(_owner._menuHandle, item.Handle);
+                    }
                 }
+
             }
 
-            public ToolStripMenuItem Add(string text)
+
+            public override ToolStripMenuItem Add(string text)
             {
                 var item = new ToolStripMenuItem { Text = text };
                 Add(item);

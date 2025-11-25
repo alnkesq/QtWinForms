@@ -1,11 +1,10 @@
-using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
-    public class Control : IWin32Window, IDisposable
+    public class Control : IWin32Window, IDisposable, IComponent, ISupportInitialize
     {
         // ... (existing code)
         public IntPtr Handle { get; protected set; }
@@ -161,10 +160,11 @@ namespace System.Windows.Forms
             }
         }
 
+        private string _unusedText = string.Empty;
         public virtual string Text
         {
-            get => throw new NotSupportedException();
-            set => throw new NotSupportedException();
+            get => _unusedText;
+            set => _unusedText = value ?? string.Empty;
         }
 
         public bool Visible
@@ -575,6 +575,8 @@ namespace System.Windows.Forms
                 gcHandle.Value.Dispose();
                 gcHandle = null;
             }
+            if (disposing)
+                Disposed?.Invoke(this, EventArgs.Empty);
         }
 
         public virtual Font Font
@@ -596,6 +598,7 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public ContentAlignment TextAlign { get; set; }
         public event PreviewKeyDownEventHandler? PreviewKeyDown;
         public event KeyEventHandler? KeyDown;
+        public event EventHandler? Disposed;
 
         public virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
         public virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);
@@ -666,5 +669,17 @@ namespace System.Windows.Forms
             var text = Text;
             return string.IsNullOrEmpty(text) ? base.ToString()! : text;
         }
+
+        public void BeginInit()
+        {
+        }
+
+        public void EndInit()
+        {
+        }
+
+        [Obsolete(NotImplementedWarning)] public Padding Padding { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool TabStop { get; set; }
+        public ISite? Site { get; set; }
     }
 }

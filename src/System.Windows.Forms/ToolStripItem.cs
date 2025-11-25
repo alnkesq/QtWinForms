@@ -110,6 +110,8 @@ namespace System.Windows.Forms
 
             NativeMethods.QAction_SetToolTip(Handle, tooltipText);
         }
+
+        [Obsolete(NotImplementedWarning)] public Color ImageTransparentColor { get; set; }
     }
 }
 

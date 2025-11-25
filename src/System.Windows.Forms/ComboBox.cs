@@ -62,6 +62,8 @@ namespace System.Windows.Forms
             }
         }
 
+        [Obsolete(NotImplementedWarning)] public bool FormattingEnabled { get; set; }
+
         public ComboBoxStyle DropDownStyle
         {
             get => _dropDownStyle;
@@ -204,6 +206,14 @@ namespace System.Windows.Forms
                     NativeMethods.QComboBox_AddItem(_owner.Handle, item?.ToString() ?? "");
                 }
                 return index;
+            }
+
+            public void AddRange(IEnumerable items)
+            {
+                foreach (var item in items)
+                {
+                    Add(item);
+                }
             }
 
             public void Clear()

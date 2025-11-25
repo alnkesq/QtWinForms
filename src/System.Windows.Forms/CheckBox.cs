@@ -49,6 +49,18 @@ namespace System.Windows.Forms
             }
         }
 
+        public CheckState CheckState
+        {
+            get
+            {
+                return Checked ? CheckState.Checked : CheckState.Unchecked;
+            }
+            set
+            {
+                Checked = value == CheckState.Checked;
+            }
+        }
+
         public event EventHandler? CheckedChanged;
 
         private unsafe void ConnectStateChangedEvent()

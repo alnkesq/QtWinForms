@@ -38,18 +38,18 @@ namespace System.Windows.Forms
             NativeMethods.QToolBar_AddAction(Handle, item.Handle);
         }
 
-        public ToolStripItemCollection Items => new ToolStripItemCollection(this);
+        public ToolStripItemCollection Items => new ToolStripItemCollectionImpl(this);
 
-        public class ToolStripItemCollection
+        private class ToolStripItemCollectionImpl : ToolStripItemCollection
         {
             private readonly ToolStrip _owner;
 
-            internal ToolStripItemCollection(ToolStrip owner)
+            internal ToolStripItemCollectionImpl(ToolStrip owner)
             {
                 _owner = owner;
             }
 
-            public void Add(ToolStripItem item)
+            public override void Add(ToolStripItem item)
             {
                 _owner._items.Add(item);
 
@@ -60,18 +60,13 @@ namespace System.Windows.Forms
                 }
             }
 
-            public ToolStripButton Add(string text)
+            public override ToolStripButton Add(string text)
             {
                 var item = new ToolStripButton { Text = text };
                 Add(item);
                 return item;
             }
-
-            public void AddSeparator()
-            {
-                var separator = new ToolStripSeparator();
-                Add(separator);
-            }
         }
+
     }
 }

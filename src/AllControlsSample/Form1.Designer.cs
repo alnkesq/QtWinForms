@@ -1,4 +1,7 @@
-﻿namespace AllControlsSample;
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace AllControlsSample;
 
 partial class Form1
 {
@@ -47,6 +50,7 @@ partial class Form1
         colorToolStripMenuItem = new ToolStripMenuItem();
         fontToolStripMenuItem = new ToolStripMenuItem();
         helpToolStripMenuItem = new ToolStripMenuItem();
+        messageBoxToolStripMenuItem = new ToolStripMenuItem();
         progressBar1 = new ProgressBar();
         progressBar2 = new ProgressBar();
         groupBox1 = new GroupBox();
@@ -58,8 +62,7 @@ partial class Form1
         radioButton1 = new RadioButton();
         linkLabel1 = new LinkLabel();
         comboBox1 = new ComboBox();
-        listBox1 = new ListBox();
-        panel1 = new Panel();
+        textBox3 = new TextBox();
         contextMenuStrip1 = new ContextMenuStrip(components);
         toolStripMenuItem1 = new ToolStripMenuItem();
         submenuItem1ToolStripMenuItem = new ToolStripMenuItem();
@@ -71,14 +74,15 @@ partial class Form1
         tabPage2 = new TabPage();
         textBox1 = new TextBox();
         groupBox3 = new GroupBox();
-        numericUpDown1 = new NumericUpDown();
+        textBox2 = new TextBox();
         dateTimePicker1 = new DateTimePicker();
+        numericUpDown1 = new NumericUpDown();
+        listBox1 = new ListBox();
         toolStrip1.SuspendLayout();
         menuStrip1.SuspendLayout();
         groupBox1.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)trackBar1).BeginInit();
         groupBox2.SuspendLayout();
-        panel1.SuspendLayout();
         contextMenuStrip1.SuspendLayout();
         tabControl1.SuspendLayout();
         groupBox3.SuspendLayout();
@@ -87,7 +91,7 @@ partial class Form1
         // 
         // button1
         // 
-        button1.Location = new Point(473, 391);
+        button1.Location = new Point(477, 431);
         button1.Name = "button1";
         button1.Size = new Size(86, 23);
         button1.TabIndex = 0;
@@ -99,7 +103,7 @@ partial class Form1
         toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2 });
         toolStrip1.Location = new Point(0, 24);
         toolStrip1.Name = "toolStrip1";
-        toolStrip1.Size = new Size(706, 25);
+        toolStrip1.Size = new Size(887, 25);
         toolStrip1.TabIndex = 1;
         toolStrip1.Text = "toolStrip1";
         // 
@@ -206,9 +210,17 @@ partial class Form1
         // 
         // helpToolStripMenuItem
         // 
+        helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { messageBoxToolStripMenuItem });
         helpToolStripMenuItem.Name = "helpToolStripMenuItem";
         helpToolStripMenuItem.Size = new Size(44, 20);
         helpToolStripMenuItem.Text = "Help";
+        // 
+        // messageBoxToolStripMenuItem
+        // 
+        messageBoxToolStripMenuItem.Name = "messageBoxToolStripMenuItem";
+        messageBoxToolStripMenuItem.Size = new Size(180, 22);
+        messageBoxToolStripMenuItem.Text = "MessageBox";
+        messageBoxToolStripMenuItem.Click += messageBoxToolStripMenuItem_Click;
         // 
         // progressBar1
         // 
@@ -231,7 +243,7 @@ partial class Form1
         groupBox1.Controls.Add(trackBar1);
         groupBox1.Controls.Add(progressBar1);
         groupBox1.Controls.Add(progressBar2);
-        groupBox1.Location = new Point(39, 224);
+        groupBox1.Location = new Point(43, 264);
         groupBox1.Name = "groupBox1";
         groupBox1.Size = new Size(240, 148);
         groupBox1.TabIndex = 5;
@@ -255,7 +267,7 @@ partial class Form1
         groupBox2.Controls.Add(checkBox1);
         groupBox2.Controls.Add(radioButton2);
         groupBox2.Controls.Add(radioButton1);
-        groupBox2.Location = new Point(312, 229);
+        groupBox2.Location = new Point(316, 269);
         groupBox2.Name = "groupBox2";
         groupBox2.Size = new Size(247, 143);
         groupBox2.TabIndex = 6;
@@ -310,7 +322,7 @@ partial class Form1
         // 
         linkLabel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         linkLabel1.AutoSize = true;
-        linkLabel1.Location = new Point(623, 411);
+        linkLabel1.Location = new Point(818, 466);
         linkLabel1.Name = "linkLabel1";
         linkLabel1.Size = new Size(57, 15);
         linkLabel1.TabIndex = 7;
@@ -327,24 +339,15 @@ partial class Form1
         comboBox1.Size = new Size(201, 23);
         comboBox1.TabIndex = 8;
         // 
-        // listBox1
+        // textBox3
         // 
-        listBox1.Dock = DockStyle.Fill;
-        listBox1.FormattingEnabled = true;
-        listBox1.Items.AddRange(new object[] { "Item 1", "Item 2", "Item 3" });
-        listBox1.Location = new Point(0, 0);
-        listBox1.Name = "listBox1";
-        listBox1.Size = new Size(181, 433);
-        listBox1.TabIndex = 9;
-        // 
-        // panel1
-        // 
-        panel1.Controls.Add(listBox1);
-        panel1.Dock = DockStyle.Right;
-        panel1.Location = new Point(706, 24);
-        panel1.Name = "panel1";
-        panel1.Size = new Size(181, 433);
-        panel1.TabIndex = 10;
+        textBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        textBox3.Location = new Point(697, 111);
+        textBox3.Multiline = true;
+        textBox3.Name = "textBox3";
+        textBox3.Size = new Size(178, 111);
+        textBox3.TabIndex = 10;
+        textBox3.Text = "multi\r\nline\r\ntextbox";
         // 
         // contextMenuStrip1
         // 
@@ -390,7 +393,7 @@ partial class Form1
         tabControl1.Location = new Point(39, 64);
         tabControl1.Name = "tabControl1";
         tabControl1.SelectedIndex = 0;
-        tabControl1.Size = new Size(240, 150);
+        tabControl1.Size = new Size(240, 184);
         tabControl1.TabIndex = 11;
         // 
         // tabPage1
@@ -398,7 +401,7 @@ partial class Form1
         tabPage1.Location = new Point(4, 24);
         tabPage1.Name = "tabPage1";
         tabPage1.Padding = new Padding(3);
-        tabPage1.Size = new Size(232, 122);
+        tabPage1.Size = new Size(232, 156);
         tabPage1.TabIndex = 0;
         tabPage1.Text = "tabPage1";
         tabPage1.UseVisualStyleBackColor = true;
@@ -408,7 +411,7 @@ partial class Form1
         tabPage2.Location = new Point(4, 24);
         tabPage2.Name = "tabPage2";
         tabPage2.Padding = new Padding(3);
-        tabPage2.Size = new Size(192, 72);
+        tabPage2.Size = new Size(232, 156);
         tabPage2.TabIndex = 1;
         tabPage2.Text = "tabPage2";
         tabPage2.UseVisualStyleBackColor = true;
@@ -422,23 +425,25 @@ partial class Form1
         // 
         // groupBox3
         // 
+        groupBox3.Controls.Add(textBox2);
         groupBox3.Controls.Add(dateTimePicker1);
         groupBox3.Controls.Add(numericUpDown1);
         groupBox3.Controls.Add(comboBox1);
         groupBox3.Controls.Add(textBox1);
         groupBox3.Location = new Point(312, 64);
         groupBox3.Name = "groupBox3";
-        groupBox3.Size = new Size(247, 150);
+        groupBox3.Size = new Size(247, 180);
         groupBox3.TabIndex = 13;
         groupBox3.TabStop = false;
         groupBox3.Text = "groupBox3";
         // 
-        // numericUpDown1
+        // textBox2
         // 
-        numericUpDown1.Location = new Point(16, 79);
-        numericUpDown1.Name = "numericUpDown1";
-        numericUpDown1.Size = new Size(200, 23);
-        numericUpDown1.TabIndex = 13;
+        textBox2.Location = new Point(16, 138);
+        textBox2.Name = "textBox2";
+        textBox2.Size = new Size(200, 23);
+        textBox2.TabIndex = 10;
+        textBox2.UseSystemPasswordChar = true;
         // 
         // dateTimePicker1
         // 
@@ -447,20 +452,39 @@ partial class Form1
         dateTimePicker1.Size = new Size(200, 23);
         dateTimePicker1.TabIndex = 14;
         // 
+        // numericUpDown1
+        // 
+        numericUpDown1.Location = new Point(16, 79);
+        numericUpDown1.Name = "numericUpDown1";
+        numericUpDown1.Size = new Size(200, 23);
+        numericUpDown1.TabIndex = 13;
+        // 
+        // listBox1
+        // 
+        listBox1.Anchor = AnchorStyles.Right;
+        listBox1.FormattingEnabled = true;
+        listBox1.Items.AddRange(new object[] { "Item 1", "Item 2", "Item 3", "Item 4" });
+        listBox1.Location = new Point(697, 228);
+        listBox1.Name = "listBox1";
+        listBox1.SelectionMode = SelectionMode.MultiExtended;
+        listBox1.Size = new Size(178, 94);
+        listBox1.TabIndex = 14;
+        // 
         // Form1
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(887, 457);
+        ClientSize = new Size(887, 490);
         ContextMenuStrip = contextMenuStrip1;
+        Controls.Add(listBox1);
+        Controls.Add(textBox3);
         Controls.Add(groupBox3);
         Controls.Add(tabControl1);
         Controls.Add(linkLabel1);
         Controls.Add(groupBox2);
         Controls.Add(groupBox1);
-        Controls.Add(toolStrip1);
         Controls.Add(button1);
-        Controls.Add(panel1);
+        Controls.Add(toolStrip1);
         Controls.Add(menuStrip1);
         MainMenuStrip = menuStrip1;
         Name = "Form1";
@@ -474,7 +498,6 @@ partial class Form1
         ((System.ComponentModel.ISupportInitialize)trackBar1).EndInit();
         groupBox2.ResumeLayout(false);
         groupBox2.PerformLayout();
-        panel1.ResumeLayout(false);
         contextMenuStrip1.ResumeLayout(false);
         tabControl1.ResumeLayout(false);
         groupBox3.ResumeLayout(false);
@@ -514,8 +537,6 @@ partial class Form1
     private ToolStripMenuItem openFolderToolStripMenuItem;
     private LinkLabel linkLabel1;
     private ComboBox comboBox1;
-    private ListBox listBox1;
-    private Panel panel1;
     private ContextMenuStrip contextMenuStrip1;
     private ToolStripMenuItem toolStripMenuItem1;
     private ToolStripMenuItem submenuItem1ToolStripMenuItem;
@@ -529,4 +550,8 @@ partial class Form1
     private GroupBox groupBox3;
     private DateTimePicker dateTimePicker1;
     private NumericUpDown numericUpDown1;
+    private TextBox textBox3;
+    private TextBox textBox2;
+    private ToolStripMenuItem messageBoxToolStripMenuItem;
+    private ListBox listBox1;
 }

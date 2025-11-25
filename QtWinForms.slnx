@@ -3,5 +3,6 @@
   <Project Path="src/System.Drawing/System.Drawing.csproj" />
   <Project Path="src/System.Windows.Forms/System.Windows.Forms.csproj" />
   <Project Path="src/TestApp/TestApp.csproj" />
-  <Project Path="src/AllControlsSample/AllControlsSample.csproj" />
+  <Project Path="src/AllControlsSample/AllControlsSample-WinForms.csproj" />
+  <Project Path="src/AllControlsSample/AllControlsSample-QtWinForms.csproj" />
 </Solution>

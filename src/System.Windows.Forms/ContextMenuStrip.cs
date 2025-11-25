@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace System.Windows.Forms
@@ -9,6 +10,10 @@ namespace System.Windows.Forms
         {
         }
 
+        public ContextMenuStrip(IContainer container)
+        {
+            container.Add(this);
+        }
         protected override IntPtr CreateNativeControlCore()
         {
             return NativeMethods.QMenu_Create(string.Empty);

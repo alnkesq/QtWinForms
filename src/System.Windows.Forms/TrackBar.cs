@@ -71,10 +71,12 @@ namespace System.Windows.Forms
         }
 
         public event EventHandler? ValueChanged;
+        public event EventHandler? Scroll;
 
         protected virtual void OnValueChanged(EventArgs e)
         {
             ValueChanged?.Invoke(this, e);
+            Scroll?.Invoke(this, e);
         }
 
         private void UpdateRange()
@@ -99,5 +101,7 @@ namespace System.Windows.Forms
             trackBar._value = value;
             trackBar.OnValueChanged(EventArgs.Empty);
         }
+
+        [Obsolete(NotImplementedWarning)] public int TickFrequency { get; set; }
     }
 }

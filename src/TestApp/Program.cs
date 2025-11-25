@@ -1802,7 +1802,7 @@ namespace TestApp
             toolStrip.Items.Add(btnSave);
 
             // Add separator
-            toolStrip.Items.AddSeparator();
+            toolStrip.Items.Add(new ToolStripSeparator());
 
             var btnCopy = new ToolStripButton();
             btnCopy.Text = "Copy";
@@ -1823,7 +1823,7 @@ namespace TestApp
             toolStrip.Items.Add(btnPaste);
 
             // Add separator
-            toolStrip.Items.AddSeparator();
+            toolStrip.Items.Add(new ToolStripSeparator());
 
             var btnHelp = new ToolStripButton();
             btnHelp.Text = "Help";
