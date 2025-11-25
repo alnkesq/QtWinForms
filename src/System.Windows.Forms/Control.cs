@@ -67,14 +67,16 @@ namespace System.Windows.Forms
         {
             Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
             SetCommonProperties();
+            CreateChildren();
+        }
+
+        protected void CreateChildren()
+        {
 
             // Create handles for any child controls that were added before this control was created
             foreach (Control child in Controls)
             {
-                if (!child.IsHandleCreated)
-                {
-                    child.EnsureCreated();
-                }
+                child.EnsureCreated();
 
                 // Set parent relationship in Qt
                 NativeMethods.QWidget_SetParent(child.Handle, Handle);

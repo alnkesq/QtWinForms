@@ -19,6 +19,7 @@ namespace System.Windows.Forms
             {
                 Handle = NativeMethods.QGroupBox_Create(IntPtr.Zero, _text);
                 SetCommonProperties();
+                CreateChildren();
             }
         }
 
