@@ -27,20 +27,20 @@ namespace System.Windows.Forms
         public static void Run()
         {
             SetMainThreadOrEnsureMainThread();
-
-            if (SynchronizationContext.Current == null)
-            {
-                SynchronizationContext.SetSynchronizationContext(new WindowsFormsSynchronizationContext());
-            }
-            _synchronizationContext = SynchronizationContext.Current;
-
             NativeMethods.QApplication_Run();
         }
 
         public static void SetMainThreadOrEnsureMainThread()
         {
             if (_mainThreadId == -1)
+            {
+                if (SynchronizationContext.Current == null)
+                {
+                    SynchronizationContext.SetSynchronizationContext(new WindowsFormsSynchronizationContext());
+                }
+                _synchronizationContext = SynchronizationContext.Current;
                 _mainThreadId = Environment.CurrentManagedThreadId;
+            }
             else if (_mainThreadId != Environment.CurrentManagedThreadId)
                 throw new InvalidOperationException("Qt already initialized on a different thread.");
         }
