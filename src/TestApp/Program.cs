@@ -2074,10 +2074,7 @@ namespace TestApp
             expandAllButton.Size = new Size(130, 30);
             expandAllButton.Click += (s, e) =>
             {
-                foreach (TreeNode rootNode in treeView.Nodes)
-                {
-                    rootNode.ExpandAll();
-                }
+                treeView.ExpandAll();
             };
             form.Controls.Add(expandAllButton);
 
@@ -2088,10 +2085,7 @@ namespace TestApp
             collapseAllButton.Size = new Size(130, 30);
             collapseAllButton.Click += (s, e) =>
             {
-                foreach (TreeNode rootNode in treeView.Nodes)
-                {
-                    rootNode.CollapseAll();
-                }
+                treeView.CollapseAll();
             };
             form.Controls.Add(collapseAllButton);
 

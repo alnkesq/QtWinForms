@@ -31,6 +31,21 @@ namespace System.Windows.Forms
             }
         }
 
+        public void ExpandAll()
+        {
+            foreach (TreeNode child in Nodes)
+            {
+                child.ExpandAll();
+            }
+        }
+
+        public void CollapseAll()
+        {
+            foreach (TreeNode child in Nodes)
+            {
+                child.CollapseAll();
+            }
+        }
         public TreeNode.TreeNodeCollection Nodes => _nodes;
 
         public TreeNode? SelectedNode
