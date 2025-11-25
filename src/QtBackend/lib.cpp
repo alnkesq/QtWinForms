@@ -1273,6 +1273,10 @@ extern "C" {
         });
     }
 
+    EXPORT void QTreeWidgetItem_SetExpanded(void* item, bool expanded) {
+        ((QTreeWidgetItem*)item)->setExpanded(expanded);
+    }
+
     }
 
 

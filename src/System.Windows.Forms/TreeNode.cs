@@ -26,7 +26,7 @@ namespace System.Windows.Forms
             {
                 if (_text != value)
                 {
-                    _text = value;
+                    _text = value ?? string.Empty;
                     if (_treeView != null && _treeView.IsHandleCreated && _nativeItem != IntPtr.Zero)
                     {
                         NativeMethods.QTreeWidgetItem_SetText(_nativeItem, 0, _text);
@@ -71,6 +71,40 @@ namespace System.Windows.Forms
                         child.EnsureNativeItem();
                     }
                 }
+            }
+        }
+
+        public void Expand()
+        {
+            if (_nativeItem != IntPtr.Zero)
+            {
+                NativeMethods.QTreeWidgetItem_SetExpanded(_nativeItem, true);
+            }
+        }
+
+        public void Collapse()
+        {
+            if (_nativeItem != IntPtr.Zero)
+            {
+                NativeMethods.QTreeWidgetItem_SetExpanded(_nativeItem, false);
+            }
+        }
+
+        public void ExpandAll()
+        {
+            Expand();
+            foreach (TreeNode child in Nodes)
+            {
+                child.ExpandAll();
+            }
+        }
+
+        public void CollapseAll()
+        {
+            Collapse();
+            foreach (TreeNode child in Nodes)
+            {
+                child.CollapseAll();
             }
         }
 

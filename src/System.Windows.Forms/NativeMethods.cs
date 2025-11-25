@@ -426,6 +426,9 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QTreeWidget_ConnectItemSelectionChanged(IntPtr treeWidget, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_SetExpanded(IntPtr item, bool expanded);
     }
 }
 

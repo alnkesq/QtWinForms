@@ -2039,11 +2039,67 @@ namespace TestApp
             };
             form.Controls.Add(selectButton);
 
+            // Button to expand selected node
+            var expandSelectedButton = new Button();
+            expandSelectedButton.Text = "Expand Selected";
+            expandSelectedButton.Location = new Point(290, 220);
+            expandSelectedButton.Size = new Size(130, 30);
+            expandSelectedButton.Click += (s, e) =>
+            {
+                if (treeView.SelectedNode != null)
+                {
+                    treeView.SelectedNode.Expand();
+                }
+            };
+            form.Controls.Add(expandSelectedButton);
+
+            // Button to collapse selected node
+            var collapseSelectedButton = new Button();
+            collapseSelectedButton.Text = "Collapse Selected";
+            collapseSelectedButton.Location = new Point(430, 220);
+            collapseSelectedButton.Size = new Size(130, 30);
+            collapseSelectedButton.Click += (s, e) =>
+            {
+                if (treeView.SelectedNode != null)
+                {
+                    treeView.SelectedNode.Collapse();
+                }
+            };
+            form.Controls.Add(collapseSelectedButton);
+
+            // Button to expand all nodes
+            var expandAllButton = new Button();
+            expandAllButton.Text = "Expand All";
+            expandAllButton.Location = new Point(290, 260);
+            expandAllButton.Size = new Size(130, 30);
+            expandAllButton.Click += (s, e) =>
+            {
+                foreach (TreeNode rootNode in treeView.Nodes)
+                {
+                    rootNode.ExpandAll();
+                }
+            };
+            form.Controls.Add(expandAllButton);
+
+            // Button to collapse all nodes
+            var collapseAllButton = new Button();
+            collapseAllButton.Text = "Collapse All";
+            collapseAllButton.Location = new Point(430, 260);
+            collapseAllButton.Size = new Size(130, 30);
+            collapseAllButton.Click += (s, e) =>
+            {
+                foreach (TreeNode rootNode in treeView.Nodes)
+                {
+                    rootNode.CollapseAll();
+                }
+            };
+            form.Controls.Add(collapseAllButton);
+
             // Info label
             var infoLabel = new Label();
-            infoLabel.Text = "Click on tree nodes to select.\nUse buttons to modify the tree.";
-            infoLabel.Location = new Point(290, 230);
-            infoLabel.Size = new Size(280, 60);
+            infoLabel.Text = "Click on tree nodes to select.\nUse buttons to modify the tree.\nExpand/Collapse to control visibility.";
+            infoLabel.Location = new Point(290, 300);
+            infoLabel.Size = new Size(280, 80);
             form.Controls.Add(infoLabel);
 
             return form;
