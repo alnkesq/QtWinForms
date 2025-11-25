@@ -22,6 +22,7 @@ cmake -S . -B . `
     -DCMAKE_BUILD_TYPE=Release `
     -DCMAKE_C_COMPILER=cl `
     -DCMAKE_CXX_COMPILER=cl `
+    -DCMAKE_CXX_FLAGS_RELEASE="/Gy" `
     -G "Ninja" 
 
 
@@ -32,9 +33,16 @@ cd ..\qtwinforms\src\QtBackend
 cmake -S . -B build "-DCMAKE_PREFIX_PATH=$installdir"
 cmake --build build --config Release --parallel
 
+cd ..\..
 
-qt6_add_plugins(QtBackend
-    PLUGIN_TYPE style
-    PLUGINS qwindowsvistastyle
-)
+# The code above is only needed during the first build.
+# Now you can iterate using:
+./build.ps1 -Run
 
+```
+
+## Linux
+TODO
+
+## macOS
+TODO

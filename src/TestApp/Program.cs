@@ -14,6 +14,8 @@ namespace TestApp
         {
             try
             {
+                Application.SetQtWinFormsNativeDirectory(@"..\..\..\..\..\QtBackend\build\Release\");
+                
                 Console.WriteLine("Qt WinForms Test Application");
                 Console.WriteLine("Choose a test:");
                 Console.WriteLine("1. Dock Test");

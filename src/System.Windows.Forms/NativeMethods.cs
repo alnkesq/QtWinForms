@@ -6,7 +6,7 @@ namespace System.Windows.Forms
 {
     internal static class NativeMethods
     {
-        private const string LibName = "QtWinFormsNative";
+        internal const string LibName = "QtWinFormsNative";
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QApplication_Create();

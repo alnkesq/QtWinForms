@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace System.Windows.Forms
@@ -43,6 +44,24 @@ namespace System.Windows.Forms
             }
             else if (_mainThreadId != Environment.CurrentManagedThreadId)
                 throw new InvalidOperationException("Qt already initialized on a different thread.");
+        }
+
+        public static void SetQtWinFormsNativeDirectory(string directoryRelativeToWinFormsDll)
+        {
+            NativeLibrary.SetDllImportResolver(typeof(System.Windows.Forms.Control).Assembly, (a, b, c) =>
+            {
+                if (a == NativeMethods.LibName)
+                {
+                    var winFormsDll = typeof(System.Windows.Forms.Control).Assembly.Location;
+                    var path = Path.Combine(winFormsDll, directoryRelativeToWinFormsDll);
+                    if (File.Exists(path)) return NativeLibrary.Load(path);
+                    if (OperatingSystem.IsWindows()) return NativeLibrary.Load(Path.Combine(path, NativeMethods.LibName + ".dll"));
+                    if (OperatingSystem.IsLinux()) return NativeLibrary.Load(Path.Combine(path, "lib" + NativeMethods.LibName + ".so"));
+                    if (OperatingSystem.IsMacOS()) return NativeLibrary.Load(Path.Combine(path, "lib" + NativeMethods.LibName + ".dylib"));
+                }
+                return default;
+
+            });
         }
     }
 }
