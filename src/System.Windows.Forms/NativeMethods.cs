@@ -402,6 +402,31 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QToolBar_SetToolButtonStyle(IntPtr toolBar, int style);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QTreeWidget_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QTreeWidget_AddTopLevelItem(IntPtr treeWidget, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QTreeWidgetItem_AddChild(IntPtr parentItem, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_SetText(IntPtr item, int column, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_RemoveChild(IntPtr parentItem, IntPtr childItem);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QTreeWidget_GetCurrentItem(IntPtr treeWidget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_SetCurrentItem(IntPtr treeWidget, IntPtr item);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTreeWidget_ConnectItemSelectionChanged(IntPtr treeWidget, IntPtr callback, IntPtr userData);
     }
 }
+
 

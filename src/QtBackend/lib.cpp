@@ -34,6 +34,8 @@
 #include <QBuffer>
 #include <QPainter>
 #include <QToolBar>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -1222,6 +1224,53 @@ extern "C" {
         QPoint p = ((QWidget*)widget)->mapToGlobal(QPoint(x, y));
         *rx = p.x();
         *ry = p.y();
+    }
+
+    EXPORT void* QTreeWidget_Create(void* parent) {
+        QTreeWidget* widget = new QTreeWidget((QWidget*)parent);
+        widget->setHeaderHidden(true);
+        return widget;
+    }
+
+    EXPORT void* QTreeWidget_AddTopLevelItem(void* treeWidget, const char* text) {
+        QTreeWidget* tw = (QTreeWidget*)treeWidget;
+        QTreeWidgetItem* item = new QTreeWidgetItem();
+        item->setText(0, QString::fromUtf8(text));
+        tw->addTopLevelItem(item);
+        return item;
+    }
+
+    EXPORT void* QTreeWidgetItem_AddChild(void* parentItem, const char* text) {
+        QTreeWidgetItem* parent = (QTreeWidgetItem*)parentItem;
+        QTreeWidgetItem* child = new QTreeWidgetItem();
+        child->setText(0, QString::fromUtf8(text));
+        parent->addChild(child);
+        return child;
+    }
+
+    EXPORT void QTreeWidgetItem_SetText(void* item, int column, const char* text) {
+        ((QTreeWidgetItem*)item)->setText(column, QString::fromUtf8(text));
+    }
+
+    EXPORT void QTreeWidgetItem_RemoveChild(void* parentItem, void* childItem) {
+        QTreeWidgetItem* parent = (QTreeWidgetItem*)parentItem;
+        QTreeWidgetItem* child = (QTreeWidgetItem*)childItem;
+        parent->removeChild(child);
+        delete child;
+    }
+
+    EXPORT void* QTreeWidget_GetCurrentItem(void* treeWidget) {
+        return ((QTreeWidget*)treeWidget)->currentItem();
+    }
+
+    EXPORT void QTreeWidget_SetCurrentItem(void* treeWidget, void* item) {
+        ((QTreeWidget*)treeWidget)->setCurrentItem((QTreeWidgetItem*)item);
+    }
+
+    EXPORT void QTreeWidget_ConnectItemSelectionChanged(void* treeWidget, void (*callback)(void*), void* userData) {
+        QObject::connect((QTreeWidget*)treeWidget, &QTreeWidget::itemSelectionChanged, [callback, userData]() {
+            callback(userData);
+        });
     }
 
     }

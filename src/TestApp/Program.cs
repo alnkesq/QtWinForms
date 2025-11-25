@@ -40,6 +40,7 @@ namespace TestApp
                 Console.WriteLine("20. ToolStrip Test");
                 Console.WriteLine("21. ContextMenu Test");
                 Console.WriteLine("22. Key Events Test");
+                Console.WriteLine("23. TreeView Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -158,6 +159,11 @@ namespace TestApp
                     case "22":
                         Console.WriteLine("Running Key Events Test...");
                         testForm = CreateKeyEventsTest();
+                        break;
+
+                    case "23":
+                        Console.WriteLine("Running TreeView Test...");
+                        testForm = CreateTreeViewTest();
                         break;
 
                     default:
@@ -1932,6 +1938,113 @@ namespace TestApp
                     logLabel.Text += "\n(Suppressed)";
                 }
             };
+
+            return form;
+        }
+
+        static Form CreateTreeViewTest()
+        {
+            var form = new Form();
+            form.Text = "TreeView Test";
+            form.Size = new Size(600, 500);
+
+            var treeView = new TreeView();
+            treeView.Location = new Point(20, 20);
+            treeView.Size = new Size(250, 400);
+            form.Controls.Add(treeView);
+
+            // Add root nodes
+            var node1 = treeView.Nodes.Add("Root Node 1");
+            var node2 = treeView.Nodes.Add("Root Node 2");
+            var node3 = treeView.Nodes.Add("Root Node 3");
+
+            // Add child nodes to Root Node 1
+            var child1_1 = node1.Nodes.Add("Child 1.1");
+            var child1_2 = node1.Nodes.Add("Child 1.2");
+            var child1_3 = node1.Nodes.Add("Child 1.3");
+
+            // Add grandchild nodes
+            child1_1.Nodes.Add("Grandchild 1.1.1");
+            child1_1.Nodes.Add("Grandchild 1.1.2");
+            child1_2.Nodes.Add("Grandchild 1.2.1");
+
+            // Add child nodes to Root Node 2
+            node2.Nodes.Add("Child 2.1");
+            node2.Nodes.Add("Child 2.2");
+
+            // Add child nodes to Root Node 3
+            var child3_1 = node3.Nodes.Add("Child 3.1");
+            child3_1.Nodes.Add("Grandchild 3.1.1");
+            child3_1.Nodes.Add("Grandchild 3.1.2");
+            child3_1.Nodes.Add("Grandchild 3.1.3");
+
+            // Label to show selected node
+            var selectedLabel = new Label();
+            selectedLabel.Text = "Selected: None";
+            selectedLabel.Location = new Point(290, 20);
+            selectedLabel.Size = new Size(280, 30);
+            form.Controls.Add(selectedLabel);
+
+            // TextBox to modify selected node text
+            var textBox = new TextBox();
+            textBox.Location = new Point(290, 60);
+            textBox.Size = new Size(280, 30);
+            form.Controls.Add(textBox);
+
+            // Button to update selected node text
+            var updateButton = new Button();
+            updateButton.Text = "Update Selected Node";
+            updateButton.Location = new Point(290, 100);
+            updateButton.Size = new Size(180, 30);
+            updateButton.Click += (s, e) =>
+            {
+                if (treeView.SelectedNode != null && !string.IsNullOrWhiteSpace(textBox.Text))
+                {
+                    treeView.SelectedNode.Text = textBox.Text;
+                    selectedLabel.Text = $"Selected: {treeView.SelectedNode.Text}";
+                }
+            };
+            form.Controls.Add(updateButton);
+
+            // Button to add child to selected node
+            var addChildButton = new Button();
+            addChildButton.Text = "Add Child";
+            addChildButton.Location = new Point(290, 140);
+            addChildButton.Size = new Size(180, 30);
+            addChildButton.Click += (s, e) =>
+            {
+                if (treeView.SelectedNode != null)
+                {
+                    var newChild = treeView.SelectedNode.Nodes.Add("New Child");
+                    selectedLabel.Text = $"Added child to: {treeView.SelectedNode.Text}";
+                }
+                else
+                {
+                    var newRoot = treeView.Nodes.Add("New Root");
+                    selectedLabel.Text = "Added new root node";
+                }
+            };
+            form.Controls.Add(addChildButton);
+
+            // Button to select a specific node programmatically
+            var selectButton = new Button();
+            selectButton.Text = "Select Child 1.1";
+            selectButton.Location = new Point(290, 180);
+            selectButton.Size = new Size(180, 30);
+            selectButton.Click += (s, e) =>
+            {
+                treeView.SelectedNode = child1_1;
+                textBox.Text = child1_1.Text;
+                selectedLabel.Text = $"Selected: {child1_1.Text}";
+            };
+            form.Controls.Add(selectButton);
+
+            // Info label
+            var infoLabel = new Label();
+            infoLabel.Text = "Click on tree nodes to select.\nUse buttons to modify the tree.";
+            infoLabel.Location = new Point(290, 230);
+            infoLabel.Size = new Size(280, 60);
+            form.Controls.Add(infoLabel);
 
             return form;
         }
