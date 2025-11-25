@@ -70,6 +70,32 @@ namespace System.Windows.Forms
             CreateChildren();
         }
 
+        private unsafe void ConnectKeyEvent()
+        {
+            delegate* unmanaged[Cdecl]<IntPtr, int, int, byte> callback = &OnKeyEventCallback;
+            NativeMethods.QWidget_ConnectKeyEvent(Handle, callback, GCHandlePtr);
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe byte OnKeyEventCallback(IntPtr userData, int key, int modifiers)
+        {
+            var control = ObjectFromGCHandle<Control>(userData);
+            return control.ProcessKey(key, modifiers) ? (byte)1 : (byte)0;
+        }
+
+        private bool ProcessKey(int qtKey, int qtModifiers)
+        {
+            Keys keys = Utils.MapQtKeyToWinFormsKeys(qtKey, qtModifiers);
+
+            var previewArgs = new PreviewKeyDownEventArgs(keys);
+            OnPreviewKeyDown(previewArgs);
+
+            var keyArgs = new KeyEventArgs(keys);
+            OnKeyDown(keyArgs);
+
+            return keyArgs.SuppressKeyPress;
+        }
+
         protected void CreateChildren()
         {
 
@@ -122,6 +148,8 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetFont(Handle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
             }
+
+            ConnectKeyEvent();
 
             if (_visible)
             {
@@ -566,8 +594,8 @@ namespace System.Windows.Forms
         }
         private Font? _font;
         [Obsolete(NotImplementedWarning)] public ContentAlignment TextAlign { get; set; }
-        [Obsolete(NotImplementedWarning)] public event PreviewKeyDownEventHandler? PreviewKeyDown;
-        [Obsolete(NotImplementedWarning)] public event KeyEventHandler? KeyDown;
+        public event PreviewKeyDownEventHandler? PreviewKeyDown;
+        public event KeyEventHandler? KeyDown;
 
         public virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
         public virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);

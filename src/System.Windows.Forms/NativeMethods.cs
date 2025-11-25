@@ -171,6 +171,9 @@ namespace System.Windows.Forms
         public static extern void QWidget_ConnectCloseEvent(IntPtr widget, IntPtr closeCallback, IntPtr closedCallback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QWidget_ConnectKeyEvent(IntPtr widget, delegate* unmanaged[Cdecl]<IntPtr, int, int, byte> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_Close(IntPtr widget);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

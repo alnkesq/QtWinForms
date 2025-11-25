@@ -13,6 +13,7 @@
 #include <QResizeEvent>
 #include <QMoveEvent>
 #include <QCloseEvent>
+#include <QKeyEvent>
 #include <QProgressBar>
 #include <QRadioButton>
 #include <QMenuBar>
@@ -327,6 +328,38 @@ extern "C" {
     EXPORT void QWidget_ConnectCloseEvent(void* widget, int (*closeCallback)(void*), void (*closedCallback)(void*), void* userData) {
         QWidget* w = static_cast<QWidget*>(widget);
         CloseEventFilter* filter = new CloseEventFilter(closeCallback, closedCallback, userData);
+        w->installEventFilter(filter);
+    }
+
+    // Key event support
+    class KeyEventFilter : public QObject {
+    private:
+        bool (*keyCallback)(void*, int, int); // key, modifiers. Returns true if handled/suppressed.
+        void* userData;
+
+    public:
+        KeyEventFilter(bool (*cb)(void*, int, int), void* data)
+            : keyCallback(cb), userData(data) {}
+
+    protected:
+        bool eventFilter(QObject* obj, QEvent* event) override {
+            if (event->type() == QEvent::KeyPress) {
+                QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+                if (keyCallback) {
+                    // Pass key and modifiers
+                    bool handled = keyCallback(userData, keyEvent->key(), (int)keyEvent->modifiers());
+                    if (handled) {
+                        return true; // Stop propagation (SuppressKeyPress)
+                    }
+                }
+            }
+            return QObject::eventFilter(obj, event);
+        }
+    };
+
+    EXPORT void QWidget_ConnectKeyEvent(void* widget, bool (*callback)(void*, int, int), void* userData) {
+        QWidget* w = static_cast<QWidget*>(widget);
+        KeyEventFilter* filter = new KeyEventFilter(callback, userData);
         w->installEventFilter(filter);
     }
 

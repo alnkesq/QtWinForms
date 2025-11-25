@@ -39,6 +39,7 @@ namespace TestApp
                 Console.WriteLine("19. SynchronizationContext Test");
                 Console.WriteLine("20. ToolStrip Test");
                 Console.WriteLine("21. ContextMenu Test");
+                Console.WriteLine("22. Key Events Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -152,6 +153,11 @@ namespace TestApp
                     case "21":
                         Console.WriteLine("Running ContextMenu Test...");
                         testForm = CreateContextMenuTest();
+                        break;
+
+                    case "22":
+                        Console.WriteLine("Running Key Events Test...");
+                        testForm = CreateKeyEventsTest();
                         break;
 
                     default:
@@ -1884,6 +1890,48 @@ namespace TestApp
                 AutoSize = true
             };
             form.Controls.Add(label2);
+
+            return form;
+        }
+        static Form CreateKeyEventsTest()
+        {
+            var form = new Form();
+            form.Text = "Key Events Test";
+            form.Size = new Size(400, 300);
+
+            var label = new Label();
+            label.Text = "Type in the TextBox below.\nPress 'A' to test suppression.";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(350, 40);
+            form.Controls.Add(label);
+
+            var textBox = new TextBox();
+            textBox.Location = new Point(20, 70);
+            textBox.Size = new Size(350, 30);
+            form.Controls.Add(textBox);
+
+            var logLabel = new Label();
+            logLabel.Text = "Log:";
+            logLabel.Location = new Point(20, 110);
+            logLabel.Size = new Size(350, 150);
+            form.Controls.Add(logLabel);
+
+            textBox.PreviewKeyDown += (s, e) =>
+            {
+                Console.WriteLine($"PreviewKeyDown: {e.KeyCode}, Modifiers: {e.Modifiers}");
+            };
+
+            textBox.KeyDown += (s, e) =>
+            {
+                Console.WriteLine($"KeyDown: {e.KeyCode}, Modifiers: {e.Modifiers}");
+                logLabel.Text = $"Key: {e.KeyCode}\nModifiers: {e.Modifiers}";
+
+                if (e.KeyCode == Keys.A)
+                {
+                    e.SuppressKeyPress = true;
+                    logLabel.Text += "\n(Suppressed)";
+                }
+            };
 
             return form;
         }
