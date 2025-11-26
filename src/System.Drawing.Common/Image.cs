@@ -15,6 +15,7 @@ namespace System.Drawing
         private SixLabors.ImageSharp.Image<Rgba32>? _imageSharpImage;
         private byte[]? _bytes;
         private IntPtr _nativeQIcon;
+        private IntPtr _nativeQPixmap;
 
         public Image(SixLabors.ImageSharp.Image<Rgba32> image)
         {
@@ -22,10 +23,12 @@ namespace System.Drawing
         }
         internal Image(byte[] bytes, bool isOwned = false)
         {
+            if (bytes == null || bytes.Length == 0) throw new ArgumentNullException();
             this._bytes = isOwned ? bytes : bytes.ToArray();
         }
         public Image(ReadOnlySpan<byte> bytes)
         {
+            if (bytes.Length == 0) throw new ArgumentNullException();
             this._bytes = bytes.ToArray();
         }
 
@@ -37,6 +40,11 @@ namespace System.Drawing
             {
                 NativeMethods.QIcon_Destroy(_nativeQIcon);
                 _nativeQIcon = default;
+            }
+            if (_nativeQPixmap != default)
+            {
+                NativeMethods.QPixmap_Destroy(_nativeQPixmap);
+                _nativeQPixmap = default;
             }
         }
 
@@ -100,6 +108,16 @@ namespace System.Drawing
             }
 
             return _nativeQIcon;
+        }
+
+        public IntPtr GetQPixmap()
+        {
+            if (_nativeQPixmap == default)
+            {
+                _nativeQPixmap = NativeMethods.QPixmap_CreateFromData(Bytes, Bytes.Length);
+            }
+
+            return _nativeQPixmap;
         }
     }
 }

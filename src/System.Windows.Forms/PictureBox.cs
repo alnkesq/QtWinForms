@@ -100,13 +100,8 @@ namespace System.Windows.Forms
         {
             if (_image != null)
             {
-                using (var ms = new MemoryStream())
-                {
-                    // Save as PNG to preserve quality and transparency
-                    _image.Save(ms, ImageFormat.Png);
-                    var data = ms.ToArray();
-                    NativeMethods.QPictureBox_SetImage(Handle, data, data.Length);
-                }
+                IntPtr pixmap = _image.GetQPixmap();
+                NativeMethods.QPictureBox_SetImage(Handle, pixmap);
             }
             //else if (!string.IsNullOrEmpty(_imageLocation))
             //{
@@ -114,7 +109,7 @@ namespace System.Windows.Forms
             //}
             else
             {
-                NativeMethods.QPictureBox_SetImage(Handle, null, 0);
+                NativeMethods.QPictureBox_SetImage(Handle, IntPtr.Zero);
             }
         }
 

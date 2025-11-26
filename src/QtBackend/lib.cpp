@@ -1153,14 +1153,25 @@ extern "C" {
         return widget;
     }
 
-    EXPORT void QPictureBox_SetImage(void* pictureBox, const unsigned char* data, int length) {
+    EXPORT void QPictureBox_SetImage(void* pictureBox, void* pixmap) {
         QPictureBox* pb = (QPictureBox*)pictureBox;
-        if (data == nullptr || length == 0) {
+        QPixmap* qPixmap = (QPixmap*)pixmap;
+        if (qPixmap == nullptr) {
             pb->setOriginalPixmap(QPixmap());
         } else {
-            QPixmap pixmap;
-            pixmap.loadFromData(data, length);
-            pb->setOriginalPixmap(pixmap);
+            pb->setOriginalPixmap(*qPixmap);
+        }
+    }
+
+    EXPORT void* QPixmap_CreateFromData(const unsigned char* data, int length) {
+        QPixmap* pixmap = new QPixmap();
+        pixmap->loadFromData(data, length);
+        return pixmap;
+    }
+
+    EXPORT void QPixmap_Destroy(void* pixmap) {
+        if (pixmap != nullptr) {
+            delete (QPixmap*)pixmap;
         }
     }
 
@@ -1284,9 +1295,6 @@ extern "C" {
     }
 
     EXPORT void* QIcon_CreateFromData(const unsigned char* data, int length) {
-        if (data == nullptr || length == 0) {
-            return nullptr;
-        }
         QPixmap pixmap;
         pixmap.loadFromData(data, length);
         QIcon* icon = new QIcon(pixmap);

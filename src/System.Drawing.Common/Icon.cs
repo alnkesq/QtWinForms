@@ -10,8 +10,19 @@ namespace System.Drawing
     [TypeConverter(typeof(IconConverter))]
     public class Icon : IDisposable
     {
-        public required byte[] Bytes { get; init; }
-        
+        public byte[] Bytes { get; }
+
+        public Icon(byte[] bytes, bool owned = false)
+        {
+            if (bytes == null || bytes.Length == 0) throw new ArgumentNullException();
+            Bytes = owned ? bytes : bytes.ToArray();
+        }
+        public Icon(ReadOnlySpan<byte> bytes)
+        {
+            if (bytes.Length == 0) throw new ArgumentNullException();
+            Bytes = bytes.ToArray();
+        }
+
         public IntPtr _nativeQIcon;
 
         public IntPtr GetQIcon()

@@ -386,7 +386,13 @@ namespace System.Windows.Forms
         public static extern IntPtr QPictureBox_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QPictureBox_SetImage(IntPtr pictureBox, byte[]? data, int length);
+        public static extern void QPictureBox_SetImage(IntPtr pictureBox, IntPtr pixmap);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QPixmap_CreateFromData(byte[] data, int length);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QPixmap_Destroy(IntPtr pixmap);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QPictureBox_SetImageLocation(IntPtr pictureBox, [MarshalAs(UnmanagedType.LPStr)] string path);
