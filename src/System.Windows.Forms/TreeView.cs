@@ -85,6 +85,8 @@ namespace System.Windows.Forms
         }
         
         [Obsolete(NotImplementedWarning)] public bool HideSelection { get; set; }
+        [Obsolete(NotImplementedWarning)] public int ImageIndex { get; set; } = -1;
+        [Obsolete(NotImplementedWarning)] public int SelectedImageIndex { get; set; } = -1;
 
         public TreeNode.TreeNodeCollection Nodes => _nodes;
 
