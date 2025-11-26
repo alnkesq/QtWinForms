@@ -33,6 +33,11 @@ namespace System.Drawing
         {
             _imageSharpImage?.Dispose();
             _bytes = null;
+            if (_nativeQIcon != default)
+            {
+                // TODO: destroy QIcon
+                _nativeQIcon = default;
+            }
         }
 
 
@@ -95,7 +100,6 @@ namespace System.Drawing
             }
 
             return _nativeQIcon;
-
         }
     }
 }

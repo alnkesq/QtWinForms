@@ -9,7 +9,7 @@ namespace System.Drawing
         {
             if (value is byte[] bytes)
             {
-                return new Icon() { IcoBytes = bytes };
+                return new Icon() { Bytes = bytes };
             }
             return null;
         }

@@ -299,9 +299,9 @@ namespace System.Windows.Forms
 
         private void UpdateIcon()
         {
-            if (_icon != null && _icon.IcoBytes != null)
+            if (_icon != null && _icon.Bytes != null)
             {
-                NativeMethods.QWidget_SetIcon(Handle, _icon.IcoBytes, _icon.IcoBytes.Length);
+                NativeMethods.QWidget_SetIcon(Handle, _icon.Bytes, _icon.Bytes.Length);
             }
             else
             {
