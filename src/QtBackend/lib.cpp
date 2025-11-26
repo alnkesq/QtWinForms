@@ -36,6 +36,7 @@
 #include <QToolBar>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QImageReader>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -1292,10 +1293,33 @@ extern "C" {
         });
     }
 
-    EXPORT void* QIcon_CreateFromData(const unsigned char* data, int length) {
-        QPixmap pixmap;
-        pixmap.loadFromData(data, length);
-        QIcon* icon = new QIcon(pixmap);
+    static bool isIcoMagic(const void* ptr, size_t len)
+    {
+        if (len < 4) return false;
+        const unsigned char* p = static_cast<const unsigned char*>(ptr);
+        return p[0] == 0x00 && p[1] == 0x00 && p[2] == 0x01 && p[3] == 0x00;
+    }
+        
+    EXPORT void* QIcon_CreateFromData(const unsigned char* ptr, int len) {
+        QByteArray ba(reinterpret_cast<const char*>(ptr), len);
+
+        if (!isIcoMagic(ptr, len)) {
+            QPixmap px;
+            px.loadFromData(ba);
+            return new QIcon(px);
+        }
+            
+        QBuffer buf(&ba);
+        buf.open(QIODevice::ReadOnly);
+
+        QImageReader reader(&buf, "ICO");
+
+        QIcon* icon = new QIcon();
+        do {
+            QImage img = reader.read();
+            if (!img.isNull())
+                icon->addPixmap(QPixmap::fromImage(img));
+        } while (reader.jumpToNextImage());
         return icon;
     }
 
