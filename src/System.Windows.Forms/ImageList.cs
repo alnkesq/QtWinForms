@@ -36,9 +36,12 @@ namespace System.Windows.Forms
 
         public class ImageListCollection : List<Image>
         {
+            internal Dictionary<string, int>? nameToIndex;
             [Obsolete(Control.NotImplementedWarning)]
             public void SetKeyName(int index, string name)
             {
+                nameToIndex ??= new();
+                nameToIndex[name] = index;
             }
         }
     }
