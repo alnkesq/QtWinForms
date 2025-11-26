@@ -453,5 +453,8 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_SetIcon(IntPtr item, int column, IntPtr icon);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_SetToolTip(IntPtr item, int column, [MarshalAs(UnmanagedType.LPStr)] string toolTip);
     }
 }

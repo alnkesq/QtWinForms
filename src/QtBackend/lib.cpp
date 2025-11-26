@@ -1349,4 +1349,7 @@ extern "C" {
         }
     }
 
+    EXPORT void QTreeWidgetItem_SetToolTip(void* item, int column, const char* toolTip) {
+        ((QTreeWidgetItem*)item)->setToolTip(column, QString::fromUtf8(toolTip));
     }
+}

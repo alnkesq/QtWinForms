@@ -66,6 +66,23 @@ namespace System.Windows.Forms
             }
         }
 
+        private string _toolTipText = "";
+        public string ToolTipText
+        {
+            get => _toolTipText;
+            set
+            {
+                if (_toolTipText != value)
+                {
+                    _toolTipText = value ?? string.Empty;
+                    if (_nativeItem != IntPtr.Zero)
+                    {
+                        NativeMethods.QTreeWidgetItem_SetToolTip(_nativeItem, 0, _toolTipText);
+                    }
+                }
+            }
+        }
+
         public TreeNodeCollection Nodes
         {
             get
@@ -99,6 +116,11 @@ namespace System.Windows.Forms
                 }
 
                 UpdateIcon();
+
+                if (!string.IsNullOrEmpty(_toolTipText))
+                {
+                    NativeMethods.QTreeWidgetItem_SetToolTip(_nativeItem, 0, _toolTipText);
+                }
 
                 if (_nodes != null)
                 {

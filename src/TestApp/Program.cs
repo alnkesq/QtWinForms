@@ -2159,12 +2159,21 @@ namespace TestApp
             };
             form.Controls.Add(collapseAllButton);
 
-            // Info label
-            var infoLabel = new Label();
-            infoLabel.Text = "Click on tree nodes to select.\nUse buttons to modify the tree.\nExpand/Collapse to control visibility.";
-            infoLabel.Location = new Point(290, 300);
-            infoLabel.Size = new Size(280, 80);
-            form.Controls.Add(infoLabel);
+            // Button to set tooltip for selected node
+            var tooltipButton = new Button();
+            tooltipButton.Text = "Set ToolTip";
+            tooltipButton.Location = new Point(290, 340);
+            tooltipButton.Size = new Size(130, 30);
+            tooltipButton.Click += (s, e) =>
+            {
+                if (treeView.SelectedNode != null)
+                {
+                    treeView.SelectedNode.ToolTipText = "Tooltip set at " + DateTime.Now.ToShortTimeString();
+                    MessageBox.Show(form, "Tooltip set for " + treeView.SelectedNode.Text, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            };
+            form.Controls.Add(tooltipButton);
+
 
             // Label to show AfterExpand events
             var afterExpandLabel = new Label();
