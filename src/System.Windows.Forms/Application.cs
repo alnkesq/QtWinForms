@@ -41,27 +41,35 @@ namespace System.Windows.Forms
                 }
                 _synchronizationContext = SynchronizationContext.Current;
                 _mainThreadId = Environment.CurrentManagedThreadId;
+
+                var path = Environment.GetEnvironmentVariable("QTWINFORMS_DLL_PATH") ?? qtWinFormsNativeDirectory;
+                if (path != null)
+                {
+                    NativeLibrary.SetDllImportResolver(typeof(System.Windows.Forms.NativeMethods).Assembly, (a, b, c) =>
+                    {
+                        if (a == NativeMethods.LibName)
+                        {
+                            var winFormsDll = typeof(System.Windows.Forms.Control).Assembly.Location;
+                            if (File.Exists(path)) return NativeLibrary.Load(path);
+                            if (OperatingSystem.IsWindows()) return NativeLibrary.Load(Path.Combine(path, NativeMethods.LibName + ".dll"));
+                            if (OperatingSystem.IsLinux()) return NativeLibrary.Load(Path.Combine(path, "lib" + NativeMethods.LibName + ".so"));
+                            if (OperatingSystem.IsMacOS()) return NativeLibrary.Load(Path.Combine(path, "lib" + NativeMethods.LibName + ".dylib"));
+                        }
+                        return default;
+
+                    });
+                }
             }
             else if (_mainThreadId != Environment.CurrentManagedThreadId)
                 throw new InvalidOperationException("Qt already initialized on a different thread.");
         }
 
+
+        private static string? qtWinFormsNativeDirectory;
+
         public static void SetQtWinFormsNativeDirectory(string directoryRelativeToWinFormsDll)
         {
-            NativeLibrary.SetDllImportResolver(typeof(System.Windows.Forms.NativeMethods).Assembly, (a, b, c) =>
-            {
-                if (a == NativeMethods.LibName)
-                {
-                    var winFormsDll = typeof(System.Windows.Forms.Control).Assembly.Location;
-                    var path = Path.Combine(winFormsDll, directoryRelativeToWinFormsDll);
-                    if (File.Exists(path)) return NativeLibrary.Load(path);
-                    if (OperatingSystem.IsWindows()) return NativeLibrary.Load(Path.Combine(path, NativeMethods.LibName + ".dll"));
-                    if (OperatingSystem.IsLinux()) return NativeLibrary.Load(Path.Combine(path, "lib" + NativeMethods.LibName + ".so"));
-                    if (OperatingSystem.IsMacOS()) return NativeLibrary.Load(Path.Combine(path, "lib" + NativeMethods.LibName + ".dylib"));
-                }
-                return default;
-
-            });
+            qtWinFormsNativeDirectory = directoryRelativeToWinFormsDll;
         }
     }
 }
