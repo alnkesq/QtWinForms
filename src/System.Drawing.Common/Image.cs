@@ -11,6 +11,10 @@ namespace System.Drawing
     public abstract class Image : IDisposable
     {
         public readonly SixLabors.ImageSharp.Image<Rgba32> ImageSharpImage;
+        
+        // Lazily-initialized native Qt icon pointer for reuse
+        public IntPtr _nativeQIcon = IntPtr.Zero;
+        
         public Image(SixLabors.ImageSharp.Image<Rgba32> image)
         {
             this.ImageSharpImage = image;
@@ -18,6 +22,8 @@ namespace System.Drawing
         public void Dispose()
         {
             ImageSharpImage.Dispose();
+            // Note: We don't dispose the native QIcon here because it may be shared
+            // across multiple tree nodes. The ImageList will manage the lifecycle.
         }
 
         public void Save(Stream destination, ImageFormat format)

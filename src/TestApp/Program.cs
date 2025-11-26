@@ -1,3 +1,4 @@
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -1953,6 +1954,14 @@ namespace TestApp
             treeView.Size = new Size(250, 400);
             form.Controls.Add(treeView);
 
+            var imageList = new ImageList();
+
+            imageList.Images.Add(MakeMonochromeImage(Color.PeachPuff));
+            imageList.Images.Add(MakeMonochromeImage(Color.Peru));
+            imageList.Images.Add(MakeMonochromeImage(Color.Orchid));
+            imageList.Images.Add(MakeMonochromeImage(Color.DarkOrchid));
+            treeView.ImageList = imageList;
+
             // Add root nodes
             var node1 = treeView.Nodes.Add("Root Node 1");
             var node2 = treeView.Nodes.Add("Root Node 2");
@@ -1966,7 +1975,6 @@ namespace TestApp
             // Add grandchild nodes
             child1_1.Nodes.Add("Grandchild 1.1.1");
             child1_1.Nodes.Add("Grandchild 1.1.2");
-            child1_2.Nodes.Add("Grandchild 1.2.1");
 
             // Add child nodes to Root Node 2
             node2.Nodes.Add("Child 2.1");
@@ -2000,6 +2008,17 @@ namespace TestApp
                     textBox.Text = e.Node.Text;
                 }
             };
+
+            foreach (TreeNode item in treeView.Nodes)
+            {
+                item.ImageIndex = 0;
+                item.SelectedImageIndex = 1;
+                foreach (TreeNode child in item.Nodes)
+                {
+                    child.ImageIndex = 2;
+                    child.SelectedImageIndex = 3;
+                }
+            }
 
             // Button to update selected node text
             var updateButton = new Button();
@@ -2137,11 +2156,11 @@ namespace TestApp
                 {
                     // Clear existing children
                     e.Node.Nodes.Clear();
-                    
+
                     // Add a single child with timestamp
                     var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     e.Node.Nodes.Add($"Parent was expanded at {timestamp}");
-                    
+
                     selectedLabel.Text = $"BeforeExpand: {e.Node.Text} at {timestamp}";
                 }
             };
@@ -2157,6 +2176,21 @@ namespace TestApp
             };
 
             return form;
+        }
+
+        private static Bitmap MakeMonochromeImage(Color color)
+        {
+            var imageSharpColor = new Rgba32(color.R, color.G, color.B);
+            var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(16, 16);
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    image[x, y] = imageSharpColor;
+                }
+            }
+
+            return new Bitmap(image);
         }
     }
 }

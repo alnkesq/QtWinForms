@@ -1283,4 +1283,24 @@ extern "C" {
         });
     }
 
+    EXPORT void* QIcon_CreateFromData(const unsigned char* data, int length) {
+        if (data == nullptr || length == 0) {
+            return nullptr;
+        }
+        QPixmap pixmap;
+        pixmap.loadFromData(data, length);
+        QIcon* icon = new QIcon(pixmap);
+        return icon;
+    }
+
+    EXPORT void QTreeWidgetItem_SetIcon(void* item, int column, void* icon) {
+        QTreeWidgetItem* treeItem = (QTreeWidgetItem*)item;
+        QIcon* qIcon = (QIcon*)icon;
+        if (qIcon != nullptr) {
+            treeItem->setIcon(column, *qIcon);
+        } else {
+            treeItem->setIcon(column, QIcon());
+        }
+    }
+
     }

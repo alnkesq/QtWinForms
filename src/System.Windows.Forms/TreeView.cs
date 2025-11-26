@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -66,7 +67,22 @@ namespace System.Windows.Forms
         {
             AfterSelect?.Invoke(this, e);
         }
-        [Obsolete(NotImplementedWarning)] public ImageList? ImageList { get; set; }
+        
+        private ImageList? _imageList;
+        public ImageList? ImageList 
+        { 
+            get => _imageList;
+            set
+            {
+                _imageList = value;
+                // When ImageList changes, update all nodes
+                if (IsHandleCreated)
+                {
+                    UpdateAllNodeIcons();
+                }
+            }
+        }
+        
         [Obsolete(NotImplementedWarning)] public bool HideSelection { get; set; }
 
         public TreeNode.TreeNodeCollection Nodes => _nodes;
@@ -135,7 +151,21 @@ namespace System.Windows.Forms
         {
             var control = ObjectFromGCHandle<TreeView>(userData);
             IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(control.Handle);
+            
+            // Store the previous selected node to update its icon
+            TreeNode? previousNode = control._selectedNode;
+            
             control._selectedNode = control.FindNodeByNativeItem(nativeItem);
+            
+            // Update icons for both old and new selected nodes
+            if (previousNode != null)
+            {
+                previousNode.UpdateIcon(); // Revert to normal icon
+            }
+            if (control._selectedNode != null)
+            {
+                control._selectedNode.UpdateIcon(); // Show selected icon
+            }
             
             // Fire AfterSelect event
             if (control._selectedNode != null)
@@ -173,6 +203,45 @@ namespace System.Windows.Forms
                     control.OnAfterExpand(args);
                 }
             }
+        }
+        
+        private void UpdateAllNodeIcons()
+        {
+            foreach (TreeNode node in _nodes)
+            {
+                UpdateNodeIconsRecursive(node);
+            }
+        }
+        
+        private void UpdateNodeIconsRecursive(TreeNode node)
+        {
+            node.UpdateIcon();
+            foreach (TreeNode child in node.Nodes)
+            {
+                UpdateNodeIconsRecursive(child);
+            }
+        }
+        
+        internal IntPtr GetQIconFromImageList(int imageIndex)
+        {
+            if (_imageList == null || imageIndex < 0 || imageIndex >= _imageList.Images.Count)
+                return IntPtr.Zero;
+                
+            var image = _imageList.Images[imageIndex];
+            
+            // Check if we already have a native QIcon for this image
+            if (image._nativeQIcon != IntPtr.Zero)
+                return image._nativeQIcon;
+            
+            // Create a new QIcon from the image bytes
+            using (var ms = new System.IO.MemoryStream())
+            {
+                image.Save(ms, ImageFormat.Png);
+                byte[] imageBytes = ms.ToArray();
+                image._nativeQIcon = NativeMethods.QIcon_CreateFromData(imageBytes, imageBytes.Length);
+            }
+            
+            return image._nativeQIcon;
         }
     }
 }

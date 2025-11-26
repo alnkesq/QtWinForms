@@ -11,8 +11,34 @@ namespace System.Windows.Forms
         internal ITreeNodeOrTreeView? _parent;
         public object? Tag { get; set; }
 
-        [Obsolete(Control.NotImplementedWarning)] public int SelectedImageIndex { get; set; }
-        [Obsolete(Control.NotImplementedWarning)] public int ImageIndex { get; set; }
+        private int _selectedImageIndex = -1;
+        public int SelectedImageIndex 
+        { 
+            get => _selectedImageIndex;
+            set
+            {
+                if (_selectedImageIndex != value)
+                {
+                    _selectedImageIndex = value;
+                    UpdateIcon();
+                }
+            }
+        }
+        
+        private int _imageIndex = -1;
+        public int ImageIndex 
+        { 
+            get => _imageIndex;
+            set
+            {
+                if (_imageIndex != value)
+                {
+                    _imageIndex = value;
+                    UpdateIcon();
+                }
+            }
+        }
+        
         [Obsolete(Control.NotImplementedWarning)] public Color ForeColor { get; set; }
         [Obsolete(Control.NotImplementedWarning)] public Color BackColor { get; set; }
         public TreeNode()
@@ -71,6 +97,8 @@ namespace System.Windows.Forms
                     //_parent.EnsureNativeItem();
                     _nativeItem = NativeMethods.QTreeWidgetItem_AddChild(((TreeNode)_parent)._nativeItem, _text);
                 }
+
+                UpdateIcon();
 
                 if (_nodes != null)
                 {
@@ -269,6 +297,46 @@ namespace System.Windows.Forms
             public IEnumerator GetEnumerator() => _innerList.GetEnumerator();
         }
 #pragma warning restore CS8767
+        
+        internal void UpdateIcon()
+        {
+            if (_nativeItem == IntPtr.Zero)
+                return;
+                
+            // Get the TreeView
+            TreeView? treeView = GetTreeView();
+            if (treeView == null || treeView.ImageList == null)
+                return;
+            
+            // Determine which icon to use based on selection state
+            bool isSelected = treeView.SelectedNode == this;
+            int iconIndex = isSelected && _selectedImageIndex >= 0 ? _selectedImageIndex : _imageIndex;
+            
+            if (iconIndex < 0)
+                return;
+            
+            // Get the QIcon from the ImageList (reused if already created)
+            IntPtr qIcon = treeView.GetQIconFromImageList(iconIndex);
+            if (qIcon != IntPtr.Zero)
+            {
+                NativeMethods.QTreeWidgetItem_SetIcon(_nativeItem, 0, qIcon);
+            }
+        }
+        
+        private TreeView? GetTreeView()
+        {
+            ITreeNodeOrTreeView? current = _parent;
+            while (current != null)
+            {
+                if (current is TreeView tv)
+                    return tv;
+                if (current is TreeNode node)
+                    current = node._parent;
+                else
+                    break;
+            }
+            return null;
+        }
     }
 
     interface ITreeNodeOrTreeView
