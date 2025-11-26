@@ -437,6 +437,9 @@ namespace System.Windows.Forms
         public static extern IntPtr QIcon_CreateFromData(byte[] data, int length);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QIcon_Destroy(IntPtr icon);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_SetIcon(IntPtr item, int column, IntPtr icon);
     }
 }

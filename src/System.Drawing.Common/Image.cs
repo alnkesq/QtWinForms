@@ -35,7 +35,7 @@ namespace System.Drawing
             _bytes = null;
             if (_nativeQIcon != default)
             {
-                // TODO: destroy QIcon
+                NativeMethods.QIcon_Destroy(_nativeQIcon);
                 _nativeQIcon = default;
             }
         }

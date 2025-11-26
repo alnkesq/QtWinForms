@@ -1293,6 +1293,12 @@ extern "C" {
         return icon;
     }
 
+    EXPORT void QIcon_Destroy(void* icon) {
+        if (icon != nullptr) {
+            delete (QIcon*)icon;
+        }
+    }
+
     EXPORT void QTreeWidgetItem_SetIcon(void* item, int column, void* icon) {
         QTreeWidgetItem* treeItem = (QTreeWidgetItem*)item;
         QIcon* qIcon = (QIcon*)icon;
