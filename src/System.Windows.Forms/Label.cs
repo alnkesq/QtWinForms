@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -33,5 +34,7 @@ namespace System.Windows.Forms
         {
             NativeMethods.QLabel_SetText(Handle, _text);
         }
+
+        [Obsolete(NotImplementedWarning)] public Image? Image { get; set; }
     }
 }

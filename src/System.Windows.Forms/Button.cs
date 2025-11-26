@@ -14,7 +14,6 @@ namespace System.Windows.Forms
                 Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
 
-                // Connect click event if handler is already attached
                 if (_clickHandler != null)
                 {
                     ConnectClickEvent();
@@ -64,5 +63,8 @@ namespace System.Windows.Forms
             var button = ObjectFromGCHandle<Button>(userData);
             button._clickHandler?.Invoke(button, EventArgs.Empty);
         }
+
+        public DialogResult DialogResult { get; set; }
+        public FlatStyle FlatStyle { get; set; }
     }
 }

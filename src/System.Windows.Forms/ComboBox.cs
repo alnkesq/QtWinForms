@@ -186,6 +186,9 @@ namespace System.Windows.Forms
             control.OnSelectedIndexChanged(EventArgs.Empty);
         }
 
+        [Obsolete(NotImplementedWarning)] public AutoCompleteMode AutoCompleteMode { get; set; }
+        [Obsolete(NotImplementedWarning)] public AutoCompleteSource AutoCompleteSource { get; set; }
+
 #pragma warning disable CS8767
         public class ObjectCollection : IList
         {

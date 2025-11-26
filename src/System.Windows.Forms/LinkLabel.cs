@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -20,6 +21,7 @@ namespace System.Windows.Forms
 
         private delegate void LinkClickedCallbackDelegate(IntPtr userData, [MarshalAs(UnmanagedType.LPStr)] string link);
         private LinkClickedCallbackDelegate _linkClickedCallback;
+        [Obsolete(NotImplementedWarning)] public Color LinkColor { get; set; }
 
         protected override void CreateHandle()
         {

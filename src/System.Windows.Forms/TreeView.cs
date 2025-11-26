@@ -51,6 +51,7 @@ namespace System.Windows.Forms
 
         public void BeginUpdate() { }
         public void EndUpdate() { }
+        [Obsolete(NotImplementedWarning)] public TreeNodeMouseClickEventHandler? NodeMouseClick;
 
         public TreeViewCancelEventHandler? BeforeExpand;
         protected virtual void OnBeforeExpand(TreeViewCancelEventArgs e)
@@ -230,6 +231,13 @@ namespace System.Windows.Forms
             var image = _imageList.Images[imageIndex];
 
             return image.GetQIcon();
+        }
+
+        [Obsolete(NotImplementedWarning)]
+        public TreeNode? TopNode
+        { 
+            get => Nodes.Count != 0 ? Nodes[0] : null;
+            set { }
         }
     }
 }

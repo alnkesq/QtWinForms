@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-    public class Control : Component, IWin32Window, IDisposable, IComponent, ISupportInitialize
+    public class Control : Component, IWin32Window, IDisposable, IComponent, ISupportInitialize, ISynchronizeInvoke
     {
         public IntPtr Handle { get; protected set; }
         internal GCHandle<Control>? gcHandle;
@@ -13,6 +13,7 @@ namespace System.Windows.Forms
         internal static T ObjectFromGCHandle<T>(IntPtr gcHandle) where T : class => GCHandle<T>.FromIntPtr(gcHandle).Target;
 
         public bool InvokeRequired => Environment.CurrentManagedThreadId != Application._mainThreadId;
+        [Obsolete(NotImplementedWarning)] public static bool CheckForIllegalCrossThreadCalls { get; set; }
 
         public void Invoke(Action action)
         {
@@ -39,6 +40,62 @@ namespace System.Windows.Forms
                 return result;
             }
             return d.DynamicInvoke(args);
+        }
+
+        public Task<object?> InvokeAsync(Delegate d, params object?[]? args)
+        {
+            var tcs = new TaskCompletionSource<object?>();
+            Application._synchronizationContext!.Post(_ =>
+            {
+                try
+                {
+
+                    tcs.SetResult(d.DynamicInvoke(args));
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                    throw;
+                }
+            }, null);
+            return tcs.Task;
+        }
+
+        public Task<T> InvokeAsync<T>(Func<T> func, CancellationToken ct = default)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            Application._synchronizationContext!.Post(_ =>
+            {
+                try
+                {
+
+                    tcs.SetResult(func());
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                    throw;
+                }
+            }, null);
+            return tcs.Task;
+        }
+        public Task InvokeAsync(Action func, CancellationToken ct = default)
+        {
+            var tcs = new TaskCompletionSource();
+            Application._synchronizationContext!.Post(_ =>
+            {
+                try
+                {
+                    func();
+                    tcs.SetResult();
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                    throw;
+                }
+            }, null);
+            return tcs.Task;
         }
 
         public Control()
@@ -344,7 +401,6 @@ namespace System.Windows.Forms
             }
         }
 
-        // Resize event
         public event EventHandler? Resize;
 
         protected virtual void OnResize(EventArgs e)
@@ -392,10 +448,6 @@ namespace System.Windows.Forms
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
 
         public void SuspendLayout() { }
         public void ResumeLayout(bool performLayout) { }
@@ -552,10 +604,13 @@ namespace System.Windows.Forms
 
         internal const string NotImplementedWarning = "Not implemented, NOP";
 
+        public bool Disposing { get; private set; }
+        public bool IsDisposed { get; private set; }
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
+                Disposing = true;
                 // Dispose children
                 for (int i = Controls.Count - 1; i >= 0; i--)
                 {
@@ -576,6 +631,7 @@ namespace System.Windows.Forms
             }
             if (disposing)
                 Disposed?.Invoke(this, EventArgs.Empty);
+            IsDisposed = true;
         }
 
         public virtual Font Font
@@ -597,6 +653,7 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public ContentAlignment TextAlign { get; set; }
         public event PreviewKeyDownEventHandler? PreviewKeyDown;
         public event KeyEventHandler? KeyDown;
+        [Obsolete(NotImplementedWarning)] public event EventHandler? Click;
         public event EventHandler? Disposed;
 
         protected virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
@@ -688,5 +745,30 @@ namespace System.Windows.Forms
 
         [Obsolete(NotImplementedWarning)]
         public void Focus() { }
+
+        public IAsyncResult BeginInvoke(Delegate method, object?[]? args)
+        {
+            var tcs = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            _ = InvokeAsync(method, args).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                    tcs.SetException(t.Exception!.InnerExceptions);
+                else if (t.IsCanceled)
+                    tcs.SetCanceled();
+                else
+                    tcs.SetResult(t.Result);
+            }, TaskScheduler.Default);
+
+            return tcs.Task;
+        }
+
+        public object? EndInvoke(IAsyncResult result)
+        {
+            var task = (Task<object?>)result;
+            return task.GetAwaiter().GetResult();
+        }
+
+        public string? AccessibleName { get; set; }
     }
 }

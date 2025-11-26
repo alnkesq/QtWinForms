@@ -19,14 +19,24 @@ namespace System.Windows.Forms
 
 
         public event EventHandler? Load;
-        public event EventHandler<FormClosedEventArgs>? FormClosed;
-        public event EventHandler<FormClosingEventArgs>? FormClosing;
+        public event FormClosedEventHandler? FormClosed;
+        public event FormClosingEventHandler? FormClosing;
+
+        [Obsolete(NotImplementedWarning)] public Button? AcceptButton { get; set; }
+        [Obsolete(NotImplementedWarning)] public Button? CancelButton { get; set; }
+        [Obsolete(NotImplementedWarning)] public Size MinimumSize { get; set; }
 
         protected virtual void OnLoad(EventArgs e) => Load?.Invoke(this, e);
 
         protected virtual void OnFormClosed(FormClosedEventArgs e) => FormClosed?.Invoke(this, e);
 
         protected virtual void OnFormClosing(FormClosingEventArgs e) => FormClosing?.Invoke(this, e);
+
+        public void Activate()
+        {
+            Show();
+            Focus();
+        }
 
         protected override void CreateHandle()
         {
@@ -161,6 +171,8 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        [Obsolete(NotImplementedWarning)] public FormStartPosition StartPosition { get; set; }
 
         public FormWindowState WindowState
         {
@@ -315,6 +327,19 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetFormProperties(Handle, _minimizeBox, _maximizeBox, _showInTaskbar, _showIcon, _topMost, (int)_formBorderStyle);
             }
+        }
+
+        public DialogResult DialogResult { get; set; }
+     
+        public Task<DialogResult> ShowDialogAsync(IWin32Window? owner = null)
+        {
+            this.Visible = true;
+            var tcs = new TaskCompletionSource<DialogResult>();
+            this.FormClosed += (_, _) =>
+            {
+                tcs.TrySetResult(this.DialogResult);
+            };
+            return tcs.Task;
         }
     }
 }
