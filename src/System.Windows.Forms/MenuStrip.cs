@@ -30,15 +30,8 @@ namespace System.Windows.Forms
 
         private void AddItemToMenuBar(ToolStripMenuItem item)
         {
-            // Check if the item has a menu (submenu)
-            if (item.HasMenu)
-            {
-                NativeMethods.QMenuBar_AddMenu(Handle, item.MenuHandle);
-            }
-            else
-            {
-                NativeMethods.QMenuBar_AddAction(Handle, item.Handle);
-            }
+            // Always use AddAction, as ToolStripMenuItem now wraps everything in a QAction
+            NativeMethods.QMenuBar_AddAction(Handle, item.Handle);
         }
         
         public ToolStripItemCollection Items => new ToolStripItemCollectionImpl(this);

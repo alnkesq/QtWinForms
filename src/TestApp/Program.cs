@@ -1910,6 +1910,18 @@ namespace TestApp
                 Console.WriteLine($"ContextMenu Opening: Item 2 Visible = {item2.Visible}");
             };
 
+            var chkShowSubItem2 = new CheckBox();
+            chkShowSubItem2.Text = "Show SubItem 2";
+            chkShowSubItem2.Location = new Point(50, 190);
+            chkShowSubItem2.Checked = true;
+            form.Controls.Add(chkShowSubItem2);
+
+            subMenu.DropDown.Opening += (s, e) =>
+            {
+                subItem2.Visible = chkShowSubItem2.Checked;
+                Console.WriteLine($"SubMenu Opening: SubItem 2 Visible = {subItem2.Visible}");
+            };
+
             return form;
         }
         static Form CreateKeyEventsTest()

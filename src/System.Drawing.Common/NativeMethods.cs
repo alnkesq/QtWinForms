@@ -234,6 +234,9 @@ namespace System.Windows.Forms
         public static extern void QMenuBar_AddMenu(IntPtr menuBar, IntPtr menu);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QMenu_ConnectAboutToShow(IntPtr menu, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QAction_SetMenu(IntPtr action, IntPtr menu);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

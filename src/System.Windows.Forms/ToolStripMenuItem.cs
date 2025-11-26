@@ -9,8 +9,6 @@ namespace System.Windows.Forms
     public class ToolStripMenuItem : ToolStripDropDownItem
     {
         private EventHandler? _clickHandler;
-        private readonly List<ToolStripItem> _dropDownItems = new List<ToolStripItem>();
-        private IntPtr _menuHandle = IntPtr.Zero; // QMenu handle if this has children
         private bool _hasChildren = false;
 
         protected override void CreateHandle()
@@ -20,19 +18,9 @@ namespace System.Windows.Forms
                 // If this item has children, create a QMenu; otherwise create a QAction
                 if (_hasChildren)
                 {
-                    _menuHandle = NativeMethods.QMenu_Create(Text);
+                    DropDown.EnsureCreated();
                     Handle = NativeMethods.QAction_Create(Text);
-                    NativeMethods.QAction_SetMenu(Handle, _menuHandle);
-
-                    // Add any items that were added before handle creation
-                    foreach (var item in _dropDownItems)
-                    {
-                        if (!item.IsHandleCreated)
-                        {
-                            item.EnsureCreated();
-                        }
-                        NativeMethods.QMenu_AddAction(_menuHandle, item.Handle);
-                    }
+                    NativeMethods.QAction_SetMenu(Handle, DropDown.Handle);
                 }
                 else
                 {
@@ -63,7 +51,6 @@ namespace System.Windows.Forms
 
         // Public properties to expose menu state
         public bool HasMenu => _hasChildren;
-        public IntPtr MenuHandle => _menuHandle;
 
         public ToolStripItemCollection DropDownItems => new ToolStripItemCollectionImpl(this);
 
@@ -80,35 +67,19 @@ namespace System.Windows.Forms
 
             public override void Add(ToolStripItem item)
             {
-                if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
-                {
-                    if (!item.IsHandleCreated)
-                    {
-                        item.EnsureCreated();
-                    }
-                }
-                // If handle is already created, we need to recreate it as a menu
-                if (_owner.IsHandleCreated && _owner._menuHandle == IntPtr.Zero)
-                {
-                    // This shouldn't happen in normal usage, but handle it just in case
-                    // We'd need to recreate the handle as a menu
-                    Console.Error.WriteLine("Warning: Adding dropdown items after handle creation requires recreation");
-                }
-
-                _owner._dropDownItems.Add(item);
+                bool wasEmpty = !_owner.HasMenu;
+                _owner.DropDown.Items.Add(item);
                 _owner._hasChildren = true;
-                if (_owner.IsHandleCreated && _owner._menuHandle != IntPtr.Zero)
+                
+                // If we are transitioning from no children to having children, we might need to recreate the handle
+                // to attach the menu.
+                if (_owner.IsHandleCreated && wasEmpty)
                 {
-                    if (item is ToolStripSeparator separator)
-                    {
-                        NativeMethods.QMenu_AddAction(_owner._menuHandle, separator.Handle);
-                    }
-                    else
-                    {
-                        NativeMethods.QMenu_AddAction(_owner._menuHandle, item.Handle);
-                    }
+                     // This is tricky. QAction::setMenu can be called anytime.
+                     // But we need to ensure DropDown is created.
+                     _owner.DropDown.EnsureCreated();
+                     NativeMethods.QAction_SetMenu(_owner.Handle, _owner.DropDown.Handle);
                 }
-
             }
 
 

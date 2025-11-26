@@ -734,6 +734,12 @@ extern "C" {
         ((QMenuBar*)menuBar)->addMenu((QMenu*)menu);
     }
 
+    EXPORT void QMenu_ConnectAboutToShow(void* menu, void (*callback)(void*), void* userData) {
+        QObject::connect((QMenu*)menu, &QMenu::aboutToShow, [callback, userData]() {
+            callback(userData);
+        });
+    }
+
     EXPORT void QAction_SetMenu(void* action, void* menu) {
         ((QAction*)action)->setMenu((QMenu*)menu);
     }
