@@ -93,12 +93,15 @@ namespace System.Drawing
             return new Bitmap(File.ReadAllBytes(path));
         }
 
-        internal static Image FromStream(Stream stream)
+        public static Image FromStream(Stream stream)
         {
             return new Bitmap(stream);
         }
 
         public Size Size => new Size(ImageSharpImage.Width, ImageSharpImage.Height);
+
+        public int Width => Size.Width;
+        public int Height => Size.Height;
 
         public IntPtr GetQIcon()
         {

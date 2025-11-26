@@ -677,7 +677,12 @@ namespace System.Windows.Forms
         {
         }
 
+        [Obsolete(NotImplementedWarning)]
+        public void Invalidate() 
+        {
+        }
         [Obsolete(NotImplementedWarning)] public Padding Padding { get; set; }
+        [Obsolete(NotImplementedWarning)] public Padding Margin { get; set; }
         [Obsolete(NotImplementedWarning)] public bool TabStop { get; set; }
         public ISite? Site { get; set; }
 
