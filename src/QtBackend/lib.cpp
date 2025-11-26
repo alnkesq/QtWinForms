@@ -1394,4 +1394,10 @@ extern "C" {
             }
         }
     }
+
+    EXPORT void QSplitter_ConnectSplitterMoved(void* splitter, void (*callback)(void*, int, int), void* userData) {
+        QObject::connect((QSplitter*)splitter, &QSplitter::splitterMoved, [callback, userData](int pos, int index) {
+            callback(userData, pos, index);
+        });
+    }
 }

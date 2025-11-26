@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using Cdecl = System.Runtime.CompilerServices.CallConvCdecl;
 
 namespace System.Windows.Forms
 {
@@ -105,6 +107,9 @@ namespace System.Windows.Forms
             // Set handle width
             NativeMethods.QSplitter_SetHandleWidth(Handle, _splitterWidth);
 
+            // Connect to splitter moved event
+            ConnectSplitterMoved();
+
             CreateChildren();
 
             // After children are created, we can apply FixedPanel and SplitterDistance
@@ -116,6 +121,37 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QSplitter_SetSplitterDistance(Handle, _splitterDistance, WidgetSize);
             }
+        }
+
+        private void ConnectSplitterMoved()
+        {
+            if (!IsHandleCreated) return;
+
+            unsafe
+            {
+                delegate* unmanaged[Cdecl]<IntPtr, int, int, void> callback = &OnSplitterMovedCallback;
+                NativeMethods.QSplitter_ConnectSplitterMoved(Handle, (IntPtr)callback, GCHandle.ToIntPtr(GCHandle.Alloc(this)));
+            }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static void OnSplitterMovedCallback(IntPtr userData, int pos, int index)
+        {
+            GCHandle handle = GCHandle.FromIntPtr(userData);
+            if (handle.Target is SplitContainer container)
+            {
+                container.OnSplitterMoved(pos, index);
+            }
+        }
+
+        private void OnSplitterMoved(int pos, int index)
+        {
+            // Update the splitter distance
+            _splitterDistance = pos;
+
+            // Trigger layout on both panels so docked/anchored controls update
+            _panel1.PerformLayout();
+            _panel2.PerformLayout();
         }
 
         private void UpdateSplitterStretch()
