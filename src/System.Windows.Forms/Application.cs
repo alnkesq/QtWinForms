@@ -48,7 +48,7 @@ namespace System.Windows.Forms
 
         public static void SetQtWinFormsNativeDirectory(string directoryRelativeToWinFormsDll)
         {
-            NativeLibrary.SetDllImportResolver(typeof(System.Windows.Forms.Control).Assembly, (a, b, c) =>
+            NativeLibrary.SetDllImportResolver(typeof(System.Windows.Forms.NativeMethods).Assembly, (a, b, c) =>
             {
                 if (a == NativeMethods.LibName)
                 {

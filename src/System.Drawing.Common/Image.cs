@@ -4,26 +4,62 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace System.Drawing
 {
     [TypeConverter(typeof(ImageConverter))]
     public abstract class Image : IDisposable
     {
-        public readonly SixLabors.ImageSharp.Image<Rgba32> ImageSharpImage;
-        
-        // Lazily-initialized native Qt icon pointer for reuse
-        public IntPtr _nativeQIcon = IntPtr.Zero;
-        
+        private SixLabors.ImageSharp.Image<Rgba32>? _imageSharpImage;
+        private byte[]? _bytes;
+        private IntPtr _nativeQIcon;
+
         public Image(SixLabors.ImageSharp.Image<Rgba32> image)
         {
-            this.ImageSharpImage = image;
+            this._imageSharpImage = image;
         }
+        internal Image(byte[] bytes, bool isOwned = false)
+        {
+            this._bytes = isOwned ? bytes : bytes.ToArray();
+        }
+        public Image(ReadOnlySpan<byte> bytes)
+        {
+            this._bytes = bytes.ToArray();
+        }
+
         public void Dispose()
         {
-            ImageSharpImage.Dispose();
-            // Note: We don't dispose the native QIcon here because it may be shared
-            // across multiple tree nodes. The ImageList will manage the lifecycle.
+            _imageSharpImage?.Dispose();
+            _bytes = null;
+        }
+
+
+        public SixLabors.ImageSharp.Image<Rgba32> ImageSharpImage
+        {
+            get
+            {
+                if (_imageSharpImage == null)
+                {
+                    _imageSharpImage = SixLabors.ImageSharp.Image.Load<Rgba32>(_bytes);
+                }
+                return _imageSharpImage;
+            }
+        }
+
+        public byte[] Bytes
+        {
+            get
+            {
+                if (_bytes == null)
+                {
+                    using var ms = new MemoryStream();
+                    _imageSharpImage.SaveAsPng(ms);
+                    _bytes = ms.ToArray();
+                }
+                return _bytes;
+            }
         }
 
         public void Save(Stream destination, ImageFormat format)
@@ -41,14 +77,25 @@ namespace System.Drawing
 
         public static Image FromFile(string path)
         {
-            return new Bitmap(SixLabors.ImageSharp.Image.Load<Rgba32>(path));
+            return new Bitmap(File.ReadAllBytes(path));
         }
 
         internal static Image FromStream(Stream stream)
         {
-            return new Bitmap(SixLabors.ImageSharp.Image.Load<Rgba32>(stream));
+            return new Bitmap(stream);
         }
 
         public Size Size => new Size(ImageSharpImage.Width, ImageSharpImage.Height);
+
+        public IntPtr GetQIcon()
+        {
+            if (_nativeQIcon == default)
+            {
+                _nativeQIcon = NativeMethods.QIcon_CreateFromData(Bytes, Bytes.Length);
+            }
+
+            return _nativeQIcon;
+
+        }
     }
 }

@@ -8,6 +8,7 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Open.snk</AssemblyOriginatorKeyFile>
     <AssemblyVersion>10.0</AssemblyVersion>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

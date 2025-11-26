@@ -228,20 +228,8 @@ namespace System.Windows.Forms
                 return IntPtr.Zero;
                 
             var image = _imageList.Images[imageIndex];
-            
-            // Check if we already have a native QIcon for this image
-            if (image._nativeQIcon != IntPtr.Zero)
-                return image._nativeQIcon;
-            
-            // Create a new QIcon from the image bytes
-            using (var ms = new System.IO.MemoryStream())
-            {
-                image.Save(ms, ImageFormat.Png);
-                byte[] imageBytes = ms.ToArray();
-                image._nativeQIcon = NativeMethods.QIcon_CreateFromData(imageBytes, imageBytes.Length);
-            }
-            
-            return image._nativeQIcon;
+
+            return image.GetQIcon();
         }
     }
 }
