@@ -28,6 +28,7 @@ namespace System.Windows.Forms
                 }
 
                 ConnectItemSelectionChanged();
+                ConnectItemExpanded();
             }
         }
 
@@ -128,6 +129,30 @@ namespace System.Windows.Forms
             var control = ObjectFromGCHandle<TreeView>(userData);
             IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(control.Handle);
             control._selectedNode = control.FindNodeByNativeItem(nativeItem);
+        }
+
+        private unsafe void ConnectItemExpanded()
+        {
+            delegate* unmanaged[Cdecl]<nint, nint, void> callback = &OnItemExpandedCallback;
+            NativeMethods.QTreeWidget_ConnectItemExpanded(Handle, (IntPtr)callback, GCHandlePtr);
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+        private static unsafe void OnItemExpandedCallback(nint userData, nint itemPtr)
+        {
+            var control = ObjectFromGCHandle<TreeView>(userData);
+            TreeNode? node = control.FindNodeByNativeItem(itemPtr);
+            if (node != null)
+            {
+                var args = new TreeViewCancelEventArgs(node, false, TreeViewAction.Expand);
+                control.OnBeforeExpand(args);
+                
+                // If the event handler cancelled the expansion, collapse it back
+                if (args.Cancel)
+                {
+                    NativeMethods.QTreeWidgetItem_SetExpanded(itemPtr, false);
+                }
+            }
         }
 
         // Special collection for root nodes that doesn't have a parent TreeNode

@@ -1277,6 +1277,10 @@ extern "C" {
         ((QTreeWidgetItem*)item)->setExpanded(expanded);
     }
 
+    EXPORT void QTreeWidget_ConnectItemExpanded(void* treeWidget, void (*callback)(void*, void*), void* userData) {
+        QObject::connect((QTreeWidget*)treeWidget, &QTreeWidget::itemExpanded, [callback, userData](QTreeWidgetItem* item) {
+            callback(userData, item);
+        });
     }
 
-
+    }

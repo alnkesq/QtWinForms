@@ -2067,6 +2067,13 @@ namespace TestApp
             };
             form.Controls.Add(collapseSelectedButton);
 
+            // Checkbox to enable dynamic child replacement on expand
+            var dynamicExpandCheckbox = new CheckBox();
+            dynamicExpandCheckbox.Text = "Replace children on expand";
+            dynamicExpandCheckbox.Location = new Point(290, 390);
+            dynamicExpandCheckbox.Size = new Size(280, 30);
+            form.Controls.Add(dynamicExpandCheckbox);
+
             // Button to expand all nodes
             var expandAllButton = new Button();
             expandAllButton.Text = "Expand All";
@@ -2074,6 +2081,7 @@ namespace TestApp
             expandAllButton.Size = new Size(130, 30);
             expandAllButton.Click += (s, e) =>
             {
+                dynamicExpandCheckbox.Checked = false;
                 treeView.ExpandAll();
             };
             form.Controls.Add(expandAllButton);
@@ -2095,6 +2103,22 @@ namespace TestApp
             infoLabel.Location = new Point(290, 300);
             infoLabel.Size = new Size(280, 80);
             form.Controls.Add(infoLabel);
+
+            // BeforeExpand event handler
+            treeView.BeforeExpand += (s, e) =>
+            {
+                if (dynamicExpandCheckbox.Checked && e.Node != null)
+                {
+                    // Clear existing children
+                    e.Node.Nodes.Clear();
+                    
+                    // Add a single child with timestamp
+                    var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    e.Node.Nodes.Add($"Parent was expanded at {timestamp}");
+                    
+                    selectedLabel.Text = $"Expanded: {e.Node.Text} at {timestamp}";
+                }
+            };
 
             return form;
         }
