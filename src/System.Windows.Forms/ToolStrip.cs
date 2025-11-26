@@ -38,6 +38,10 @@ namespace System.Windows.Forms
             NativeMethods.QToolBar_AddAction(Handle, item.Handle);
         }
 
+
+        [Obsolete(NotImplementedWarning)] public ToolStripGripStyle GripStyle { get; set; }
+        [Obsolete(NotImplementedWarning)] public ToolStripRenderMode RenderMode { get; set; }
+
         public ToolStripItemCollection Items => new ToolStripItemCollectionImpl(this);
 
         private class ToolStripItemCollectionImpl : ToolStripItemCollection
