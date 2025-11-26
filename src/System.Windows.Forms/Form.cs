@@ -19,6 +19,7 @@ namespace System.Windows.Forms
 
 
         public event EventHandler? Load;
+        public event EventHandler? Shown;
         public event FormClosedEventHandler? FormClosed;
         public event FormClosingEventHandler? FormClosing;
 
@@ -101,6 +102,13 @@ namespace System.Windows.Forms
             // Don't trigger resize event since size hasn't changed
             var currentSize = form.Size;
             form.SetBoundsCore(x, y, currentSize.Width, currentSize.Height);
+        }
+
+        protected override void UpdateVisibleCore(bool value)
+        {
+            base.UpdateVisibleCore(value);
+            if (value)
+                Shown?.Invoke(this, EventArgs.Empty);
         }
 
         private void ConnectCloseEvent()

@@ -95,6 +95,9 @@ namespace System.Windows.Forms
             }
         }
 
+        public TreeNode? FirstNode => Nodes.Count != 0 ? Nodes[0] : null;
+        public TreeNode? LastNode => Nodes.Count != 0 ? Nodes[Nodes.Count - 1] : null;
+
         bool ITreeNodeOrTreeView.IsNativeHandleCreated => _nativeItem != default;
 
         internal void EnsureNativeItem()
