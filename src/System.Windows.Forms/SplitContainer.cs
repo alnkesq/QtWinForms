@@ -149,7 +149,21 @@ namespace System.Windows.Forms
             // Update the splitter distance
             _splitterDistance = pos;
 
-            // Trigger layout on both panels so docked/anchored controls update
+            // Query the actual sizes from Qt and update the C# Size properties
+            // This is crucial because docked/anchored controls need the correct parent size
+            if (_panel1.IsHandleCreated)
+            {
+                NativeMethods.QWidget_GetSize(_panel1.Handle, out int width1, out int height1);
+                _panel1.Size = new Size(width1, height1);
+            }
+
+            if (_panel2.IsHandleCreated)
+            {
+                NativeMethods.QWidget_GetSize(_panel2.Handle, out int width2, out int height2);
+                _panel2.Size = new Size(width2, height2);
+            }
+
+            // Now trigger layout on both panels so docked/anchored controls update
             _panel1.PerformLayout();
             _panel2.PerformLayout();
         }

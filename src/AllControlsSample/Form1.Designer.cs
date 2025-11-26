@@ -350,7 +350,7 @@ partial class Form1
         textBox3.Location = new Point(0, 0);
         textBox3.Multiline = true;
         textBox3.Name = "textBox3";
-        textBox3.Size = new Size(57, 343);
+        textBox3.Size = new Size(380, 78);
         textBox3.TabIndex = 10;
         textBox3.Text = "multi\r\nline\r\ntextbox";
         // 
@@ -472,13 +472,16 @@ partial class Form1
         listBox1.Location = new Point(0, 0);
         listBox1.Name = "listBox1";
         listBox1.SelectionMode = SelectionMode.MultiExtended;
-        listBox1.Size = new Size(385, 343);
+        listBox1.Size = new Size(380, 249);
         listBox1.TabIndex = 14;
         // 
         // splitContainer1
         // 
+        splitContainer1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        splitContainer1.BackColor = Color.Red;
         splitContainer1.Location = new Point(592, 69);
         splitContainer1.Name = "splitContainer1";
+        splitContainer1.Orientation = Orientation.Horizontal;
         // 
         // splitContainer1.Panel1
         // 
@@ -487,8 +490,8 @@ partial class Form1
         // splitContainer1.Panel2
         // 
         splitContainer1.Panel2.Controls.Add(listBox1);
-        splitContainer1.Size = new Size(446, 343);
-        splitContainer1.SplitterDistance = 57;
+        splitContainer1.Size = new Size(380, 331);
+        splitContainer1.SplitterDistance = 78;
         splitContainer1.TabIndex = 15;
         // 
         // Form1

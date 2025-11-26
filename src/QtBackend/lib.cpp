@@ -1400,4 +1400,11 @@ extern "C" {
             callback(userData, pos, index);
         });
     }
+
+    EXPORT void QWidget_GetSize(void* widget, int* width, int* height) {
+        QWidget* w = (QWidget*)widget;
+        QSize size = w->size();
+        *width = size.width();
+        *height = size.height();
+    }
 }
