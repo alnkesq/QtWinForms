@@ -470,6 +470,6 @@ namespace System.Windows.Forms
         public static extern void QSplitter_SetStretchFactor(IntPtr splitter, int index, int stretch);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QSplitter_SetSplitterDistance(IntPtr splitter, int distance);
+        public static extern void QSplitter_SetSplitterDistance(IntPtr splitter, int distance, int widgetSize);
     }
 }

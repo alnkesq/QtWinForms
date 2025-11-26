@@ -74,9 +74,8 @@ namespace System.Windows.Forms
                         // We need to know the total size to calculate the other panel's size.
                         // Or we can just set the size of the first one and let the second one take the rest?
                         // QSplitter::setSizes expects sizes for all widgets.
-                        
                         // Let's implement a helper to set splitter distance.
-                        NativeMethods.QSplitter_SetSplitterDistance(Handle, value);
+                        NativeMethods.QSplitter_SetSplitterDistance(Handle, value, WidgetSize);
                     }
                 }
             }
@@ -96,6 +95,8 @@ namespace System.Windows.Forms
             }
         }
 
+        private int WidgetSize => Orientation == Orientation.Horizontal ? Height : Width;
+
         protected override void CreateHandle()
         {
             Handle = NativeMethods.QSplitter_Create(IntPtr.Zero, (int)_orientation);
@@ -113,7 +114,7 @@ namespace System.Windows.Forms
             // Note: sizes might not be accurate until layout happens.
             if (_splitterDistance > 0)
             {
-                NativeMethods.QSplitter_SetSplitterDistance(Handle, _splitterDistance);
+                NativeMethods.QSplitter_SetSplitterDistance(Handle, _splitterDistance, WidgetSize);
             }
         }
 

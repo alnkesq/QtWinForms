@@ -1371,17 +1371,27 @@ extern "C" {
         ((QSplitter*)splitter)->setStretchFactor(index, stretch);
     }
 
-    EXPORT void QSplitter_SetSplitterDistance(void* splitter, int distance) {
+    EXPORT void QSplitter_SetSplitterDistance(void* splitter, int distance, int widgetSize) {
         QSplitter* s = (QSplitter*)splitter;
         QList<int> sizes = s->sizes();
         if (sizes.size() >= 2) {
             int total = 0;
             for (int size : sizes) total += size;
             
-            QList<int> newSizes;
-            newSizes.append(distance);
-            newSizes.append(total - distance);
-            s->setSizes(newSizes);
+            if (total > 0) {
+                // Widget has been laid out, use setSizes
+                QList<int> newSizes;
+                newSizes.append(distance);
+                newSizes.append(total - distance);
+                s->setSizes(newSizes);
+            } else {
+                int stretch1 = distance;
+                int stretch2 = widgetSize - distance;
+                if (stretch1 > 0 && stretch2 > 0) {
+                    s->setStretchFactor(0, stretch1);
+                    s->setStretchFactor(1, stretch2);
+                }
+            }
         }
     }
 }
