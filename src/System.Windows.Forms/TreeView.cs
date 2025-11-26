@@ -134,6 +134,13 @@ namespace System.Windows.Forms
             var control = ObjectFromGCHandle<TreeView>(userData);
             IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(control.Handle);
             control._selectedNode = control.FindNodeByNativeItem(nativeItem);
+            
+            // Fire AfterSelect event
+            if (control._selectedNode != null)
+            {
+                var args = new TreeViewEventArgs(control._selectedNode, TreeViewAction.ByMouse);
+                control.OnAfterSelect(args);
+            }
         }
 
         private unsafe void ConnectItemExpanded()

@@ -1991,6 +1991,16 @@ namespace TestApp
             textBox.Size = new Size(280, 30);
             form.Controls.Add(textBox);
 
+            // AfterSelect event handler
+            treeView.AfterSelect += (s, e) =>
+            {
+                if (e.Node != null)
+                {
+                    selectedLabel.Text = $"Selected: {e.Node.Text}";
+                    textBox.Text = e.Node.Text;
+                }
+            };
+
             // Button to update selected node text
             var updateButton = new Button();
             updateButton.Text = "Update Selected Node";
