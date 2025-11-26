@@ -21,7 +21,6 @@
 
 
 	<ItemGroup>
-		<ProjectReference Include="..\System.Drawing\System.Drawing.csproj" />
 		<ProjectReference Include="..\System.Windows.Forms\System.Windows.Forms.csproj" />
 	</ItemGroup>
 

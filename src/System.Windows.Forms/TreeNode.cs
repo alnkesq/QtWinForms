@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -9,7 +10,12 @@ namespace System.Windows.Forms
         internal TreeView? _treeView;
         internal IntPtr _nativeItem = IntPtr.Zero;
         internal TreeNode? _parent;
+        public object? Tag { get; set; }
 
+        [Obsolete(Control.NotImplementedWarning)] public int SelectedImageIndex { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public int ImageIndex { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public Color ForeColor { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public Color BackColor { get; set; }
         public TreeNode()
         {
         }
@@ -106,6 +112,11 @@ namespace System.Windows.Forms
             {
                 child.CollapseAll();
             }
+        }
+
+        public void Remove()
+        {
+            this._parent!.Nodes.Remove(this);
         }
 
 #pragma warning disable CS8767

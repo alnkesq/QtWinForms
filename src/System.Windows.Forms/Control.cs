@@ -551,7 +551,7 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public bool AutoSize { get; set; }
         [Obsolete(NotImplementedWarning)] public SizeF AutoScaleDimensions { get; set; }
 
-        protected const string NotImplementedWarning = "Not implemented, NOP";
+        internal const string NotImplementedWarning = "Not implemented, NOP";
 
         protected virtual void Dispose(bool disposing)
         {
@@ -600,8 +600,8 @@ namespace System.Windows.Forms
         public event KeyEventHandler? KeyDown;
         public event EventHandler? Disposed;
 
-        public virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
-        public virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);
+        protected virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
+        protected virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);
 
         private ContextMenuStrip? _contextMenuStrip;
 
@@ -681,5 +681,8 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public Padding Padding { get; set; }
         [Obsolete(NotImplementedWarning)] public bool TabStop { get; set; }
         public ISite? Site { get; set; }
+
+        [Obsolete(NotImplementedWarning)]
+        public void Focus() { }
     }
 }

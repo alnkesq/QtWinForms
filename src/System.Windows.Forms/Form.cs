@@ -9,6 +9,8 @@ namespace System.Windows.Forms
         private FormWindowState _windowState = FormWindowState.Normal;
         private MenuStrip? _mainMenuStrip;
 
+        [Obsolete(NotImplementedWarning)] public bool KeyPreview { get; set; }
+        
         public Form() : base()
         {
             Visible = false;

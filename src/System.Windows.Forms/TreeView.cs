@@ -46,6 +46,23 @@ namespace System.Windows.Forms
                 child.CollapseAll();
             }
         }
+
+        public void BeginUpdate() { }
+        public void EndUpdate() { }
+
+        public TreeViewCancelEventHandler? BeforeExpand;
+        protected virtual void OnBeforeExpand(TreeViewCancelEventArgs e)
+        {
+            BeforeExpand?.Invoke(this, e);
+        }
+        public TreeViewEventHandler? AfterSelect;
+        protected virtual void OnAfterSelect(TreeViewEventArgs e)
+        {
+            AfterSelect?.Invoke(this, e);
+        }
+        [Obsolete(NotImplementedWarning)] public ImageList ImageList { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool HideSelection { get; set; }
+
         public TreeNode.TreeNodeCollection Nodes => _nodes;
 
         public TreeNode? SelectedNode
