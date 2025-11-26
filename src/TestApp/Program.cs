@@ -2104,6 +2104,13 @@ namespace TestApp
             infoLabel.Size = new Size(280, 80);
             form.Controls.Add(infoLabel);
 
+            // Label to show AfterExpand events
+            var afterExpandLabel = new Label();
+            afterExpandLabel.Text = "AfterExpand: (none)";
+            afterExpandLabel.Location = new Point(20, 430);
+            afterExpandLabel.Size = new Size(550, 30);
+            form.Controls.Add(afterExpandLabel);
+
             // BeforeExpand event handler
             treeView.BeforeExpand += (s, e) =>
             {
@@ -2116,7 +2123,17 @@ namespace TestApp
                     var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     e.Node.Nodes.Add($"Parent was expanded at {timestamp}");
                     
-                    selectedLabel.Text = $"Expanded: {e.Node.Text} at {timestamp}";
+                    selectedLabel.Text = $"BeforeExpand: {e.Node.Text} at {timestamp}";
+                }
+            };
+
+            // AfterExpand event handler
+            treeView.AfterExpand += (s, e) =>
+            {
+                if (e.Node != null)
+                {
+                    var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    afterExpandLabel.Text = $"AfterExpand: {e.Node.Text} at {timestamp} (Children: {e.Node.Nodes.Count})";
                 }
             };
 

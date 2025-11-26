@@ -56,6 +56,11 @@ namespace System.Windows.Forms
         {
             BeforeExpand?.Invoke(this, e);
         }
+        public TreeViewEventHandler? AfterExpand;
+        protected virtual void OnAfterExpand(TreeViewEventArgs e)
+        {
+            AfterExpand?.Invoke(this, e);
+        }
         public TreeViewEventHandler? AfterSelect;
         protected virtual void OnAfterSelect(TreeViewEventArgs e)
         {
@@ -144,13 +149,19 @@ namespace System.Windows.Forms
             TreeNode? node = control.FindNodeByNativeItem(itemPtr);
             if (node != null)
             {
-                var args = new TreeViewCancelEventArgs(node, false, TreeViewAction.Expand);
-                control.OnBeforeExpand(args);
+                var cancelArgs = new TreeViewCancelEventArgs(node, false, TreeViewAction.Expand);
+                control.OnBeforeExpand(cancelArgs);
                 
                 // If the event handler cancelled the expansion, collapse it back
-                if (args.Cancel)
+                if (cancelArgs.Cancel)
                 {
                     NativeMethods.QTreeWidgetItem_SetExpanded(itemPtr, false);
+                }
+                else
+                {
+                    // Only fire AfterExpand if the expansion wasn't cancelled
+                    var args = new TreeViewEventArgs(node, TreeViewAction.Expand);
+                    control.OnAfterExpand(args);
                 }
             }
         }
