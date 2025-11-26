@@ -78,6 +78,7 @@ partial class Form1
         dateTimePicker1 = new DateTimePicker();
         numericUpDown1 = new NumericUpDown();
         listBox1 = new ListBox();
+        splitContainer1 = new SplitContainer();
         toolStrip1.SuspendLayout();
         menuStrip1.SuspendLayout();
         groupBox1.SuspendLayout();
@@ -87,6 +88,10 @@ partial class Form1
         tabControl1.SuspendLayout();
         groupBox3.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+        splitContainer1.Panel1.SuspendLayout();
+        splitContainer1.Panel2.SuspendLayout();
+        splitContainer1.SuspendLayout();
         SuspendLayout();
         // 
         // button1
@@ -103,7 +108,7 @@ partial class Form1
         toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2 });
         toolStrip1.Location = new Point(0, 24);
         toolStrip1.Name = "toolStrip1";
-        toolStrip1.Size = new Size(887, 25);
+        toolStrip1.Size = new Size(1082, 25);
         toolStrip1.TabIndex = 1;
         toolStrip1.Text = "toolStrip1";
         // 
@@ -130,7 +135,7 @@ partial class Form1
         menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, helpToolStripMenuItem });
         menuStrip1.Location = new Point(0, 0);
         menuStrip1.Name = "menuStrip1";
-        menuStrip1.Size = new Size(887, 24);
+        menuStrip1.Size = new Size(1082, 24);
         menuStrip1.TabIndex = 2;
         menuStrip1.Text = "menuStrip1";
         // 
@@ -322,7 +327,7 @@ partial class Form1
         // 
         linkLabel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         linkLabel1.AutoSize = true;
-        linkLabel1.Location = new Point(818, 466);
+        linkLabel1.Location = new Point(1013, 497);
         linkLabel1.Name = "linkLabel1";
         linkLabel1.Size = new Size(57, 15);
         linkLabel1.TabIndex = 7;
@@ -341,11 +346,11 @@ partial class Form1
         // 
         // textBox3
         // 
-        textBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        textBox3.Location = new Point(697, 111);
+        textBox3.Dock = DockStyle.Fill;
+        textBox3.Location = new Point(0, 0);
         textBox3.Multiline = true;
         textBox3.Name = "textBox3";
-        textBox3.Size = new Size(178, 111);
+        textBox3.Size = new Size(57, 343);
         textBox3.TabIndex = 10;
         textBox3.Text = "multi\r\nline\r\ntextbox";
         // 
@@ -461,23 +466,38 @@ partial class Form1
         // 
         // listBox1
         // 
-        listBox1.Anchor = AnchorStyles.Right;
+        listBox1.Dock = DockStyle.Fill;
         listBox1.FormattingEnabled = true;
         listBox1.Items.AddRange(new object[] { "Item 1", "Item 2", "Item 3", "Item 4" });
-        listBox1.Location = new Point(697, 228);
+        listBox1.Location = new Point(0, 0);
         listBox1.Name = "listBox1";
         listBox1.SelectionMode = SelectionMode.MultiExtended;
-        listBox1.Size = new Size(178, 94);
+        listBox1.Size = new Size(385, 343);
         listBox1.TabIndex = 14;
+        // 
+        // splitContainer1
+        // 
+        splitContainer1.Location = new Point(592, 69);
+        splitContainer1.Name = "splitContainer1";
+        // 
+        // splitContainer1.Panel1
+        // 
+        splitContainer1.Panel1.Controls.Add(textBox3);
+        // 
+        // splitContainer1.Panel2
+        // 
+        splitContainer1.Panel2.Controls.Add(listBox1);
+        splitContainer1.Size = new Size(446, 343);
+        splitContainer1.SplitterDistance = 57;
+        splitContainer1.TabIndex = 15;
         // 
         // Form1
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(887, 490);
+        ClientSize = new Size(1082, 521);
         ContextMenuStrip = contextMenuStrip1;
-        Controls.Add(listBox1);
-        Controls.Add(textBox3);
+        Controls.Add(splitContainer1);
         Controls.Add(groupBox3);
         Controls.Add(tabControl1);
         Controls.Add(linkLabel1);
@@ -504,6 +524,11 @@ partial class Form1
         groupBox3.ResumeLayout(false);
         groupBox3.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
+        splitContainer1.Panel1.ResumeLayout(false);
+        splitContainer1.Panel1.PerformLayout();
+        splitContainer1.Panel2.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+        splitContainer1.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
     }
@@ -555,4 +580,5 @@ partial class Form1
     private TextBox textBox2;
     private ToolStripMenuItem messageBoxToolStripMenuItem;
     private ListBox listBox1;
+    private SplitContainer splitContainer1;
 }
