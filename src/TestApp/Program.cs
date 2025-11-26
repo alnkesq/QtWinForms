@@ -2005,7 +2005,7 @@ namespace TestApp
             var updateButton = new Button();
             updateButton.Text = "Update Selected Node";
             updateButton.Location = new Point(290, 100);
-            updateButton.Size = new Size(180, 30);
+            updateButton.Size = new Size(130, 30);
             updateButton.Click += (s, e) =>
             {
                 if (treeView.SelectedNode != null && !string.IsNullOrWhiteSpace(textBox.Text))
@@ -2020,7 +2020,7 @@ namespace TestApp
             var addChildButton = new Button();
             addChildButton.Text = "Add Child";
             addChildButton.Location = new Point(290, 140);
-            addChildButton.Size = new Size(180, 30);
+            addChildButton.Size = new Size(130, 30);
             addChildButton.Click += (s, e) =>
             {
                 if (treeView.SelectedNode != null)
@@ -2036,11 +2036,20 @@ namespace TestApp
             };
             form.Controls.Add(addChildButton);
 
+            var deleteNode = new Button();
+            deleteNode.Text = "Delete";
+            deleteNode.Location = new Point(430, 140);
+            deleteNode.Size = new Size(130, 30);
+            deleteNode.Click += (s, e) =>
+            {
+                treeView.SelectedNode!.Remove();
+            };
+            form.Controls.Add(deleteNode);
             // Button to select a specific node programmatically
             var selectButton = new Button();
             selectButton.Text = "Select Child 1.1";
             selectButton.Location = new Point(290, 180);
-            selectButton.Size = new Size(180, 30);
+            selectButton.Size = new Size(130, 30);
             selectButton.Click += (s, e) =>
             {
                 treeView.SelectedNode = child1_1;

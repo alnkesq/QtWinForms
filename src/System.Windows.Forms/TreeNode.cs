@@ -3,13 +3,12 @@ using System.Drawing;
 
 namespace System.Windows.Forms
 {
-    public class TreeNode
+    public class TreeNode : ITreeNodeOrTreeView
     {
         private string _text = "";
         private TreeNodeCollection? _nodes;
-        internal TreeView? _treeView;
         internal IntPtr _nativeItem = IntPtr.Zero;
-        internal TreeNode? _parent;
+        internal ITreeNodeOrTreeView? _parent;
         public object? Tag { get; set; }
 
         [Obsolete(Control.NotImplementedWarning)] public int SelectedImageIndex { get; set; }
@@ -33,7 +32,7 @@ namespace System.Windows.Forms
                 if (_text != value)
                 {
                     _text = value ?? string.Empty;
-                    if (_treeView != null && _treeView.IsHandleCreated && _nativeItem != IntPtr.Zero)
+                    if (_nativeItem != IntPtr.Zero)
                     {
                         NativeMethods.QTreeWidgetItem_SetText(_nativeItem, 0, _text);
                     }
@@ -53,27 +52,31 @@ namespace System.Windows.Forms
             }
         }
 
+        bool ITreeNodeOrTreeView.IsNativeHandleCreated => _nativeItem != default;
+
         internal void EnsureNativeItem()
         {
-            if (_nativeItem == IntPtr.Zero && _treeView != null && _treeView.IsHandleCreated)
+            if (_parent == null) throw new InvalidOperationException();
+            if (!_parent.IsNativeHandleCreated) throw new InvalidOperationException();
+            if (_nativeItem == IntPtr.Zero)
             {
-                if (_parent == null)
+                if (_parent is TreeView treeView)
                 {
                     // Top-level node
-                    _nativeItem = NativeMethods.QTreeWidget_AddTopLevelItem(_treeView.Handle, _text);
+                    _nativeItem = NativeMethods.QTreeWidget_AddTopLevelItem(treeView.Handle, _text);
                 }
                 else
                 {
                     // Child node
-                    _parent.EnsureNativeItem();
-                    _nativeItem = NativeMethods.QTreeWidgetItem_AddChild(_parent._nativeItem, _text);
+                    //_parent.EnsureNativeItem();
+                    _nativeItem = NativeMethods.QTreeWidgetItem_AddChild(((TreeNode)_parent)._nativeItem, _text);
                 }
 
-                // Add any existing child nodes
                 if (_nodes != null)
                 {
                     foreach (TreeNode child in _nodes)
                     {
+                        child._parent = this;
                         child.EnsureNativeItem();
                     }
                 }
@@ -116,22 +119,23 @@ namespace System.Windows.Forms
 
         public void Remove()
         {
-            this._parent!.Nodes.Remove(this);
+            if (_parent == null) return;
+            if (_parent is TreeNode parentNode) parentNode.Nodes.Remove(this);
+            else ((TreeView)_parent).Nodes.Remove(this);
         }
 
 #pragma warning disable CS8767
         public class TreeNodeCollection : IList
         {
-            private TreeNode? _owner;
-            private ArrayList _innerList = new ArrayList();
+            private readonly ITreeNodeOrTreeView _owner;
+            private readonly ArrayList _innerList = new ArrayList();
 
-            internal TreeNodeCollection(TreeNode? owner)
+            internal TreeNodeCollection(ITreeNodeOrTreeView owner)
             {
                 _owner = owner;
             }
 
-            protected virtual TreeView? GetTreeView() => _owner?._treeView;
-            protected virtual TreeNode? GetParentNode() => _owner;
+            internal ITreeNodeOrTreeView Owner => _owner;
 
             public TreeNode Add(string text)
             {
@@ -145,10 +149,9 @@ namespace System.Windows.Forms
                 if (value is TreeNode node)
                 {
                     int index = _innerList.Add(node);
-                    node._parent = GetParentNode();
-                    node._treeView = GetTreeView();
+                    node._parent = Owner;
                     
-                    if (GetTreeView() != null && GetTreeView()!.IsHandleCreated)
+                    if (Owner.IsNativeHandleCreated)
                     {
                         node.EnsureNativeItem();
                     }
@@ -162,13 +165,12 @@ namespace System.Windows.Forms
             {
                 foreach (TreeNode node in _innerList)
                 {
-                    if (node._nativeItem != IntPtr.Zero && _owner != null && _owner._nativeItem != IntPtr.Zero)
+                    if (node._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                     {
-                        NativeMethods.QTreeWidgetItem_RemoveChild(_owner._nativeItem, node._nativeItem);
+                        NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
                         node._nativeItem = IntPtr.Zero;
                     }
                     node._parent = null;
-                    node._treeView = null;
                 }
                 _innerList.Clear();
             }
@@ -181,10 +183,9 @@ namespace System.Windows.Forms
                 if (value is TreeNode node)
                 {
                     _innerList.Insert(index, node);
-                    node._parent = GetParentNode();
-                    node._treeView = GetTreeView();
+                    node._parent = Owner;
                     
-                    if (GetTreeView() != null && GetTreeView()!.IsHandleCreated)
+                    if (Owner.IsNativeHandleCreated)
                     {
                         node.EnsureNativeItem();
                     }
@@ -210,13 +211,12 @@ namespace System.Windows.Forms
             public void RemoveAt(int index)
             {
                 TreeNode node = (TreeNode)_innerList[index]!;
-                if (node._nativeItem != IntPtr.Zero && _owner != null && _owner._nativeItem != IntPtr.Zero)
+                if (node._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                 {
-                    NativeMethods.QTreeWidgetItem_RemoveChild(_owner._nativeItem, node._nativeItem);
+                    NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
                     node._nativeItem = IntPtr.Zero;
                 }
                 node._parent = null;
-                node._treeView = null;
                 _innerList.RemoveAt(index);
             }
 
@@ -226,19 +226,17 @@ namespace System.Windows.Forms
                 set
                 {
                     TreeNode oldNode = (TreeNode)_innerList[index]!;
-                    if (oldNode._nativeItem != IntPtr.Zero && _owner != null && _owner._nativeItem != IntPtr.Zero)
+                    if (oldNode._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                     {
-                        NativeMethods.QTreeWidgetItem_RemoveChild(_owner._nativeItem, oldNode._nativeItem);
+                        NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, oldNode._nativeItem);
                         oldNode._nativeItem = IntPtr.Zero;
                     }
                     oldNode._parent = null;
-                    oldNode._treeView = null;
 
                     _innerList[index] = value;
-                    value._parent = GetParentNode();
-                    value._treeView = GetTreeView();
+                    value._parent = Owner;
                     
-                    if (GetTreeView() != null && GetTreeView()!.IsHandleCreated)
+                    if (Owner.IsNativeHandleCreated)
                     {
                         value.EnsureNativeItem();
                     }
@@ -271,5 +269,10 @@ namespace System.Windows.Forms
             public IEnumerator GetEnumerator() => _innerList.GetEnumerator();
         }
 #pragma warning restore CS8767
+    }
+
+    interface ITreeNodeOrTreeView
+    {
+        public bool IsNativeHandleCreated { get; }
     }
 }

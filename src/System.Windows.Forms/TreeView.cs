@@ -3,14 +3,14 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-    public class TreeView : Control
+    public class TreeView : Control, ITreeNodeOrTreeView
     {
-        private RootTreeNodeCollection _nodes;
+        private TreeNode.TreeNodeCollection _nodes;
         private TreeNode? _selectedNode;
 
         public TreeView()
         {
-            _nodes = new RootTreeNodeCollection(this);
+            _nodes = new TreeNode.TreeNodeCollection(this);
         }
 
         protected override void CreateHandle()
@@ -23,7 +23,7 @@ namespace System.Windows.Forms
                 // Add all existing nodes
                 foreach (TreeNode node in _nodes)
                 {
-                    node._treeView = this;
+                    node._parent = this;
                     node.EnsureNativeItem();
                 }
 
@@ -66,7 +66,7 @@ namespace System.Windows.Forms
         {
             AfterSelect?.Invoke(this, e);
         }
-        [Obsolete(NotImplementedWarning)] public ImageList ImageList { get; set; }
+        [Obsolete(NotImplementedWarning)] public ImageList? ImageList { get; set; }
         [Obsolete(NotImplementedWarning)] public bool HideSelection { get; set; }
 
         public TreeNode.TreeNodeCollection Nodes => _nodes;
@@ -98,6 +98,8 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        bool ITreeNodeOrTreeView.IsNativeHandleCreated => IsHandleCreated;
 
         private TreeNode? FindNodeByNativeItem(IntPtr nativeItem)
         {
@@ -171,20 +173,6 @@ namespace System.Windows.Forms
                     control.OnAfterExpand(args);
                 }
             }
-        }
-
-        // Special collection for root nodes that doesn't have a parent TreeNode
-        internal class RootTreeNodeCollection : TreeNode.TreeNodeCollection
-        {
-            private TreeView _treeView;
-
-            internal RootTreeNodeCollection(TreeView treeView) : base(null!)
-            {
-                _treeView = treeView;
-            }
-
-            protected override TreeView? GetTreeView() => _treeView;
-            protected override TreeNode? GetParentNode() => null;
         }
     }
 }
