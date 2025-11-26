@@ -110,6 +110,10 @@ namespace System.Windows.Forms
             // Connect to splitter moved event
             ConnectSplitterMoved();
 
+            // Pre-calculate panel sizes based on SplitterDistance and container size
+            // This ensures docked/anchored controls have correct parent sizes from the start
+            UpdatePanelSizes();
+
             CreateChildren();
 
             // After children are created, we can apply FixedPanel and SplitterDistance
@@ -149,21 +153,27 @@ namespace System.Windows.Forms
             // Update the splitter distance
             _splitterDistance = pos;
 
-            // Query the actual sizes from Qt and update the C# Size properties
-            // This is crucial because docked/anchored controls need the correct parent size
-            if (_panel1.IsHandleCreated)
+            // Update panel sizes and trigger layout
+            UpdatePanelSizes();
+        }
+
+        private void UpdatePanelSizes()
+        {
+            // Calculate panel sizes based on orientation and splitter distance
+            if (_orientation == Orientation.Horizontal)
             {
-                NativeMethods.QWidget_GetSize(_panel1.Handle, out int width1, out int height1);
-                _panel1.Size = new Size(width1, height1);
+                // Horizontal: panels are stacked vertically
+                _panel1.Size = new Size(Width, _splitterDistance);
+                _panel2.Size = new Size(Width, Height - _splitterDistance - _splitterWidth);
+            }
+            else
+            {
+                // Vertical: panels are side by side
+                _panel1.Size = new Size(_splitterDistance, Height);
+                _panel2.Size = new Size(Width - _splitterDistance - _splitterWidth, Height);
             }
 
-            if (_panel2.IsHandleCreated)
-            {
-                NativeMethods.QWidget_GetSize(_panel2.Handle, out int width2, out int height2);
-                _panel2.Size = new Size(width2, height2);
-            }
-
-            // Now trigger layout on both panels so docked/anchored controls update
+            // Trigger layout on both panels so docked/anchored controls update
             _panel1.PerformLayout();
             _panel2.PerformLayout();
         }
