@@ -37,6 +37,7 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QImageReader>
+#include <QSplitter>
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -1351,5 +1352,36 @@ extern "C" {
 
     EXPORT void QTreeWidgetItem_SetToolTip(void* item, int column, const char* toolTip) {
         ((QTreeWidgetItem*)item)->setToolTip(column, QString::fromUtf8(toolTip));
+    }
+
+    EXPORT void* QSplitter_Create(void* parent, int orientation) {
+        QSplitter* splitter = new QSplitter((Qt::Orientation)orientation, (QWidget*)parent);
+        return splitter;
+    }
+
+    EXPORT void QSplitter_SetOrientation(void* splitter, int orientation) {
+        ((QSplitter*)splitter)->setOrientation((Qt::Orientation)orientation);
+    }
+
+    EXPORT void QSplitter_SetHandleWidth(void* splitter, int width) {
+        ((QSplitter*)splitter)->setHandleWidth(width);
+    }
+
+    EXPORT void QSplitter_SetStretchFactor(void* splitter, int index, int stretch) {
+        ((QSplitter*)splitter)->setStretchFactor(index, stretch);
+    }
+
+    EXPORT void QSplitter_SetSplitterDistance(void* splitter, int distance) {
+        QSplitter* s = (QSplitter*)splitter;
+        QList<int> sizes = s->sizes();
+        if (sizes.size() >= 2) {
+            int total = 0;
+            for (int size : sizes) total += size;
+            
+            QList<int> newSizes;
+            newSizes.append(distance);
+            newSizes.append(total - distance);
+            s->setSizes(newSizes);
+        }
     }
 }

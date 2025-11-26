@@ -456,5 +456,20 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_SetToolTip(IntPtr item, int column, [MarshalAs(UnmanagedType.LPStr)] string toolTip);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QSplitter_Create(IntPtr parent, int orientation);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSplitter_SetOrientation(IntPtr splitter, int orientation);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSplitter_SetHandleWidth(IntPtr splitter, int width);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSplitter_SetStretchFactor(IntPtr splitter, int index, int stretch);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSplitter_SetSplitterDistance(IntPtr splitter, int distance);
     }
 }
