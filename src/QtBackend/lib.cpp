@@ -697,6 +697,10 @@ extern "C" {
         ((QAction*)action)->setToolTip(QString::fromUtf8(toolTip));
     }
 
+    EXPORT void QAction_SetVisible(void* action, bool visible) {
+        ((QAction*)action)->setVisible(visible);
+    }
+
 
 
     EXPORT void QWidget_SetMenuBar(void* widget, void* menuBar) {

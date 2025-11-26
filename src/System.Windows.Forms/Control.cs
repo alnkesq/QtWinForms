@@ -223,7 +223,7 @@ namespace System.Windows.Forms
             set => _unusedText = value ?? string.Empty;
         }
 
-        public bool Visible
+        public virtual bool Visible
         {
             get => _visible;
             set
@@ -235,19 +235,24 @@ namespace System.Windows.Forms
 
                     if (IsHandleCreated)
                     {
-                        if (value)
-                        {
-                            NativeMethods.QWidget_Show(Handle);
-                        }
-                        else
-                        {
-                            NativeMethods.QWidget_Hide(Handle);
-                        }
+                        UpdateVisibleCore(value);
                     }
                 }
             }
         }
         private bool _visible = true;
+
+        protected virtual void UpdateVisibleCore(bool value)
+        {
+            if (value)
+            {
+                NativeMethods.QWidget_Show(Handle);
+            }
+            else
+            {
+                NativeMethods.QWidget_Hide(Handle);
+            }
+        }
 
         public void Show()
         {

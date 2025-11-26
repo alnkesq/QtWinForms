@@ -1898,6 +1898,18 @@ namespace TestApp
             };
             form.Controls.Add(label2);
 
+            var chkShowItem2 = new CheckBox();
+            chkShowItem2.Text = "Show Item 2";
+            chkShowItem2.Location = new Point(50, 150);
+            chkShowItem2.Checked = true;
+            form.Controls.Add(chkShowItem2);
+
+            contextMenu.Opening += (s, e) =>
+            {
+                item2.Visible = chkShowItem2.Checked;
+                Console.WriteLine($"ContextMenu Opening: Item 2 Visible = {item2.Visible}");
+            };
+
             return form;
         }
         static Form CreateKeyEventsTest()

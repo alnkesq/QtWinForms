@@ -65,6 +65,11 @@ namespace System.Windows.Forms
             }
         }
 
+        protected override void UpdateVisibleCore(bool value)
+        {
+            NativeMethods.QAction_SetVisible(Handle, value);
+        }
+
         protected void UpdateImage()
         {
             if (_image != null)
