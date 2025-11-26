@@ -4,9 +4,8 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-    public class Control : IWin32Window, IDisposable, IComponent, ISupportInitialize
+    public class Control : Component, IWin32Window, IDisposable, IComponent, ISupportInitialize
     {
-        // ... (existing code)
         public IntPtr Handle { get; protected set; }
         internal GCHandle<Control>? gcHandle;
 
