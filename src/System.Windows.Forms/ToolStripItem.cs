@@ -69,17 +69,11 @@ namespace System.Windows.Forms
         {
             if (_image != null)
             {
-                using (var ms = new MemoryStream())
-                {
-                    // Save as PNG to preserve quality and transparency
-                    _image.Save(ms, ImageFormat.Png);
-                    var data = ms.ToArray();
-                    NativeMethods.QAction_SetIcon(Handle, data, data.Length);
-                }
+                NativeMethods.QAction_SetIcon(Handle, _image.GetQIcon());
             }
             else
             {
-                NativeMethods.QAction_SetIcon(Handle, null, 0);
+                NativeMethods.QAction_SetIcon(Handle, IntPtr.Zero);
             }
         }
 

@@ -46,7 +46,7 @@ namespace System.Windows.Forms
         public static extern void QWidget_SetTitle(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QWidget_SetIcon(IntPtr widget, byte[]? data, int length);
+        public static extern void QWidget_SetIcon(IntPtr widget, IntPtr icon);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QPushButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
@@ -210,7 +210,7 @@ namespace System.Windows.Forms
         public static extern IntPtr QAction_CreateSeparator();
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QAction_SetIcon(IntPtr action, byte[]? data, int length);
+        public static extern void QAction_SetIcon(IntPtr action, IntPtr icon);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QAction_SetToolTip(IntPtr action, [MarshalAs(UnmanagedType.LPStr)] string toolTip);

@@ -134,12 +134,11 @@ extern "C" {
         ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
     }
 
-    EXPORT void QWidget_SetIcon(void* widget, const unsigned char* data, int length) {
+    EXPORT void QWidget_SetIcon(void* widget, void* icon) {
         QWidget* w = (QWidget*)widget;
-        if (data != nullptr && length > 0) {
-            QPixmap pixmap;
-            pixmap.loadFromData(data, length);
-            w->setWindowIcon(QIcon(pixmap));
+        QIcon* qIcon = (QIcon*)icon;
+        if (qIcon != nullptr) {
+            w->setWindowIcon(*qIcon);
         } else {
             w->setWindowIcon(QIcon());
         }
@@ -683,12 +682,11 @@ extern "C" {
         return separator;
     }
 
-    EXPORT void QAction_SetIcon(void* action, const unsigned char* data, int length) {
+    EXPORT void QAction_SetIcon(void* action, void* icon) {
         QAction* qAction = (QAction*)action;
-        if (data != nullptr && length > 0) {
-            QPixmap pixmap;
-            pixmap.loadFromData(data, length);
-            qAction->setIcon(QIcon(pixmap));
+        QIcon* qIcon = (QIcon*)icon;
+        if (qIcon != nullptr) {
+            qAction->setIcon(*qIcon);
         } else {
             qAction->setIcon(QIcon());
         }

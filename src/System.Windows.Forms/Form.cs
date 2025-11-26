@@ -299,13 +299,13 @@ namespace System.Windows.Forms
 
         private void UpdateIcon()
         {
-            if (_icon != null && _icon.Bytes != null)
+            if (_icon != null)
             {
-                NativeMethods.QWidget_SetIcon(Handle, _icon.Bytes, _icon.Bytes.Length);
+                NativeMethods.QWidget_SetIcon(Handle, _icon.GetQIcon());
             }
             else
             {
-                NativeMethods.QWidget_SetIcon(Handle, null, 0);
+                NativeMethods.QWidget_SetIcon(Handle, IntPtr.Zero);
             }
         }
 
