@@ -23,8 +23,6 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
         [Obsolete(NotImplementedWarning)] public bool Checked { get; set; }
 
-        public event EventHandler? Click;
-
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
@@ -35,7 +33,7 @@ namespace System.Windows.Forms
         private static unsafe void OnClickedCallback(nint userData)
         {
             var button = ObjectFromGCHandle<ToolStripButton>(userData);
-            button.Click?.Invoke(button, EventArgs.Empty);
+            button.OnClick(EventArgs.Empty);
         }
     }
 }

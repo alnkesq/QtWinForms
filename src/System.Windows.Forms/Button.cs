@@ -5,7 +5,6 @@ namespace System.Windows.Forms
 {
     public class Button : Control
     {
-        private EventHandler? _clickHandler;
 
         protected override void CreateHandle()
         {
@@ -13,11 +12,7 @@ namespace System.Windows.Forms
             {
                 QtHandle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
-
-                if (_clickHandler != null)
-                {
-                    ConnectClickEvent();
-                }
+                ConnectClickEvent();
             }
         }
 
@@ -35,22 +30,6 @@ namespace System.Windows.Forms
         }
         private string _text = string.Empty;
 
-        public event EventHandler Click
-        {
-            add
-            {
-                if (_clickHandler == null && IsHandleCreated)
-                {
-                    ConnectClickEvent();
-                }
-                _clickHandler += value;
-            }
-            remove
-            {
-                _clickHandler -= value;
-            }
-        }
-
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
@@ -61,7 +40,7 @@ namespace System.Windows.Forms
         private static unsafe void OnClickedCallback(nint userData)
         {
             var button = ObjectFromGCHandle<Button>(userData);
-            button._clickHandler?.Invoke(button, EventArgs.Empty);
+            button.OnClick(EventArgs.Empty);
         }
 
         public DialogResult DialogResult { get; set; }

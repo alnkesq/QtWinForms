@@ -662,6 +662,8 @@ namespace System.Windows.Forms
         public event KeyEventHandler? KeyDown;
         [Obsolete(NotImplementedWarning)] public event EventHandler? Click;
 
+        public void OnClick(EventArgs e) => Click?.Invoke(this, e);
+
         protected virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
         protected virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);
 

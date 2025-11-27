@@ -8,7 +8,6 @@ namespace System.Windows.Forms
 {
     public class ToolStripMenuItem : ToolStripDropDownItem
     {
-        private EventHandler? _clickHandler;
         private bool _hasChildren = false;
 
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
@@ -27,12 +26,7 @@ namespace System.Windows.Forms
                 else
                 {
                     QtHandle = NativeMethods.QAction_Create(Text);
-
-                    // Connect click event if handler is already attached
-                    if (_clickHandler != null)
-                    {
-                        ConnectClickEvent();
-                    }
+                    ConnectClickEvent();
                 }
             }
         }
@@ -93,22 +87,6 @@ namespace System.Windows.Forms
             }
         }
 
-        public event EventHandler Click
-        {
-            add
-            {
-                if (_clickHandler == null && IsHandleCreated && !_hasChildren)
-                {
-                    ConnectClickEvent();
-                }
-                _clickHandler += value;
-            }
-            remove
-            {
-                _clickHandler -= value;
-            }
-        }
-
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
@@ -119,7 +97,7 @@ namespace System.Windows.Forms
         private static void OnClickedCallback(nint userData)
         {
             var menuItem = ObjectFromGCHandle<ToolStripMenuItem>(userData);
-            menuItem._clickHandler?.Invoke(menuItem, EventArgs.Empty);
+            menuItem.OnClick(EventArgs.Empty);
         }
 
         [Obsolete(NotImplementedWarning)] public string? ShortcutKeyDisplayString { get; set; }
