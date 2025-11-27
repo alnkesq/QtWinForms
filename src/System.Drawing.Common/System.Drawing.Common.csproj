@@ -9,6 +9,7 @@
     <AssemblyOriginatorKeyFile>..\Open.snk</AssemblyOriginatorKeyFile>
     <AssemblyVersion>10.0</AssemblyVersion>
 	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<NoWarn>CS0618</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

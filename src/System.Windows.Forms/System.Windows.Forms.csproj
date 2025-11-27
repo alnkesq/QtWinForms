@@ -9,6 +9,7 @@
     <AssemblyOriginatorKeyFile>..\ECMA.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
     <AssemblyVersion>10.0</AssemblyVersion>
+	  <NoWarn>CS0618;CS0067</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
