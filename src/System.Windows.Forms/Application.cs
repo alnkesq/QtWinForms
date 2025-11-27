@@ -71,5 +71,13 @@ namespace System.Windows.Forms
         {
             qtWinFormsNativeDirectory = directoryRelativeToWinFormsDll;
         }
+
+        public static void EnableVisualStyles()
+        {
+        }
+
+        public static void SetCompatibleTextRenderingDefault(bool v)
+        {
+        }
     }
 }

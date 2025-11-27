@@ -349,5 +349,7 @@ namespace System.Windows.Forms
             };
             return tcs.Task;
         }
+
+        [Obsolete(NotImplementedWarning)] public Form? Owner { get; set; }
     }
 }
