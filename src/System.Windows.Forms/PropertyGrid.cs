@@ -31,7 +31,7 @@ namespace System.Windows.Forms
             NativeMethods.QTreeWidget_SetColumnCount(QtHandle, 2);
             NativeMethods.QTreeWidget_SetHeaderHidden(QtHandle, false);
             NativeMethods.QTreeWidget_SetHeaderLabels(QtHandle, new string[] { "Property", "Value" }, 2);
-            
+
             RefreshProperties();
         }
 
@@ -51,7 +51,7 @@ namespace System.Windows.Forms
 
                 // Add item
                 IntPtr item = NativeMethods.QTreeWidget_AddTopLevelItem(QtHandle, prop.Name);
-                
+
                 // Set value in second column
                 object? val = null;
                 try
@@ -62,7 +62,7 @@ namespace System.Windows.Forms
                 {
                     val = "<error>";
                 }
-                
+
                 string valStr = val?.ToString()?.Replace('\n', ' ') ?? string.Empty;
                 if (valStr.Length >= MaxValueLength)
                     valStr = valStr.Substring(0, MaxValueLength) + "…";
@@ -75,5 +75,5 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public PropertySort PropertySort { get; set; }
     }
 
-    
+
 }

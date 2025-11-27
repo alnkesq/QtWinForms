@@ -14,7 +14,7 @@ namespace System.Windows.Forms
 
         public Form? ParentForm
         {
-            get 
+            get
             {
                 return FindForm();
             }

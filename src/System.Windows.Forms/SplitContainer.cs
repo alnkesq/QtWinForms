@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         {
             _panel1 = new SplitterPanel(this);
             _panel2 = new SplitterPanel(this);
-            
+
             // Add panels to Controls collection so they are created and parented correctly
             Controls.Add(_panel1);
             Controls.Add(_panel2);
@@ -104,7 +104,7 @@ namespace System.Windows.Forms
         {
             QtHandle = NativeMethods.QSplitter_Create(IntPtr.Zero, (int)_orientation);
             SetCommonProperties();
-            
+
             // Set handle width
             NativeMethods.QSplitter_SetHandleWidth(QtHandle, _splitterWidth);
 
@@ -122,7 +122,7 @@ namespace System.Windows.Forms
 
             // After children are created, we can apply FixedPanel and SplitterDistance
             UpdateSplitterStretch();
-            
+
             // Apply SplitterDistance if needed. 
             // Note: sizes might not be accurate until layout happens.
             if (_splitterDistance > 0)

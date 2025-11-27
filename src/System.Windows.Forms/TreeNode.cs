@@ -17,14 +17,14 @@ namespace System.Windows.Forms
         private int _selectedImageIndex = -1;
         private string _selectedImageKey = string.Empty;
 
-        public int SelectedImageIndex 
-        { 
+        public int SelectedImageIndex
+        {
             get
             {
                 if (_selectedImageIndex == -1 && !string.IsNullOrEmpty(_selectedImageKey))
                 {
                     TreeView? tv = GetTreeView();
-                    if (tv?.ImageList?.Images.nameToIndex != null && 
+                    if (tv?.ImageList?.Images.nameToIndex != null &&
                         tv.ImageList.Images.nameToIndex.TryGetValue(_selectedImageKey, out int index))
                     {
                         return index;
@@ -56,18 +56,18 @@ namespace System.Windows.Forms
                 }
             }
         }
-        
+
         private int _imageIndex = -1;
         private string _imageKey = string.Empty;
 
-        public int ImageIndex 
-        { 
+        public int ImageIndex
+        {
             get
             {
                 if (_imageIndex == -1 && !string.IsNullOrEmpty(_imageKey))
                 {
                     TreeView? tv = GetTreeView();
-                    if (tv?.ImageList?.Images.nameToIndex != null && 
+                    if (tv?.ImageList?.Images.nameToIndex != null &&
                         tv.ImageList.Images.nameToIndex.TryGetValue(_imageKey, out int index))
                     {
                         return index;
@@ -101,7 +101,7 @@ namespace System.Windows.Forms
         }
 
         public bool IsExpanded => _nativeItem != default && NativeMethods.QTreeWidgetItem_IsExpanded(_nativeItem) != 0;
-        
+
         [Obsolete(Control.NotImplementedWarning)] public Color ForeColor { get; set; }
         [Obsolete(Control.NotImplementedWarning)] public Color BackColor { get; set; }
         public TreeNode()
@@ -266,12 +266,12 @@ namespace System.Windows.Forms
                 {
                     int index = _innerList.Add(node);
                     node._parent = Owner;
-                    
+
                     if (Owner.IsNativeHandleCreated)
                     {
                         node.EnsureNativeItem();
                     }
-                    
+
                     return index;
                 }
                 throw new ArgumentException("Value must be a TreeNode");
@@ -300,7 +300,7 @@ namespace System.Windows.Forms
                 {
                     _innerList.Insert(index, node);
                     node._parent = Owner;
-                    
+
                     if (Owner.IsNativeHandleCreated)
                     {
                         node.EnsureNativeItem();
@@ -351,7 +351,7 @@ namespace System.Windows.Forms
 
                     _innerList[index] = value;
                     value._parent = Owner;
-                    
+
                     if (Owner.IsNativeHandleCreated)
                     {
                         value.EnsureNativeItem();
@@ -385,29 +385,29 @@ namespace System.Windows.Forms
             public IEnumerator GetEnumerator() => _innerList.GetEnumerator();
         }
 #pragma warning restore CS8767
-        
+
         internal void UpdateIcon()
         {
             if (_nativeItem == IntPtr.Zero)
                 return;
-                
+
             // Get the TreeView
             TreeView? treeView = GetTreeView();
             if (treeView == null || treeView.ImageList == null)
                 return;
-            
+
             // Determine which icon to use based on selection state
             bool isSelected = treeView.SelectedNode == this;
-            
+
             // Resolve indices
             int actualImageIndex = ImageIndex;
             int actualSelectedImageIndex = SelectedImageIndex;
-            
+
             int iconIndex = isSelected && actualSelectedImageIndex >= 0 ? actualSelectedImageIndex : actualImageIndex;
-            
+
             if (iconIndex < 0)
                 return;
-            
+
             // Get the QIcon from the ImageList (reused if already created)
             IntPtr qIcon = treeView.GetQIconFromImageList(iconIndex);
             if (qIcon != IntPtr.Zero)
@@ -415,7 +415,7 @@ namespace System.Windows.Forms
                 NativeMethods.QTreeWidgetItem_SetIcon(_nativeItem, 0, qIcon);
             }
         }
-        
+
         private TreeView? GetTreeView()
         {
             ITreeNodeOrTreeView? current = _parent;

@@ -68,10 +68,10 @@ namespace System.Windows.Forms
         {
             AfterSelect?.Invoke(this, e);
         }
-        
+
         private ImageList? _imageList;
-        public ImageList? ImageList 
-        { 
+        public ImageList? ImageList
+        {
             get => _imageList;
             set
             {
@@ -83,7 +83,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        
+
         [Obsolete(NotImplementedWarning)] public bool HideSelection { get; set; }
         [Obsolete(NotImplementedWarning)] public int ImageIndex { get; set; } = -1;
         [Obsolete(NotImplementedWarning)] public int SelectedImageIndex { get; set; } = -1;
@@ -133,7 +133,7 @@ namespace System.Windows.Forms
                 {
                     return node;
                 }
-                
+
                 TreeNode? found = FindNodeByNativeItemRecursive(node.Nodes, nativeItem);
                 if (found != null)
                 {
@@ -154,12 +154,12 @@ namespace System.Windows.Forms
         {
             var control = ObjectFromGCHandle<TreeView>(userData);
             IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(control.QtHandle);
-            
+
             // Store the previous selected node to update its icon
             TreeNode? previousNode = control._selectedNode;
-            
+
             control._selectedNode = control.FindNodeByNativeItem(nativeItem);
-            
+
             // Update icons for both old and new selected nodes
             if (previousNode != null)
             {
@@ -169,7 +169,7 @@ namespace System.Windows.Forms
             {
                 control._selectedNode.UpdateIcon(); // Show selected icon
             }
-            
+
             // Fire AfterSelect event
             if (control._selectedNode != null)
             {
@@ -193,7 +193,7 @@ namespace System.Windows.Forms
             {
                 var cancelArgs = new TreeViewCancelEventArgs(node, false, TreeViewAction.Expand);
                 control.OnBeforeExpand(cancelArgs);
-                
+
                 // If the event handler cancelled the expansion, collapse it back
                 if (cancelArgs.Cancel)
                 {
@@ -207,7 +207,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        
+
         private void UpdateAllNodeIcons()
         {
             foreach (TreeNode node in _nodes)
@@ -215,7 +215,7 @@ namespace System.Windows.Forms
                 UpdateNodeIconsRecursive(node);
             }
         }
-        
+
         private void UpdateNodeIconsRecursive(TreeNode node)
         {
             node.UpdateIcon();
@@ -224,12 +224,12 @@ namespace System.Windows.Forms
                 UpdateNodeIconsRecursive(child);
             }
         }
-        
+
         internal IntPtr GetQIconFromImageList(int imageIndex)
         {
             if (_imageList == null || imageIndex < 0 || imageIndex >= _imageList.Images.Count)
                 return IntPtr.Zero;
-                
+
             var image = _imageList.Images[imageIndex];
 
             return image.GetQIcon();
@@ -237,7 +237,7 @@ namespace System.Windows.Forms
 
         [Obsolete(NotImplementedWarning)]
         public TreeNode? TopNode
-        { 
+        {
             get => Nodes.Count != 0 ? Nodes[0] : null;
             set { }
         }

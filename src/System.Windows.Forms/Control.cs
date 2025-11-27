@@ -599,7 +599,7 @@ namespace System.Windows.Forms
 
             SetBoundsCore(newX, newY, newWidth, newHeight);
         }
-        
+
         public string? Name { get; set; }
         public object? Tag { get; set; }
         [Obsolete(NotImplementedWarning)] public bool UseVisualStyleBackColor { get; set; } = true;
@@ -739,7 +739,7 @@ namespace System.Windows.Forms
         }
 
         [Obsolete(NotImplementedWarning)]
-        public void Invalidate() 
+        public void Invalidate()
         {
         }
         [Obsolete(NotImplementedWarning)] public Padding Padding { get; set; }

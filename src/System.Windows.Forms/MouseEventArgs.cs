@@ -5,7 +5,7 @@ using System.Text;
 
 namespace System.Windows.Forms
 {
-  
+
     public class MouseEventArgs : EventArgs
     {
         public MouseButtons Button { get; }

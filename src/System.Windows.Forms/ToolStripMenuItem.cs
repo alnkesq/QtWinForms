@@ -66,15 +66,15 @@ namespace System.Windows.Forms
                 bool wasEmpty = !_owner.HasMenu;
                 _owner.DropDown.Items.Add(item);
                 _owner._hasChildren = true;
-                
+
                 // If we are transitioning from no children to having children, we might need to recreate the handle
                 // to attach the menu.
                 if (_owner.IsHandleCreated && wasEmpty)
                 {
-                     // This is tricky. QAction::setMenu can be called anytime.
-                     // But we need to ensure DropDown is created.
-                     _owner.DropDown.CreateControl();
-                     NativeMethods.QAction_SetMenu(_owner.QtHandle, _owner.DropDown.QtHandle);
+                    // This is tricky. QAction::setMenu can be called anytime.
+                    // But we need to ensure DropDown is created.
+                    _owner.DropDown.CreateControl();
+                    NativeMethods.QAction_SetMenu(_owner.QtHandle, _owner.DropDown.QtHandle);
                 }
             }
 

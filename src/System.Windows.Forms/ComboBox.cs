@@ -203,7 +203,7 @@ namespace System.Windows.Forms
                 {
                     item = field.GetValue(item);
                 }
-                else 
+                else
                 {
                     var prop = item.GetType().GetProperty(DisplayMember, Reflection.BindingFlags.Public | Reflection.BindingFlags.NonPublic | Reflection.BindingFlags.Instance);
                     if (prop != null)

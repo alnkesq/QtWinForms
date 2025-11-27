@@ -10,7 +10,7 @@ namespace System.Windows.Forms
         private MenuStrip? _mainMenuStrip;
 
         [Obsolete(NotImplementedWarning)] public bool KeyPreview { get; set; }
-        
+
         public Form() : base()
         {
             Visible = false;
@@ -141,7 +141,7 @@ namespace System.Windows.Forms
         private static unsafe void OnClosedCallback(nint userData)
         {
             var form = ObjectFromGCHandle<Form>(userData);
-            
+
             // End dialog loop if any
             NativeMethods.Form_EndDialog(form.QtHandle);
 
@@ -360,7 +360,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-     
+
         public Task<DialogResult> ShowDialogAsync(IWin32Window? owner = null)
         {
             this.Owner = owner as Form;
@@ -372,7 +372,7 @@ namespace System.Windows.Forms
             _isModal = true;
             this.Visible = true;
             var tcs = new TaskCompletionSource<DialogResult>();
-            
+
             FormClosedEventHandler handler = null!;
             handler = (_, _) =>
             {
@@ -382,7 +382,7 @@ namespace System.Windows.Forms
                 tcs.TrySetResult(this.DialogResult);
             };
             this.FormClosed += handler;
-            
+
             return tcs.Task;
         }
 

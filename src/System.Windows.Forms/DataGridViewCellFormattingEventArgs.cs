@@ -14,8 +14,8 @@ namespace System.Windows.Forms
 
         public int RowIndex { get; }
 
-          public DataGridViewCellFormattingEventArgs(int columnIndex, int rowIndex, object? value, Type? desiredType, DataGridViewCellStyle cellStyle)
-            : base(value, desiredType)
+        public DataGridViewCellFormattingEventArgs(int columnIndex, int rowIndex, object? value, Type? desiredType, DataGridViewCellStyle cellStyle)
+          : base(value, desiredType)
         {
             ArgumentOutOfRangeException.ThrowIfLessThan(columnIndex, -1, "columnIndex");
             ArgumentOutOfRangeException.ThrowIfLessThan(rowIndex, -1, "rowIndex");

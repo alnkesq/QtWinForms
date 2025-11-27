@@ -20,7 +20,7 @@ namespace System.Windows.Forms
             }
 
             ConnectToggledEvent();
-            
+
         }
 
         public override string Text

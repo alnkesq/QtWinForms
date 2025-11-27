@@ -20,7 +20,7 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            
+
             QtHandle = NativeMethods.QListWidget_Create(IntPtr.Zero);
             SetCommonProperties();
 

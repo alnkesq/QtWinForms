@@ -24,7 +24,7 @@ namespace System.Windows.Forms
             NativeMethods.QDoubleSpinBox_SetValue(QtHandle, (double)_value);
 
             NativeMethods.QDoubleSpinBox_ConnectValueChanged(QtHandle, &OnValueChangedCallback, GCHandlePtr);
-            
+
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]

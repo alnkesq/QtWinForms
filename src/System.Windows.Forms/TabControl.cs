@@ -30,7 +30,7 @@ namespace System.Windows.Forms
 
             // Connect the selected index changed event
             ConnectCurrentChangedEvent();
-            
+
         }
 
         public TabPageCollection TabPages => _tabPages;

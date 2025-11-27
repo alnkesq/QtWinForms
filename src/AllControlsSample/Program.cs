@@ -18,5 +18,5 @@ static class Program
 #endif
         ApplicationConfiguration.Initialize();
         Application.Run(new Form1());
-    }    
+    }
 }
