@@ -70,6 +70,12 @@ namespace System.Windows.Forms
                 }
             }
 
+            if (_owner != null)
+            {
+                _owner.EnsureCreated();
+                NativeMethods.Form_SetOwner(Handle, _owner.Handle);
+            }
+
             // Connect resize and move events
             ConnectResizeEvent();
             ConnectCloseEvent();
@@ -135,6 +141,10 @@ namespace System.Windows.Forms
         private static unsafe void OnClosedCallback(nint userData)
         {
             var form = ObjectFromGCHandle<Form>(userData);
+            
+            // End dialog loop if any
+            NativeMethods.Form_EndDialog(form.Handle);
+
             var args = new FormClosedEventArgs(CloseReason.UserClosing);
             form.OnFormClosed(args);
         }
@@ -337,10 +347,23 @@ namespace System.Windows.Forms
             }
         }
 
-        public DialogResult DialogResult { get; set; }
+        private DialogResult _dialogResult;
+        public DialogResult DialogResult
+        {
+            get => _dialogResult;
+            set
+            {
+                _dialogResult = value;
+                if (_isModal && _dialogResult != DialogResult.None)
+                {
+                    Close();
+                }
+            }
+        }
      
         public Task<DialogResult> ShowDialogAsync(IWin32Window? owner = null)
         {
+            this.Owner = owner as Form;
             this.Visible = true;
             var tcs = new TaskCompletionSource<DialogResult>();
             this.FormClosed += (_, _) =>
@@ -350,6 +373,40 @@ namespace System.Windows.Forms
             return tcs.Task;
         }
 
-        [Obsolete(NotImplementedWarning)] public Form? Owner { get; set; }
+        private bool _isModal = false;
+
+        public DialogResult ShowDialog(IWin32Window? owner = null)
+        {
+            this.Owner = owner as Form;
+            if (!IsHandleCreated) CreateControl();
+
+
+            _isModal = true;
+            try
+            {
+                NativeMethods.Form_ShowDialog(Handle);
+            }
+            finally
+            {
+                _isModal = false;
+            }
+
+            return DialogResult;
+        }
+
+        private Form? _owner;
+        public Form? Owner
+        {
+            get => _owner;
+            set
+            {
+                _owner = value;
+                if (IsHandleCreated)
+                {
+                    _owner?.EnsureCreated();
+                    NativeMethods.Form_SetOwner(Handle, _owner?.Handle ?? default);
+                }
+            }
+        }
     }
 }

@@ -38,6 +38,9 @@
 #include <QTreeWidgetItem>
 #include <QImageReader>
 #include <QSplitter>
+#include <QMap>
+#include <QEventLoop>
+
 #include <iostream>
 using namespace std;
 #ifdef _WIN32
@@ -1438,5 +1441,35 @@ extern "C" {
         QSize size = w->size();
         *width = size.width();
         *height = size.height();
+    }
+
+    // Form Modal Dialog Support
+    static QMap<QWidget*, QEventLoop*> g_dialogLoops;
+
+    EXPORT void Form_ShowDialog(void* handle) {
+        QWidget* w = (QWidget*)handle;
+        w->setWindowModality(Qt::ApplicationModal);
+        w->show();
+        
+        QEventLoop loop;
+        g_dialogLoops.insert(w, &loop);
+        loop.exec();
+        g_dialogLoops.remove(w);
+        
+        w->setWindowModality(Qt::NonModal);
+    }
+
+    EXPORT void Form_EndDialog(void* handle) {
+        QWidget* w = (QWidget*)handle;
+        if (g_dialogLoops.contains(w)) {
+            g_dialogLoops[w]->quit();
+        }
+    }
+
+    EXPORT void Form_SetOwner(void* child, void* owner) {
+        QWidget* c = (QWidget*)child;
+        QWidget* o = (QWidget*)owner;
+        // Set parent with Qt::Window flag to keep it as a top-level window but owned
+        c->setParent(o, Qt::Window);
     }
 }

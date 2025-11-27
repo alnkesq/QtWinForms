@@ -492,5 +492,14 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QSplitter_GetSizes(IntPtr splitter, out int size1, out int size2);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void Form_ShowDialog(IntPtr handle);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void Form_EndDialog(IntPtr handle);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void Form_SetOwner(IntPtr child, IntPtr owner);
     }
 }

@@ -44,6 +44,7 @@ namespace TestApp
                 Console.WriteLine("22. Key Events Test");
                 Console.WriteLine("23. TreeView Test");
                 Console.WriteLine("24. PropertyGrid Test");
+                Console.WriteLine("25. ShowDialog Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -172,6 +173,11 @@ namespace TestApp
                     case "24":
                         Console.WriteLine("Running PropertyGrid Test...");
                         testForm = CreatePropertyGridTest();
+                        break;
+
+                    case "25":
+                        Console.WriteLine("Running ShowDialog Test...");
+                        testForm = CreateShowDialogTest();
                         break;
 
                     default:
@@ -2269,6 +2275,62 @@ namespace TestApp
 
             [Category("Details")]
             public bool IsEnabled { get; set; }
+        }
+        static Form CreateShowDialogTest()
+        {
+            var form = new Form();
+            form.Text = "ShowDialog Test";
+            form.Size = new Size(400, 300);
+
+            var btnShowModal = new Button();
+            btnShowModal.Text = "Show Modal Dialog";
+            btnShowModal.Location = new Point(20, 20);
+            btnShowModal.Size = new Size(200, 30);
+            var btnShowModalAsync = new Button();
+            btnShowModalAsync.Text = "Show Modal Dialog Async";
+            btnShowModalAsync.Location = new Point(20, 100);
+            btnShowModalAsync.Size = new Size(200, 30);
+            Form CreateDialog()
+            {
+                var dialog = new Form();
+                dialog.Text = "Modal Dialog";
+                dialog.Size = new Size(300, 200);
+                // dialog.StartPosition = FormStartPosition.CenterParent; // Not implemented yet?
+
+                var btnClose = new Button();
+                btnClose.Text = "Close (OK)";
+                btnClose.Location = new Point(20, 20);
+                btnClose.DialogResult = DialogResult.OK;
+                btnClose.Click += (sender, args) => { dialog.DialogResult = DialogResult.OK; dialog.Close(); };
+                dialog.Controls.Add(btnClose);
+                // dialog.AcceptButton = btnClose;
+
+                var btnCancel = new Button();
+                btnCancel.Text = "Cancel";
+                btnCancel.Location = new Point(20, 60);
+                btnCancel.DialogResult = DialogResult.Cancel;
+                btnCancel.Click += (sender, args) => { dialog.DialogResult = DialogResult.Cancel; dialog.Close(); };
+                dialog.Controls.Add(btnCancel);
+                return dialog;
+            }
+            btnShowModal.Click += (s, e) =>
+            {
+                using var dialog = CreateDialog();
+                // dialog.CancelButton = btnCancel;
+                var result = dialog.ShowDialog(form);
+                MessageBox.Show($"Dialog result: {result}");
+            };
+            btnShowModalAsync.Click += async (s, e) =>
+            {
+                using var dialog = CreateDialog();
+                // dialog.CancelButton = btnCancel;
+                var result = await dialog.ShowDialogAsync(form);
+                MessageBox.Show($"Dialog result: {result}");
+            };
+            form.Controls.Add(btnShowModal);
+            form.Controls.Add(btnShowModalAsync);
+
+            return form;
         }
     }
 }
