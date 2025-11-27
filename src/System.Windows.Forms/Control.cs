@@ -614,7 +614,7 @@ namespace System.Windows.Forms
 
         public bool Disposing { get; private set; }
         public bool IsDisposed { get; private set; }
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -637,8 +637,7 @@ namespace System.Windows.Forms
                 gcHandle.Value.Dispose();
                 gcHandle = null;
             }
-            if (disposing)
-                Disposed?.Invoke(this, EventArgs.Empty);
+            base.Dispose(disposing);
             IsDisposed = true;
         }
 
@@ -662,7 +661,6 @@ namespace System.Windows.Forms
         public event PreviewKeyDownEventHandler? PreviewKeyDown;
         public event KeyEventHandler? KeyDown;
         [Obsolete(NotImplementedWarning)] public event EventHandler? Click;
-        public event EventHandler? Disposed;
 
         protected virtual void OnPreviewKeyDown(PreviewKeyDownEventArgs e) => PreviewKeyDown?.Invoke(this, e);
         protected virtual void OnKeyDown(KeyEventArgs e) => KeyDown?.Invoke(this, e);
@@ -749,7 +747,6 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public Padding Padding { get; set; }
         [Obsolete(NotImplementedWarning)] public Padding Margin { get; set; }
         [Obsolete(NotImplementedWarning)] public bool TabStop { get; set; }
-        public ISite? Site { get; set; }
 
         [Obsolete(NotImplementedWarning)]
         public void Focus() { }
@@ -792,8 +789,8 @@ namespace System.Windows.Forms
         }
 
         [Obsolete(NotImplementedWarning)] public event KeyPressEventHandler? KeyPress;
-        [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseUp;
-        [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseDown;
+        [Obsolete(NotImplementedWarning)] public event MouseEventHandler? MouseUp;
+        [Obsolete(NotImplementedWarning)] public event MouseEventHandler? MouseDown;
         [Obsolete(NotImplementedWarning)] protected void SetStyle(ControlStyles flag, bool value) { }
 
         public IntPtr Handle

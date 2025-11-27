@@ -7,7 +7,7 @@ namespace System.Windows.Forms
 {
     public class DataGridView : Control
     {
-        [Obsolete(NotImplementedWarning)] public DataGridViewRow RowTemplate { get; set; }
+        [Obsolete(NotImplementedWarning)] public DataGridViewRow RowTemplate { get; set; } = new();
         [Obsolete(NotImplementedWarning)] public DataGridViewSelectedCellCollection SelectedCells => throw new NotImplementedException();
         [Obsolete(NotImplementedWarning)] public DataGridViewColumnCollection Columns => throw new NotImplementedException();
         [Obsolete(NotImplementedWarning)] public DataGridViewRowCollection Rows => throw new NotImplementedException();
