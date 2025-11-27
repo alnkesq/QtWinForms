@@ -13,7 +13,7 @@ namespace System.Drawing
     public abstract class Image : IDisposable
     {
         private SixLabors.ImageSharp.Image<Rgba32>? _imageSharpImage;
-        private byte[]? _bytes;
+        protected byte[]? _bytes;
         private IntPtr _nativeQIcon;
         private IntPtr _nativeQPixmap;
 
