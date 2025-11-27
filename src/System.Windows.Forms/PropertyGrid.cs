@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
@@ -63,10 +63,13 @@ namespace System.Windows.Forms
                     val = "<error>";
                 }
                 
-                string valStr = val != null ? val.ToString() ?? string.Empty : "(null)";
+                string valStr = val?.ToString()?.Replace('\n', ' ') ?? string.Empty;
+                if (valStr.Length >= MaxValueLength)
+                    valStr = valStr.Substring(0, MaxValueLength) + "…";
                 NativeMethods.QTreeWidgetItem_SetText(item, 1, valStr);
             }
         }
+        private const int MaxValueLength = 1000;
         [Obsolete(NotImplementedWarning)] public bool ToolbarVisible { get; set; }
         [Obsolete(NotImplementedWarning)] public bool HelpVisible { get; set; }
         [Obsolete(NotImplementedWarning)] public PropertySort PropertySort { get; set; }
