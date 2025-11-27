@@ -16,7 +16,26 @@ namespace System.Windows.Forms
             container.Add(this);
         }
 
-        [Obsolete(Control.NotImplementedWarning)] public ImageListStreamer? ImageStream { get; set; }
+        private ImageListStreamer? _imageStream;
+
+        public ImageListStreamer? ImageStream
+        {
+            get
+            {
+                return _imageStream;
+            }
+            set
+            {
+                if (_imageStream == value) return;
+                if (_imageStream != null) throw new InvalidOperationException();
+                if (Images.Count != 0) throw new InvalidOperationException();
+                _imageStream = value;
+                if (value != null)
+                {
+                    Images.AddRange(value.Images);
+                }
+            }
+        }
 
         [Obsolete(Control.NotImplementedWarning)] public Color TransparentColor { get; set; }
         public ImageCollection Images { get; set; } = [];

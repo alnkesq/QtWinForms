@@ -15,28 +15,86 @@ namespace System.Windows.Forms
         public object? Tag { get; set; }
 
         private int _selectedImageIndex = -1;
+        private string _selectedImageKey = string.Empty;
+
         public int SelectedImageIndex 
         { 
-            get => _selectedImageIndex;
+            get
+            {
+                if (_selectedImageIndex == -1 && !string.IsNullOrEmpty(_selectedImageKey))
+                {
+                    TreeView? tv = GetTreeView();
+                    if (tv?.ImageList?.Images.nameToIndex != null && 
+                        tv.ImageList.Images.nameToIndex.TryGetValue(_selectedImageKey, out int index))
+                    {
+                        return index;
+                    }
+                }
+                return _selectedImageIndex;
+            }
             set
             {
                 if (_selectedImageIndex != value)
                 {
                     _selectedImageIndex = value;
+                    _selectedImageKey = string.Empty;
+                    UpdateIcon();
+                }
+            }
+        }
+
+        public string SelectedImageKey
+        {
+            get => _selectedImageKey;
+            set
+            {
+                if (_selectedImageKey != value)
+                {
+                    _selectedImageKey = value ?? string.Empty;
+                    _selectedImageIndex = -1;
                     UpdateIcon();
                 }
             }
         }
         
         private int _imageIndex = -1;
+        private string _imageKey = string.Empty;
+
         public int ImageIndex 
         { 
-            get => _imageIndex;
+            get
+            {
+                if (_imageIndex == -1 && !string.IsNullOrEmpty(_imageKey))
+                {
+                    TreeView? tv = GetTreeView();
+                    if (tv?.ImageList?.Images.nameToIndex != null && 
+                        tv.ImageList.Images.nameToIndex.TryGetValue(_imageKey, out int index))
+                    {
+                        return index;
+                    }
+                }
+                return _imageIndex;
+            }
             set
             {
                 if (_imageIndex != value)
                 {
                     _imageIndex = value;
+                    _imageKey = string.Empty;
+                    UpdateIcon();
+                }
+            }
+        }
+
+        public string ImageKey
+        {
+            get => _imageKey;
+            set
+            {
+                if (_imageKey != value)
+                {
+                    _imageKey = value ?? string.Empty;
+                    _imageIndex = -1;
                     UpdateIcon();
                 }
             }
@@ -340,7 +398,12 @@ namespace System.Windows.Forms
             
             // Determine which icon to use based on selection state
             bool isSelected = treeView.SelectedNode == this;
-            int iconIndex = isSelected && _selectedImageIndex >= 0 ? _selectedImageIndex : _imageIndex;
+            
+            // Resolve indices
+            int actualImageIndex = ImageIndex;
+            int actualSelectedImageIndex = SelectedImageIndex;
+            
+            int iconIndex = isSelected && actualSelectedImageIndex >= 0 ? actualSelectedImageIndex : actualImageIndex;
             
             if (iconIndex < 0)
                 return;

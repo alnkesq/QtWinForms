@@ -43,7 +43,7 @@ namespace System.Windows.Forms
     [Serializable]
     public sealed class ImageListStreamer : ISerializable
     {
-        readonly ImageList.ImageCollection imageCollection;
+        internal readonly ImageList.ImageCollection imageCollection;
         Image[] images;
         Size image_size;
         Color back_color;
