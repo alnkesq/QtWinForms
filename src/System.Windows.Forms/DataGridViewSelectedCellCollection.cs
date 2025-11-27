@@ -4,8 +4,7 @@ using System.Text;
 
 namespace System.Windows.Forms
 {
-    public class DataGridViewRow
+    public class DataGridViewSelectedCellCollection
     {
-        public object? Tag { get; set; }
     }
 }
