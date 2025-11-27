@@ -477,5 +477,8 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QSplitter_ConnectSplitterMoved(IntPtr splitter, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QSplitter_GetSizes(IntPtr splitter, out int size1, out int size2);
     }
 }

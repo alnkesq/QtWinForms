@@ -1401,6 +1401,18 @@ extern "C" {
         });
     }
 
+    EXPORT void QSplitter_GetSizes(void* splitter, int* size1, int* size2) {
+        QSplitter* s = (QSplitter*)splitter;
+        QList<int> sizes = s->sizes();
+        if (sizes.size() >= 2) {
+            *size1 = sizes[0];
+            *size2 = sizes[1];
+        } else {
+            *size1 = 0;
+            *size2 = 0;
+        }
+    }
+
     EXPORT void QWidget_GetSize(void* widget, int* width, int* height) {
         QWidget* w = (QWidget*)widget;
         QSize size = w->size();

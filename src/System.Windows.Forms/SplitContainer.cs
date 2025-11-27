@@ -152,13 +152,28 @@ namespace System.Windows.Forms
             }
         }
 
-        private void OnSplitterResize(int width, int height)
+        private void OnSplitterResize(int width, int height, bool allowReschedule = true)
         {
             // Update internal size using SetBoundsCore
             SetBoundsCore(Location.X, Location.Y, width, height);
 
-            // Note: SetBoundsCore will call OnResize which calls PerformLayout
-            // But we also need to explicitly update panel sizes
+            // Query the actual splitter sizes from Qt
+            // This is important because Qt may have adjusted the splitter position
+            // based on FixedPanel settings or other constraints
+            if (IsHandleCreated)
+            {
+                NativeMethods.QSplitter_GetSizes(Handle, out int size1, out int size2);
+                if (!(size1 == 0 && size2 == 0))
+                {
+                    _splitterDistance = size1;
+                }
+            }
+            SynchronizationContext.Current!.Post(_ =>
+            {
+                if (!IsDisposed)
+                    OnSplitterResize(Width, Height, allowReschedule: false);
+            }, null);
+            // Update panel sizes and trigger layout on their children
             UpdatePanelSizes();
         }
 
