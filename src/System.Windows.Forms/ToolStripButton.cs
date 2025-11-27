@@ -21,6 +21,7 @@ namespace System.Windows.Forms
             }
         }
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool Checked { get; set; }
 
         public event EventHandler? Click;
 
