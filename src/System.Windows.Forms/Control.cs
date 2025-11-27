@@ -794,5 +794,6 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public event KeyPressEventHandler? KeyPress;
         [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseUp;
         [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseDown;
+        [Obsolete(NotImplementedWarning)] protected void SetStyle(ControlStyles flag, bool value) { }
     }
 }
