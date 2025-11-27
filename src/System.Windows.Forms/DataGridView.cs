@@ -9,6 +9,7 @@ namespace System.Windows.Forms
     {
         [Obsolete(NotImplementedWarning)] public DataGridViewSelectedCellCollection SelectedCells => throw new NotImplementedException();
         [Obsolete(NotImplementedWarning)] public DataGridViewColumnCollection Columns => throw new NotImplementedException();
+        [Obsolete(NotImplementedWarning)] public DataGridViewRowCollection Rows => throw new NotImplementedException();
 
         [Obsolete(NotImplementedWarning)] public event EventHandler? SelectionChanged;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellContentClick;
@@ -27,5 +28,10 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public bool StandardTab { get; set; }
         [Obsolete(NotImplementedWarning)] public int RowHeadersWidth { get; set; }
         [Obsolete(NotImplementedWarning)] public DataGridViewColumnHeadersHeightSizeMode ColumnHeadersHeightSizeMode { get; set; }
+
+        public void ClearSelection()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
