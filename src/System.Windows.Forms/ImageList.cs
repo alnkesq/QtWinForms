@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         [Obsolete(Control.NotImplementedWarning)] public ImageListStreamer? ImageStream { get; set; }
 
         [Obsolete(Control.NotImplementedWarning)] public Color TransparentColor { get; set; }
-        public ImageListCollection Images { get; set; } = [];
+        public ImageCollection Images { get; set; } = [];
         [Obsolete(Control.NotImplementedWarning)] public ColorDepth ColorDepth { get; set; } = ColorDepth.Depth32Bit;
         public ISite? Site { get; set; }
 
@@ -34,7 +34,7 @@ namespace System.Windows.Forms
             Disposed?.Invoke(this, EventArgs.Empty);
         }
 
-        public class ImageListCollection : List<Image>
+        public class ImageCollection : List<Image>
         {
             internal Dictionary<string, int>? nameToIndex;
             [Obsolete(Control.NotImplementedWarning)]

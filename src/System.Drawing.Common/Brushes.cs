@@ -8,7 +8,7 @@ namespace System.Drawing
     {
         private static Brush GetBrush(Color color)
         {
-            return new Brush(color);
+            return new SolidBrush(color);
         }
 
         public static Brush Transparent => GetBrush(Color.Transparent);

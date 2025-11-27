@@ -3,11 +3,8 @@ using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using System;
-using System.Collections.Generic;
 using System.Drawing.Drawing2D;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+using System.Drawing.Imaging;
 
 namespace System.Drawing
 {
@@ -99,8 +96,116 @@ namespace System.Drawing
             DrawRectangle(pen, (float)x, (float)y, (float)width, (float)height);
         }
 
+        public void DrawImage(Image image, PointF point)
+        {
+            DrawImage(image, point.X, point.Y);
+        }
+        public unsafe void DrawImage(Image image, float x, float y)
+        {
+            throw new NotImplementedException();
+        }
+        public void DrawImage(Image image, RectangleF rect)
+        {
+            DrawImage(image, rect.X, rect.Y, rect.Width, rect.Height);
+        }
+        public unsafe void DrawImage(Image image, float x, float y, float width, float height)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawImage(Image image, Point point)
+        {
+            DrawImage(image, (float)point.X, (float)point.Y);
+        }
+
+        public void DrawImage(Image image, int x, int y)
+        {
+            DrawImage(image, (float)x, (float)y);
+        }
+
+        public void DrawImage(Image image, Rectangle rect)
+        {
+            DrawImage(image, (float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
+        }
+
+        public void DrawImage(Image image, int x, int y, int width, int height)
+        {
+            DrawImage(image, (float)x, (float)y, (float)width, (float)height);
+        }
+        public unsafe void DrawImage(Image image, float x, float y, RectangleF srcRect, GraphicsUnit srcUnit)
+        {
+            if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
+        }
+        public void DrawImage(Image image, int x, int y, Rectangle srcRect, GraphicsUnit srcUnit)
+        {
+            DrawImage(image, (float)x, (float)y, (RectangleF)srcRect, srcUnit);
+        }
+        public void DrawImage(Image image, RectangleF destRect, RectangleF srcRect, GraphicsUnit srcUnit)
+        {
+            if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
+            throw new NotImplementedException();
+        }
+        public void DrawImage(Image image, Rectangle destRect, Rectangle srcRect, GraphicsUnit srcUnit)
+        {
+            DrawImage(image, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, srcUnit);
+        }
+        public void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit)
+        {
+            DrawImage(image, destRect, srcX, srcY, srcWidth, srcHeight, srcUnit, null);
+        }
+        public void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs)
+        {
+            DrawImage(image, destRect, srcX, srcY, srcWidth, srcHeight, srcUnit, imageAttrs, null);
+        }
+        public void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs, DrawImageAbort? callback)
+        {
+            DrawImage(image, destRect, srcX, srcY, srcWidth, srcHeight, srcUnit, imageAttrs, callback, IntPtr.Zero);
+        }
+        public unsafe void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs, DrawImageAbort? callback, nint callbackData)
+        {
+            if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
+            throw new NotImplementedException();
+        }
+        public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit)
+        {
+            DrawImage(image, destRect, (float)srcX, (float)srcY, (float)srcWidth, (float)srcHeight, srcUnit, (ImageAttributes?)null);
+        }
+
+        public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttr)
+        {
+            DrawImage(image, destRect, (float)srcX, (float)srcY, (float)srcWidth, (float)srcHeight, srcUnit, imageAttr, (DrawImageAbort?)null);
+        }
+        public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttr, DrawImageAbort? callback)
+        {
+            DrawImage(image, destRect, (float)srcX, (float)srcY, (float)srcWidth, (float)srcHeight, srcUnit, imageAttr, callback, IntPtr.Zero);
+        }
+        public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs, DrawImageAbort? callback, nint callbackData)
+        {
+            DrawImage(image, destRect, (float)srcX, (float)srcY, (float)srcWidth, (float)srcHeight, srcUnit, imageAttrs, callback, callbackData);
+        }
+        public void DrawImageUnscaled(Image image, Point point)
+        {
+            DrawImage(image, point.X, point.Y);
+        }
+        public void DrawImageUnscaled(Image image, int x, int y)
+        {
+            DrawImage(image, x, y);
+        }
+
+        public void DrawImageUnscaled(Image image, Rectangle rect)
+        {
+            DrawImage(image, rect.X, rect.Y);
+        }
+        public void DrawImageUnscaled(Image image, int x, int y, int width, int height)
+        {
+            DrawImage(image, x, y);
+        }
+
+
         public void Dispose()
         {
         }
+        public delegate bool DrawImageAbort(nint callbackdata);
+
     }
 }
