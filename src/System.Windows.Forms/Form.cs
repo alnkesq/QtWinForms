@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-    public class Form : Control
+    public class Form : ContainerControl
     {
         private string _text = string.Empty;
         private FormWindowState _windowState = FormWindowState.Normal;

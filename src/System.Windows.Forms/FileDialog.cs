@@ -9,7 +9,8 @@ namespace System.Windows.Forms
         public string InitialDirectory { get; set; } = string.Empty;
         public string Filter { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
-
+        [Obsolete(Control.NotImplementedWarning)] public int FilterIndex { get; set; }
+        
         public override void Reset()
         {
             FileName = string.Empty;

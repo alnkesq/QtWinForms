@@ -15,6 +15,10 @@ namespace System.Windows.Forms
         public bool InvokeRequired => Environment.CurrentManagedThreadId != Application._mainThreadId;
         [Obsolete(NotImplementedWarning)] public static bool CheckForIllegalCrossThreadCalls { get; set; }
 
+        public void CreateControl()
+        {
+            EnsureCreated();
+        }
         public void Invoke(Action action)
         {
             if (InvokeRequired) Application._synchronizationContext!.Send(a => ((Action)a!)(), action);
@@ -456,6 +460,7 @@ namespace System.Windows.Forms
 
         public void SuspendLayout() { }
         public void ResumeLayout(bool performLayout) { }
+        public void ResumeLayout() => ResumeLayout(true);
 
         public void PerformLayout()
         {
@@ -598,14 +603,12 @@ namespace System.Windows.Forms
 
             SetBoundsCore(newX, newY, newWidth, newHeight);
         }
-
+        
         public string? Name { get; set; }
         public object? Tag { get; set; }
         [Obsolete(NotImplementedWarning)] public bool UseVisualStyleBackColor { get; set; } = true;
         [Obsolete(NotImplementedWarning)] public int TabIndex { get; set; } = 0;
-        [Obsolete(NotImplementedWarning)] public AutoScaleMode AutoScaleMode { get; set; }
         [Obsolete(NotImplementedWarning)] public bool AutoSize { get; set; }
-        [Obsolete(NotImplementedWarning)] public SizeF AutoScaleDimensions { get; set; }
 
         internal const string NotImplementedWarning = "Not implemented, NOP";
 
@@ -775,5 +778,18 @@ namespace System.Windows.Forms
         }
 
         public string? AccessibleName { get; set; }
+
+        public Form? FindForm()
+        {
+            Control? control = this;
+            while (control != null)
+            {
+                var parent = control.Parent;
+                if (parent is Form f) return f;
+                control = parent;
+            }
+            return null;
+        }
+
     }
 }

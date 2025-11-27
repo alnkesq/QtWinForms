@@ -12,6 +12,11 @@ namespace System.Windows.Forms
             _owner = owner;
         }
 
+        public void SetChildIndex(Control child, int newIndex)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void InsertItem(int index, Control item)
         {
             base.InsertItem(index, item);

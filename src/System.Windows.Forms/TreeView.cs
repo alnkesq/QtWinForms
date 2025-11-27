@@ -241,5 +241,9 @@ namespace System.Windows.Forms
             get => Nodes.Count != 0 ? Nodes[0] : null;
             set { }
         }
+
+
+        [Obsolete(NotImplementedWarning)]
+        public TreeNode? GetNodeAt(int x, int y) => throw new NotImplementedException();
     }
 }

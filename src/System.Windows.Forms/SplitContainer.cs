@@ -5,7 +5,7 @@ using Cdecl = System.Runtime.CompilerServices.CallConvCdecl;
 
 namespace System.Windows.Forms
 {
-    public class SplitContainer : Control, ISupportInitialize
+    public class SplitContainer : ContainerControl, ISupportInitialize
     {
         private SplitterPanel _panel1;
         private SplitterPanel _panel2;

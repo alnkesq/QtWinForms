@@ -11,6 +11,8 @@ namespace System.Windows.Forms
         private EventHandler? _clickHandler;
         private bool _hasChildren = false;
 
+        [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
+
         protected override void CreateHandle()
         {
             if (!IsHandleCreated)
@@ -119,5 +121,7 @@ namespace System.Windows.Forms
             var menuItem = ObjectFromGCHandle<ToolStripMenuItem>(userData);
             menuItem._clickHandler?.Invoke(menuItem, EventArgs.Empty);
         }
+
+        [Obsolete(NotImplementedWarning)] public string? ShortcutKeyDisplayString { get; set; }
     }
 }

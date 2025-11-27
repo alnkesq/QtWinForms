@@ -12,6 +12,7 @@ namespace System.Windows.Forms
         private int _selectedIndex = -1;
         private string _text = string.Empty;
 
+        public string? DisplayMember { get; set; }
         public ComboBox()
         {
             _items = new ObjectCollection(this);
@@ -27,7 +28,7 @@ namespace System.Windows.Forms
                 // Apply items
                 foreach (var item in _items)
                 {
-                    NativeMethods.QComboBox_AddItem(Handle, item?.ToString() ?? "");
+                    NativeMethods.QComboBox_AddItem(Handle, ItemToString(item));
                 }
 
                 // Apply DropDownStyle
@@ -104,6 +105,12 @@ namespace System.Windows.Forms
                     OnSelectedIndexChanged(EventArgs.Empty);
                 }
             }
+        }
+
+        public object? SelectedItem
+        {
+            get => SelectedIndex != -1 ? Items[SelectedIndex] : null;
+            set => SelectedIndex = value != null ? Items.IndexOf(value) : -1;
         }
 
         public unsafe override string Text
@@ -189,6 +196,30 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public AutoCompleteMode AutoCompleteMode { get; set; }
         [Obsolete(NotImplementedWarning)] public AutoCompleteSource AutoCompleteSource { get; set; }
 
+        private string ItemToString(object? item)
+        {
+            if (item == null) return string.Empty;
+            if (!string.IsNullOrEmpty(DisplayMember))
+            {
+                var field = item.GetType().GetField(DisplayMember, Reflection.BindingFlags.Public | Reflection.BindingFlags.NonPublic | Reflection.BindingFlags.Instance);
+                if (field != null)
+                {
+                    item = field.GetValue(item);
+                }
+                else 
+                {
+                    var prop = item.GetType().GetProperty(DisplayMember, Reflection.BindingFlags.Public | Reflection.BindingFlags.NonPublic | Reflection.BindingFlags.Instance);
+                    if (prop != null)
+                    {
+                        item = prop.GetValue(item);
+                    }
+                    else return string.Empty;
+                }
+            }
+            return item?.ToString() ?? string.Empty;
+        }
+
+
 #pragma warning disable CS8767
         public class ObjectCollection : IList
         {
@@ -206,7 +237,7 @@ namespace System.Windows.Forms
                 int index = _innerList.Add(item);
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_AddItem(_owner.Handle, item?.ToString() ?? "");
+                    NativeMethods.QComboBox_AddItem(_owner.Handle, _owner.ItemToString(item));
                 }
                 return index;
             }
@@ -238,7 +269,7 @@ namespace System.Windows.Forms
                 // Actually QComboBox has insertItem.
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_InsertItem(_owner.Handle, index, item?.ToString() ?? "");
+                    NativeMethods.QComboBox_InsertItem(_owner.Handle, index, _owner.ItemToString(item));
                 }
             }
 
@@ -270,7 +301,7 @@ namespace System.Windows.Forms
                     // QComboBox setItemText
                     if (_owner.IsHandleCreated)
                     {
-                        // NativeMethods.QComboBox_SetItemText(_owner.Handle, index, value.ToString());
+                        // NativeMethods.QComboBox_SetItemText(_owner.Handle, index, ItemToString(value));
                         throw new NotImplementedException();
                     }
                 }

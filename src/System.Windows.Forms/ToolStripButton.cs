@@ -20,6 +20,7 @@ namespace System.Windows.Forms
                 ConnectClickEvent();
             }
         }
+        [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
 
         public event EventHandler? Click;
 
