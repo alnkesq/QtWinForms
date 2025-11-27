@@ -20,7 +20,9 @@ namespace System.Drawing
 
         public static Graphics FromImage(Image image)
         {
-            return new Graphics(image.ImageSharpImage);
+            var img = image.ImageSharpImage;
+            image.InvalidateCompressedImageBytes();
+            return new Graphics(img);
         }
 
         public void Clear(Color color)
