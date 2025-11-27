@@ -791,5 +791,8 @@ namespace System.Windows.Forms
             return null;
         }
 
+        [Obsolete(NotImplementedWarning)] public event KeyPressEventHandler? KeyPress;
+        [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseUp;
+        [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseDown;
     }
 }
