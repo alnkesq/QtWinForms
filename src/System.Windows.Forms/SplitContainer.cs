@@ -133,8 +133,6 @@ namespace System.Windows.Forms
 
         private void ConnectResizeEvent()
         {
-            if (!IsHandleCreated) return;
-
             unsafe
             {
                 var resizeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnResizeCallback;
@@ -180,8 +178,6 @@ namespace System.Windows.Forms
 
         private void ConnectSplitterMoved()
         {
-            if (!IsHandleCreated) return;
-
             unsafe
             {
                 delegate* unmanaged[Cdecl]<IntPtr, int, int, void> callback = &OnSplitterMovedCallback;
