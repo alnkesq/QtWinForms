@@ -104,7 +104,7 @@ namespace System.Drawing
         }
         public unsafe void DrawImage(Image image, float x, float y)
         {
-            throw new NotImplementedException();
+            ImageSharpImage.Mutate(ctx => ctx.DrawImage(image.ImageSharpImage, new SixLabors.ImageSharp.Point((int)x, (int)y), 1f));
         }
         public void DrawImage(Image image, RectangleF rect)
         {
@@ -112,7 +112,8 @@ namespace System.Drawing
         }
         public unsafe void DrawImage(Image image, float x, float y, float width, float height)
         {
-            throw new NotImplementedException();
+            using var scaled = image.ImageSharpImage.Clone(ctx => ctx.Resize((int)width, (int)height));
+            ImageSharpImage.Mutate(ctx => ctx.DrawImage(scaled, new SixLabors.ImageSharp.Point((int)x, (int)y), 1f));
         }
 
         public void DrawImage(Image image, Point point)
@@ -145,7 +146,12 @@ namespace System.Drawing
         public void DrawImage(Image image, RectangleF destRect, RectangleF srcRect, GraphicsUnit srcUnit)
         {
             if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
-            throw new NotImplementedException();
+
+            using var processed = image.ImageSharpImage.Clone(ctx => ctx
+                .Crop(new SixLabors.ImageSharp.Rectangle((int)srcRect.X, (int)srcRect.Y, (int)srcRect.Width, (int)srcRect.Height))
+                .Resize((int)destRect.Width, (int)destRect.Height));
+
+            ImageSharpImage.Mutate(ctx => ctx.DrawImage(processed, new SixLabors.ImageSharp.Point((int)destRect.X, (int)destRect.Y), 1f));
         }
         public void DrawImage(Image image, Rectangle destRect, Rectangle srcRect, GraphicsUnit srcUnit)
         {
@@ -166,7 +172,12 @@ namespace System.Drawing
         public unsafe void DrawImage(Image image, Rectangle destRect, float srcX, float srcY, float srcWidth, float srcHeight, GraphicsUnit srcUnit, ImageAttributes? imageAttrs, DrawImageAbort? callback, nint callbackData)
         {
             if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
-            throw new NotImplementedException();
+
+            using var processed = image.ImageSharpImage.Clone(ctx => ctx
+                .Crop(new SixLabors.ImageSharp.Rectangle((int)srcX, (int)srcY, (int)srcWidth, (int)srcHeight))
+                .Resize(destRect.Width, destRect.Height));
+
+            ImageSharpImage.Mutate(ctx => ctx.DrawImage(processed, new SixLabors.ImageSharp.Point(destRect.X, destRect.Y), 1f));
         }
         public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit)
         {
