@@ -9,6 +9,9 @@ namespace System.Windows.Forms
         private TreeNodeCollection? _nodes;
         internal IntPtr _nativeItem = IntPtr.Zero;
         internal ITreeNodeOrTreeView? _parent;
+
+        public TreeNode? Parent => _parent as TreeNode;
+
         public object? Tag { get; set; }
 
         private int _selectedImageIndex = -1;
