@@ -110,6 +110,9 @@ namespace System.Windows.Forms
             // Connect to splitter moved event
             ConnectSplitterMoved();
 
+            // Connect to resize event to handle form resizing
+            ConnectResizeEvent();
+
             // Pre-calculate panel sizes based on SplitterDistance and container size
             // This ensures docked/anchored controls have correct parent sizes from the start
             UpdatePanelSizes();
@@ -125,6 +128,38 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QSplitter_SetSplitterDistance(Handle, _splitterDistance, WidgetSize);
             }
+        }
+
+        private void ConnectResizeEvent()
+        {
+            if (!IsHandleCreated) return;
+
+            unsafe
+            {
+                var resizeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnResizeCallback;
+                // We don't need move callback for SplitContainer, pass null
+                NativeMethods.QWidget_ConnectResize(Handle, resizeCallbackPtr, IntPtr.Zero, GCHandlePtr);
+            }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        private static unsafe void OnResizeCallback(nint userData, int width, int height)
+        {
+            GCHandle handle = GCHandle.FromIntPtr(userData);
+            if (handle.Target is SplitContainer container)
+            {
+                container.OnSplitterResize(width, height);
+            }
+        }
+
+        private void OnSplitterResize(int width, int height)
+        {
+            // Update internal size using SetBoundsCore
+            SetBoundsCore(Location.X, Location.Y, width, height);
+
+            // Note: SetBoundsCore will call OnResize which calls PerformLayout
+            // But we also need to explicitly update panel sizes
+            UpdatePanelSizes();
         }
 
         private void ConnectSplitterMoved()
@@ -163,19 +198,18 @@ namespace System.Windows.Forms
             if (_orientation == Orientation.Horizontal)
             {
                 // Horizontal: panels are stacked vertically
-                _panel1.Size = new Size(Width, _splitterDistance);
-                _panel2.Size = new Size(Width, Height - _splitterDistance - _splitterWidth);
+                _panel1.SetBoundsCore(0, 0, Width, _splitterDistance);
+                _panel2.SetBoundsCore(0, _splitterDistance + _splitterWidth, Width, Height - _splitterDistance - _splitterWidth);
             }
             else
             {
                 // Vertical: panels are side by side
-                _panel1.Size = new Size(_splitterDistance, Height);
-                _panel2.Size = new Size(Width - _splitterDistance - _splitterWidth, Height);
+                _panel1.SetBoundsCore(0, 0, _splitterDistance, Height);
+                _panel2.SetBoundsCore(_splitterDistance + _splitterWidth, 0, Width - _splitterDistance - _splitterWidth, Height);
             }
 
-            // Trigger layout on both panels so docked/anchored controls update
-            _panel1.PerformLayout();
-            _panel2.PerformLayout();
+            // Note: SetBoundsCore already calls OnResize which triggers PerformLayout
+            // So we don't need to explicitly call PerformLayout here
         }
 
         private void UpdateSplitterStretch()
