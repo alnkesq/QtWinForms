@@ -20,14 +20,14 @@ namespace System.Windows.Forms
         {
             if (IsHandleCreated) return;
 
-            Handle = NativeMethods.QDateTimeEdit_Create(Parent?.Handle ?? IntPtr.Zero);
+            QtHandle = NativeMethods.QDateTimeEdit_Create(Parent?.QtHandle ?? IntPtr.Zero);
 
             // Set initial values
             UpdateValue();
             UpdateMinDate();
             UpdateMaxDate();
 
-            NativeMethods.QDateTimeEdit_ConnectDateTimeChanged(Handle, &OnDateTimeChanged, GCHandlePtr);
+            NativeMethods.QDateTimeEdit_ConnectDateTimeChanged(QtHandle, &OnDateTimeChanged, GCHandlePtr);
 
             SetCommonProperties();
         }
@@ -39,7 +39,7 @@ namespace System.Windows.Forms
                 if (IsHandleCreated)
                 {
                     int year, month, day, hour, minute, second;
-                    NativeMethods.QDateTimeEdit_GetDateTime(Handle, out year, out month, out day, out hour, out minute, out second);
+                    NativeMethods.QDateTimeEdit_GetDateTime(QtHandle, out year, out month, out day, out hour, out minute, out second);
                     _value = new DateTime(year, month, day, hour, minute, second);
                 }
                 return _value;
@@ -97,7 +97,7 @@ namespace System.Windows.Forms
         {
             if (IsHandleCreated)
             {
-                NativeMethods.QDateTimeEdit_SetDateTime(Handle, _value.Year, _value.Month, _value.Day, _value.Hour, _value.Minute, _value.Second);
+                NativeMethods.QDateTimeEdit_SetDateTime(QtHandle, _value.Year, _value.Month, _value.Day, _value.Hour, _value.Minute, _value.Second);
             }
         }
 
@@ -105,7 +105,7 @@ namespace System.Windows.Forms
         {
             if (IsHandleCreated)
             {
-                NativeMethods.QDateTimeEdit_SetMinimumDateTime(Handle, _minDate.Year, _minDate.Month, _minDate.Day, _minDate.Hour, _minDate.Minute, _minDate.Second);
+                NativeMethods.QDateTimeEdit_SetMinimumDateTime(QtHandle, _minDate.Year, _minDate.Month, _minDate.Day, _minDate.Hour, _minDate.Minute, _minDate.Second);
             }
         }
 
@@ -113,7 +113,7 @@ namespace System.Windows.Forms
         {
             if (IsHandleCreated)
             {
-                NativeMethods.QDateTimeEdit_SetMaximumDateTime(Handle, _maxDate.Year, _maxDate.Month, _maxDate.Day, _maxDate.Hour, _maxDate.Minute, _maxDate.Second);
+                NativeMethods.QDateTimeEdit_SetMaximumDateTime(QtHandle, _maxDate.Year, _maxDate.Month, _maxDate.Day, _maxDate.Hour, _maxDate.Minute, _maxDate.Second);
             }
         }
 

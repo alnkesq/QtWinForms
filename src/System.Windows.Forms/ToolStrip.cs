@@ -15,7 +15,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = CreateNativeControlCore();
+                QtHandle = CreateNativeControlCore();
                 SetCommonProperties();
 
                 foreach (var item in _items)
@@ -39,7 +39,7 @@ namespace System.Windows.Forms
 
         protected virtual void AddNativeItem(ToolStripItem item)
         {
-            NativeMethods.QToolBar_AddAction(Handle, item.Handle);
+            NativeMethods.QToolBar_AddAction(QtHandle, item.QtHandle);
         }
 
 

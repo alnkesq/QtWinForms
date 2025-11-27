@@ -32,7 +32,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QWidget_Create(IntPtr.Zero);
                 SetCommonProperties();
 
                 // Create handles for any child controls that were added before this control was created
@@ -44,11 +44,11 @@ namespace System.Windows.Forms
                     }
 
                     // Set parent relationship in Qt
-                    NativeMethods.QWidget_SetParent(child.Handle, Handle);
+                    NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
 
                     // Apply position and size (Qt needs this after setParent)
-                    NativeMethods.QWidget_Move(child.Handle, child.Location.X, child.Location.Y);
-                    NativeMethods.QWidget_Resize(child.Handle, child.Size.Width, child.Size.Height);
+                    NativeMethods.QWidget_Move(child.QtHandle, child.Location.X, child.Location.Y);
+                    NativeMethods.QWidget_Resize(child.QtHandle, child.Size.Width, child.Size.Height);
 
                     // Initialize anchor bounds now that parent is set
                     child.InitializeAnchorBounds();
@@ -56,7 +56,7 @@ namespace System.Windows.Forms
                     // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
                     if (child.Visible)
                     {
-                        NativeMethods.QWidget_Show(child.Handle);
+                        NativeMethods.QWidget_Show(child.QtHandle);
                     }
                 }
 

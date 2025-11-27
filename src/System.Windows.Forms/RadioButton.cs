@@ -12,12 +12,12 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text);
+                QtHandle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
 
                 if (_checked)
                 {
-                    NativeMethods.QRadioButton_SetChecked(Handle, _checked);
+                    NativeMethods.QRadioButton_SetChecked(QtHandle, _checked);
                 }
 
                 ConnectToggledEvent();
@@ -32,7 +32,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QRadioButton_SetText(Handle, _text);
+                    NativeMethods.QRadioButton_SetText(QtHandle, _text);
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace System.Windows.Forms
                     _checked = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QRadioButton_SetChecked(Handle, value);
+                        NativeMethods.QRadioButton_SetChecked(QtHandle, value);
                     }
                     OnCheckedChanged(EventArgs.Empty);
                 }
@@ -64,7 +64,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectToggledEvent()
         {
             delegate* unmanaged[Cdecl]<nint, byte, void> callback = &OnToggledCallback;
-            NativeMethods.QRadioButton_ConnectToggled(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QRadioButton_ConnectToggled(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

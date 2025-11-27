@@ -12,12 +12,12 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
+                QtHandle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
 
                 if (_checked)
                 {
-                    NativeMethods.QCheckBox_SetChecked(Handle, _checked);
+                    NativeMethods.QCheckBox_SetChecked(QtHandle, _checked);
                 }
                 ConnectStateChangedEvent();
             }
@@ -31,7 +31,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QCheckBox_SetText(Handle, _text);
+                    NativeMethods.QCheckBox_SetText(QtHandle, _text);
                 }
             }
         }
@@ -44,7 +44,7 @@ namespace System.Windows.Forms
                 _checked = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QCheckBox_SetChecked(Handle, value);
+                    NativeMethods.QCheckBox_SetChecked(QtHandle, value);
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectStateChangedEvent()
         {
             delegate* unmanaged[Cdecl]<nint, int, void> callback = &OnStateChangedCallback;
-            NativeMethods.QCheckBox_ConnectStateChanged(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QCheckBox_ConnectStateChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

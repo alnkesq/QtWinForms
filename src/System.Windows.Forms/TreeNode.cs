@@ -172,7 +172,7 @@ namespace System.Windows.Forms
                 if (_parent is TreeView treeView)
                 {
                     // Top-level node
-                    _nativeItem = NativeMethods.QTreeWidget_AddTopLevelItem(treeView.Handle, _text);
+                    _nativeItem = NativeMethods.QTreeWidget_AddTopLevelItem(treeView.QtHandle, _text);
                 }
                 else
                 {

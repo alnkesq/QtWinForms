@@ -22,17 +22,17 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QListWidget_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QListWidget_Create(IntPtr.Zero);
                 SetCommonProperties();
 
                 // Apply items
                 foreach (var item in _items)
                 {
-                    NativeMethods.QListWidget_AddItem(Handle, item?.ToString() ?? "");
+                    NativeMethods.QListWidget_AddItem(QtHandle, item?.ToString() ?? "");
                 }
 
                 // Apply SelectionMode
-                NativeMethods.QListWidget_SetSelectionMode(Handle, (int)_selectionMode);
+                NativeMethods.QListWidget_SetSelectionMode(QtHandle, (int)_selectionMode);
 
                 ConnectSelectedIndexChanged();
             }
@@ -50,7 +50,7 @@ namespace System.Windows.Forms
                     _selectionMode = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QListWidget_SetSelectionMode(Handle, (int)value);
+                        NativeMethods.QListWidget_SetSelectionMode(QtHandle, (int)value);
                     }
                 }
             }
@@ -62,7 +62,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    return NativeMethods.QListWidget_GetCurrentRow(Handle);
+                    return NativeMethods.QListWidget_GetCurrentRow(QtHandle);
                 }
                 return -1;
             }
@@ -70,7 +70,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QListWidget_SetCurrentRow(Handle, value);
+                    NativeMethods.QListWidget_SetCurrentRow(QtHandle, value);
                 }
             }
         }
@@ -122,7 +122,7 @@ namespace System.Windows.Forms
                     box.Target = result;
                 }
 
-                NativeMethods.QListWidget_GetSelectedRows(Handle, &Callback, GCHandle<int[]>.ToIntPtr(box));
+                NativeMethods.QListWidget_GetSelectedRows(QtHandle, &Callback, GCHandle<int[]>.ToIntPtr(box));
                 return new SelectedIndexCollection(box.Target ?? Array.Empty<int>());
             }
         }
@@ -155,7 +155,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectSelectedIndexChanged()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnSelectedIndexChangedCallback;
-            NativeMethods.QListWidget_ConnectCurrentRowChanged(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QListWidget_ConnectCurrentRowChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
@@ -181,7 +181,7 @@ namespace System.Windows.Forms
                 int index = _innerList.Add(item);
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QListWidget_AddItem(_owner.Handle, item?.ToString() ?? "");
+                    NativeMethods.QListWidget_AddItem(_owner.QtHandle, item?.ToString() ?? "");
                 }
                 return index;
             }
@@ -198,7 +198,7 @@ namespace System.Windows.Forms
                 _innerList.Clear();
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QListWidget_Clear(_owner.Handle);
+                    NativeMethods.QListWidget_Clear(_owner.QtHandle);
                 }
             }
 
@@ -210,7 +210,7 @@ namespace System.Windows.Forms
                 _innerList.Insert(index, item);
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QListWidget_InsertItem(_owner.Handle, index, item?.ToString() ?? "");
+                    NativeMethods.QListWidget_InsertItem(_owner.QtHandle, index, item?.ToString() ?? "");
                 }
             }
 
@@ -228,7 +228,7 @@ namespace System.Windows.Forms
                 _innerList.RemoveAt(index);
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QListWidget_RemoveItem(_owner.Handle, index);
+                    NativeMethods.QListWidget_RemoveItem(_owner.QtHandle, index);
                 }
             }
 

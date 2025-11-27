@@ -12,7 +12,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
+                QtHandle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
             }
         }
@@ -32,7 +32,7 @@ namespace System.Windows.Forms
 
         protected virtual void UpdateNativeText()
         {
-            NativeMethods.QLabel_SetText(Handle, _text);
+            NativeMethods.QLabel_SetText(QtHandle, _text);
         }
 
         [Obsolete(NotImplementedWarning)] public Image? Image { get; set; }

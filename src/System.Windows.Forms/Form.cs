@@ -44,11 +44,11 @@ namespace System.Windows.Forms
             var prevVisible = Visible;
             Visible = false;
             base.CreateHandle();
-            NativeMethods.QWidget_Resize(Handle, Size.Width, Size.Height);
-            NativeMethods.QWidget_SetTitle(Handle, _text);
+            NativeMethods.QWidget_Resize(QtHandle, Size.Width, Size.Height);
+            NativeMethods.QWidget_SetTitle(QtHandle, _text);
             if (_windowState != FormWindowState.Normal)
             {
-                NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
+                NativeMethods.QWidget_SetWindowState(QtHandle, (int)_windowState);
             }
             UpdateFormStyles();
             UpdateIcon();
@@ -60,20 +60,20 @@ namespace System.Windows.Forms
                 {
                     _mainMenuStrip.EnsureCreated();
                 }
-                NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
+                NativeMethods.QWidget_SetMenuBar(QtHandle, _mainMenuStrip.QtHandle);
 
                 // QWidget_SetMenuBar calls setParent, which hides the widget.
                 // We must show it again if it's supposed to be visible.
                 if (_mainMenuStrip.Visible)
                 {
-                    NativeMethods.QWidget_Show(_mainMenuStrip.Handle);
+                    NativeMethods.QWidget_Show(_mainMenuStrip.QtHandle);
                 }
             }
 
             if (_owner != null)
             {
                 _owner.EnsureCreated();
-                NativeMethods.Form_SetOwner(Handle, _owner.Handle);
+                NativeMethods.Form_SetOwner(QtHandle, _owner.QtHandle);
             }
 
             // Connect resize and move events
@@ -89,7 +89,7 @@ namespace System.Windows.Forms
             {
                 var resizeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnResizeCallback;
                 var moveCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnMoveCallback;
-                NativeMethods.QWidget_ConnectResize(Handle, resizeCallbackPtr, moveCallbackPtr, GCHandlePtr);
+                NativeMethods.QWidget_ConnectResize(QtHandle, resizeCallbackPtr, moveCallbackPtr, GCHandlePtr);
             }
         }
 
@@ -123,7 +123,7 @@ namespace System.Windows.Forms
             {
                 var closeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int>)&OnCloseCallback;
                 var closedCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, void>)&OnClosedCallback;
-                NativeMethods.QWidget_ConnectCloseEvent(Handle, closeCallbackPtr, closedCallbackPtr, GCHandlePtr);
+                NativeMethods.QWidget_ConnectCloseEvent(QtHandle, closeCallbackPtr, closedCallbackPtr, GCHandlePtr);
             }
         }
 
@@ -143,7 +143,7 @@ namespace System.Windows.Forms
             var form = ObjectFromGCHandle<Form>(userData);
             
             // End dialog loop if any
-            NativeMethods.Form_EndDialog(form.Handle);
+            NativeMethods.Form_EndDialog(form.QtHandle);
 
             var args = new FormClosedEventArgs(CloseReason.UserClosing);
             form.OnFormClosed(args);
@@ -162,7 +162,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QWidget_SetTitle(Handle, _text);
+                    NativeMethods.QWidget_SetTitle(QtHandle, _text);
                 }
             }
         }
@@ -180,11 +180,11 @@ namespace System.Windows.Forms
                     {
                         _mainMenuStrip.EnsureCreated();
                     }
-                    NativeMethods.QWidget_SetMenuBar(Handle, _mainMenuStrip.Handle);
+                    NativeMethods.QWidget_SetMenuBar(QtHandle, _mainMenuStrip.QtHandle);
 
                     if (_mainMenuStrip.Visible)
                     {
-                        NativeMethods.QWidget_Show(_mainMenuStrip.Handle);
+                        NativeMethods.QWidget_Show(_mainMenuStrip.QtHandle);
                     }
                 }
             }
@@ -198,7 +198,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    return (FormWindowState)NativeMethods.QWidget_GetWindowState(Handle);
+                    return (FormWindowState)NativeMethods.QWidget_GetWindowState(QtHandle);
                 }
                 return _windowState;
             }
@@ -209,7 +209,7 @@ namespace System.Windows.Forms
                     _windowState = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QWidget_SetWindowState(Handle, (int)_windowState);
+                        NativeMethods.QWidget_SetWindowState(QtHandle, (int)_windowState);
                     }
                 }
             }
@@ -219,7 +219,7 @@ namespace System.Windows.Forms
         {
             if (IsHandleCreated)
             {
-                NativeMethods.QWidget_Close(Handle);
+                NativeMethods.QWidget_Close(QtHandle);
             }
         }
 
@@ -331,11 +331,11 @@ namespace System.Windows.Forms
         {
             if (_icon != null)
             {
-                NativeMethods.QWidget_SetIcon(Handle, _icon.GetQIcon());
+                NativeMethods.QWidget_SetIcon(QtHandle, _icon.GetQIcon());
             }
             else
             {
-                NativeMethods.QWidget_SetIcon(Handle, IntPtr.Zero);
+                NativeMethods.QWidget_SetIcon(QtHandle, IntPtr.Zero);
             }
         }
 
@@ -343,7 +343,7 @@ namespace System.Windows.Forms
         {
             if (IsHandleCreated)
             {
-                NativeMethods.QWidget_SetFormProperties(Handle, _minimizeBox, _maximizeBox, _showInTaskbar, _showIcon, _topMost, (int)_formBorderStyle);
+                NativeMethods.QWidget_SetFormProperties(QtHandle, _minimizeBox, _maximizeBox, _showInTaskbar, _showIcon, _topMost, (int)_formBorderStyle);
             }
         }
 
@@ -367,7 +367,7 @@ namespace System.Windows.Forms
 
             if (!IsHandleCreated) CreateControl();
 
-            NativeMethods.QWidget_SetWindowModality(Handle, 2);
+            NativeMethods.QWidget_SetWindowModality(QtHandle, 2);
 
             _isModal = true;
             this.Visible = true;
@@ -378,7 +378,7 @@ namespace System.Windows.Forms
             {
                 this.FormClosed -= handler;
                 _isModal = false;
-                NativeMethods.QWidget_SetWindowModality(Handle, 0);
+                NativeMethods.QWidget_SetWindowModality(QtHandle, 0);
                 tcs.TrySetResult(this.DialogResult);
             };
             this.FormClosed += handler;
@@ -397,7 +397,7 @@ namespace System.Windows.Forms
             _isModal = true;
             try
             {
-                NativeMethods.Form_ShowDialog(Handle);
+                NativeMethods.Form_ShowDialog(QtHandle);
             }
             finally
             {
@@ -417,7 +417,7 @@ namespace System.Windows.Forms
                 if (IsHandleCreated)
                 {
                     _owner?.EnsureCreated();
-                    NativeMethods.Form_SetOwner(Handle, _owner?.Handle ?? default);
+                    NativeMethods.Form_SetOwner(QtHandle, _owner?.QtHandle ?? default);
                 }
             }
         }

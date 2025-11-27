@@ -16,7 +16,7 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            Handle = NativeMethods.QProgressBar_Create(Parent?.Handle ?? IntPtr.Zero);
+            QtHandle = NativeMethods.QProgressBar_Create(Parent?.QtHandle ?? IntPtr.Zero);
             SetCommonProperties();
             UpdateRange();
             UpdateValue();
@@ -85,17 +85,17 @@ namespace System.Windows.Forms
         {
             if (_style == ProgressBarStyle.Marquee)
             {
-                NativeMethods.QProgressBar_SetRange(Handle, 0, 0);
+                NativeMethods.QProgressBar_SetRange(QtHandle, 0, 0);
             }
             else
             {
-                NativeMethods.QProgressBar_SetRange(Handle, _minimum, _maximum);
+                NativeMethods.QProgressBar_SetRange(QtHandle, _minimum, _maximum);
             }
         }
 
         private void UpdateValue()
         {
-            NativeMethods.QProgressBar_SetValue(Handle, _value);
+            NativeMethods.QProgressBar_SetValue(QtHandle, _value);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QGroupBox_Create(IntPtr.Zero, _text);
+                QtHandle = NativeMethods.QGroupBox_Create(IntPtr.Zero, _text);
                 SetCommonProperties();
                 CreateChildren();
             }
@@ -31,7 +31,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QGroupBox_SetTitle(Handle, _text);
+                    NativeMethods.QGroupBox_SetTitle(QtHandle, _text);
                 }
             }
         }

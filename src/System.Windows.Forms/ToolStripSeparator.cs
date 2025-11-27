@@ -9,7 +9,7 @@ namespace System.Windows.Forms
             if (!IsHandleCreated)
             {
                 // Create a separator action
-                Handle = NativeMethods.QAction_CreateSeparator();
+                QtHandle = NativeMethods.QAction_CreateSeparator();
             }
         }
     }

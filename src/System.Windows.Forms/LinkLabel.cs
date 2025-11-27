@@ -27,17 +27,17 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QLinkLabel_Create(IntPtr.Zero, GetHtmlText());
+                QtHandle = NativeMethods.QLinkLabel_Create(IntPtr.Zero, GetHtmlText());
                 SetCommonProperties();
 
                 _linkClickedCallback = new LinkClickedCallbackDelegate(OnLinkClickedCallback);
-                NativeMethods.QLinkLabel_ConnectLinkClicked(Handle, Marshal.GetFunctionPointerForDelegate(_linkClickedCallback), IntPtr.Zero);
+                NativeMethods.QLinkLabel_ConnectLinkClicked(QtHandle, Marshal.GetFunctionPointerForDelegate(_linkClickedCallback), IntPtr.Zero);
             }
         }
 
         protected override void UpdateNativeText()
         {
-            NativeMethods.QLabel_SetText(Handle, GetHtmlText());
+            NativeMethods.QLabel_SetText(QtHandle, GetHtmlText());
         }
 
         private string GetHtmlText()

@@ -40,7 +40,7 @@ namespace System.Windows.Forms
                     _orientation = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QSplitter_SetOrientation(Handle, (int)value);
+                        NativeMethods.QSplitter_SetOrientation(QtHandle, (int)value);
                     }
                 }
             }
@@ -77,7 +77,7 @@ namespace System.Windows.Forms
                         // Or we can just set the size of the first one and let the second one take the rest?
                         // QSplitter::setSizes expects sizes for all widgets.
                         // Let's implement a helper to set splitter distance.
-                        NativeMethods.QSplitter_SetSplitterDistance(Handle, value, WidgetSize);
+                        NativeMethods.QSplitter_SetSplitterDistance(QtHandle, value, WidgetSize);
                     }
                 }
             }
@@ -92,7 +92,7 @@ namespace System.Windows.Forms
                 // QSplitter handle width can be styled or set via setHandleWidth
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QSplitter_SetHandleWidth(Handle, value);
+                    NativeMethods.QSplitter_SetHandleWidth(QtHandle, value);
                 }
             }
         }
@@ -101,11 +101,11 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            Handle = NativeMethods.QSplitter_Create(IntPtr.Zero, (int)_orientation);
+            QtHandle = NativeMethods.QSplitter_Create(IntPtr.Zero, (int)_orientation);
             SetCommonProperties();
             
             // Set handle width
-            NativeMethods.QSplitter_SetHandleWidth(Handle, _splitterWidth);
+            NativeMethods.QSplitter_SetHandleWidth(QtHandle, _splitterWidth);
 
             // Connect to splitter moved event
             ConnectSplitterMoved();
@@ -126,7 +126,7 @@ namespace System.Windows.Forms
             // Note: sizes might not be accurate until layout happens.
             if (_splitterDistance > 0)
             {
-                NativeMethods.QSplitter_SetSplitterDistance(Handle, _splitterDistance, WidgetSize);
+                NativeMethods.QSplitter_SetSplitterDistance(QtHandle, _splitterDistance, WidgetSize);
             }
         }
 
@@ -138,7 +138,7 @@ namespace System.Windows.Forms
             {
                 var resizeCallbackPtr = (IntPtr)(delegate* unmanaged[Cdecl]<nint, int, int, void>)&OnResizeCallback;
                 // We don't need move callback for SplitContainer, pass null
-                NativeMethods.QWidget_ConnectResize(Handle, resizeCallbackPtr, IntPtr.Zero, GCHandlePtr);
+                NativeMethods.QWidget_ConnectResize(QtHandle, resizeCallbackPtr, IntPtr.Zero, GCHandlePtr);
             }
         }
 
@@ -162,7 +162,7 @@ namespace System.Windows.Forms
             // based on FixedPanel settings or other constraints
             if (IsHandleCreated)
             {
-                NativeMethods.QSplitter_GetSizes(Handle, out int size1, out int size2);
+                NativeMethods.QSplitter_GetSizes(QtHandle, out int size1, out int size2);
                 if (!(size1 == 0 && size2 == 0))
                 {
                     _splitterDistance = size1;
@@ -187,7 +187,7 @@ namespace System.Windows.Forms
             unsafe
             {
                 delegate* unmanaged[Cdecl]<IntPtr, int, int, void> callback = &OnSplitterMovedCallback;
-                NativeMethods.QSplitter_ConnectSplitterMoved(Handle, (IntPtr)callback, GCHandle.ToIntPtr(GCHandle.Alloc(this)));
+                NativeMethods.QSplitter_ConnectSplitterMoved(QtHandle, (IntPtr)callback, GCHandle.ToIntPtr(GCHandle.Alloc(this)));
             }
         }
 
@@ -249,8 +249,8 @@ namespace System.Windows.Forms
                 stretch2 = 0;
             }
 
-            NativeMethods.QSplitter_SetStretchFactor(Handle, 0, stretch1);
-            NativeMethods.QSplitter_SetStretchFactor(Handle, 1, stretch2);
+            NativeMethods.QSplitter_SetStretchFactor(QtHandle, 0, stretch1);
+            NativeMethods.QSplitter_SetStretchFactor(QtHandle, 1, stretch2);
         }
     }
 }

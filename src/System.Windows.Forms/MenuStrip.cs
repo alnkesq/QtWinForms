@@ -17,7 +17,7 @@ namespace System.Windows.Forms
             {
                 // MenuStrip doesn't have its own widget - it's added to a form
                 // We'll create a QMenuBar when this is added to a form
-                Handle = NativeMethods.QMenuBar_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QMenuBar_Create(IntPtr.Zero);
                 SetCommonProperties();
 
                 // Add any items that were added before handle creation
@@ -35,7 +35,7 @@ namespace System.Windows.Forms
         private void AddItemToMenuBar(ToolStripMenuItem item)
         {
             // Always use AddAction, as ToolStripMenuItem now wraps everything in a QAction
-            NativeMethods.QMenuBar_AddAction(Handle, item.Handle);
+            NativeMethods.QMenuBar_AddAction(QtHandle, item.QtHandle);
         }
         
         public ToolStripItemCollection Items => new ToolStripItemCollectionImpl(this);

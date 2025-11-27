@@ -6,7 +6,7 @@ namespace System.Windows.Forms
 {
     public class Control : Component, IWin32Window, IDisposable, IComponent, ISupportInitialize, ISynchronizeInvoke
     {
-        public IntPtr Handle { get; protected set; }
+        internal IntPtr QtHandle;
         internal GCHandle<Control>? gcHandle;
 
         internal IntPtr GCHandlePtr => GCHandle<Control>.ToIntPtr((gcHandle ??= new GCHandle<Control>(this)));
@@ -110,7 +110,7 @@ namespace System.Windows.Forms
 
         public Control? Parent { get; internal set; }
 
-        public bool IsHandleCreated => Handle != default;
+        public bool IsHandleCreated => QtHandle != default;
 
         public ControlCollection Controls { get; protected set; }
 
@@ -124,7 +124,7 @@ namespace System.Windows.Forms
 
         protected virtual void CreateHandle()
         {
-            Handle = NativeMethods.QWidget_Create(IntPtr.Zero);
+            QtHandle = NativeMethods.QWidget_Create(IntPtr.Zero);
             SetCommonProperties();
             CreateChildren();
         }
@@ -132,7 +132,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectKeyEvent()
         {
             delegate* unmanaged[Cdecl]<IntPtr, int, int, byte> callback = &OnKeyEventCallback;
-            NativeMethods.QWidget_ConnectKeyEvent(Handle, callback, GCHandlePtr);
+            NativeMethods.QWidget_ConnectKeyEvent(QtHandle, callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -164,11 +164,11 @@ namespace System.Windows.Forms
                 child.EnsureCreated();
 
                 // Set parent relationship in Qt
-                NativeMethods.QWidget_SetParent(child.Handle, Handle);
+                NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
 
                 // Apply position and size (Qt needs this after setParent)
-                NativeMethods.QWidget_Move(child.Handle, child.Location.X, child.Location.Y);
-                NativeMethods.QWidget_Resize(child.Handle, child.Size.Width, child.Size.Height);
+                NativeMethods.QWidget_Move(child.QtHandle, child.Location.X, child.Location.Y);
+                NativeMethods.QWidget_Resize(child.QtHandle, child.Size.Width, child.Size.Height);
 
                 // Initialize anchor bounds now that parent is set
                 child.InitializeAnchorBounds();
@@ -176,7 +176,7 @@ namespace System.Windows.Forms
                 // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
                 if (child.Visible)
                 {
-                    NativeMethods.QWidget_Show(child.Handle);
+                    NativeMethods.QWidget_Show(child.QtHandle);
                 }
             }
 
@@ -191,21 +191,21 @@ namespace System.Windows.Forms
 
             if (_backColor != Color.Empty)
             {
-                NativeMethods.QWidget_SetBackColor(Handle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
+                NativeMethods.QWidget_SetBackColor(QtHandle, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
             }
             if (_foreColor != Color.Empty)
             {
-                NativeMethods.QWidget_SetForeColor(Handle, _foreColor.R, _foreColor.G, _foreColor.B, _foreColor.A);
+                NativeMethods.QWidget_SetForeColor(QtHandle, _foreColor.R, _foreColor.G, _foreColor.B, _foreColor.A);
             }
 
             if (!_enabled)
             {
-                NativeMethods.QWidget_SetEnabled(Handle, _enabled);
+                NativeMethods.QWidget_SetEnabled(QtHandle, _enabled);
             }
 
             if (_font != null)
             {
-                NativeMethods.QWidget_SetFont(Handle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
+                NativeMethods.QWidget_SetFont(QtHandle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
             }
 
             ConnectKeyEvent();
@@ -216,7 +216,7 @@ namespace System.Windows.Forms
             }
             else
             {
-                NativeMethods.QWidget_Hide(Handle);
+                NativeMethods.QWidget_Hide(QtHandle);
             }
         }
 
@@ -250,11 +250,11 @@ namespace System.Windows.Forms
         {
             if (value)
             {
-                NativeMethods.QWidget_Show(Handle);
+                NativeMethods.QWidget_Show(QtHandle);
             }
             else
             {
-                NativeMethods.QWidget_Hide(Handle);
+                NativeMethods.QWidget_Hide(QtHandle);
             }
         }
 
@@ -276,7 +276,7 @@ namespace System.Windows.Forms
                 _location = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QWidget_Move(Handle, value.X, value.Y);
+                    NativeMethods.QWidget_Move(QtHandle, value.X, value.Y);
                 }
             }
         }
@@ -290,7 +290,7 @@ namespace System.Windows.Forms
                 _size = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QWidget_Resize(Handle, value.Width, value.Height);
+                    NativeMethods.QWidget_Resize(QtHandle, value.Width, value.Height);
                 }
             }
         }
@@ -328,7 +328,7 @@ namespace System.Windows.Forms
                 _backColor = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QWidget_SetBackColor(Handle, value.R, value.G, value.B, value.A);
+                    NativeMethods.QWidget_SetBackColor(QtHandle, value.R, value.G, value.B, value.A);
                 }
             }
         }
@@ -341,7 +341,7 @@ namespace System.Windows.Forms
                 _foreColor = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QWidget_SetForeColor(Handle, value.R, value.G, value.B, value.A);
+                    NativeMethods.QWidget_SetForeColor(QtHandle, value.R, value.G, value.B, value.A);
                 }
             }
         }
@@ -355,7 +355,7 @@ namespace System.Windows.Forms
                 _enabled = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QWidget_SetEnabled(Handle, value);
+                    NativeMethods.QWidget_SetEnabled(QtHandle, value);
                 }
             }
         }
@@ -446,9 +446,9 @@ namespace System.Windows.Forms
             if (IsHandleCreated)
             {
                 if (positionChanged)
-                    NativeMethods.QWidget_Move(Handle, x, y);
+                    NativeMethods.QWidget_Move(QtHandle, x, y);
                 if (sizeChanged)
-                    NativeMethods.QWidget_Resize(Handle, width, height);
+                    NativeMethods.QWidget_Resize(QtHandle, width, height);
             }
 
             if (sizeChanged)
@@ -628,8 +628,8 @@ namespace System.Windows.Forms
 
             if (IsHandleCreated)
             {
-                NativeMethods.QWidget_Destroy(Handle);
-                Handle = IntPtr.Zero;
+                NativeMethods.QWidget_Destroy(QtHandle);
+                QtHandle = IntPtr.Zero;
             }
 
             if (disposing && gcHandle != null)
@@ -652,7 +652,7 @@ namespace System.Windows.Forms
                     _font = value;
                     if (IsHandleCreated && _font != null)
                     {
-                        NativeMethods.QWidget_SetFont(Handle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
+                        NativeMethods.QWidget_SetFont(QtHandle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
                     }
                 }
             }
@@ -688,12 +688,12 @@ namespace System.Windows.Forms
             {
                 if (_contextMenuStrip != null)
                 {
-                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 3); // Qt::CustomContextMenu
+                    NativeMethods.QWidget_SetContextMenuPolicy(QtHandle, 3); // Qt::CustomContextMenu
                     ConnectCustomContextMenuRequested();
                 }
                 else
                 {
-                    NativeMethods.QWidget_SetContextMenuPolicy(Handle, 0); // Qt::DefaultContextMenu
+                    NativeMethods.QWidget_SetContextMenuPolicy(QtHandle, 0); // Qt::DefaultContextMenu
                 }
             }
         }
@@ -701,7 +701,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectCustomContextMenuRequested()
         {
             delegate* unmanaged[Cdecl]<nint, int, int, void> callback = &OnCustomContextMenuRequestedCallback;
-            NativeMethods.QWidget_ConnectCustomContextMenuRequested(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QWidget_ConnectCustomContextMenuRequested(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -724,7 +724,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated) return p;
             int sx = 0, sy = 0;
-            NativeMethods.QWidget_MapToGlobal(Handle, p.X, p.Y, out sx, out sy);
+            NativeMethods.QWidget_MapToGlobal(QtHandle, p.X, p.Y, out sx, out sy);
             return new Point(sx, sy);
         }
 
@@ -795,5 +795,14 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseUp;
         [Obsolete(NotImplementedWarning)] public new event MouseEventHandler? MouseDown;
         [Obsolete(NotImplementedWarning)] protected void SetStyle(ControlStyles flag, bool value) { }
+
+        public IntPtr Handle
+        {
+            get
+            {
+                EnsureCreated();
+                return QtHandle;
+            }
+        }
     }
 }

@@ -17,14 +17,14 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QDoubleSpinBox_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QDoubleSpinBox_Create(IntPtr.Zero);
                 SetCommonProperties();
 
-                NativeMethods.QDoubleSpinBox_SetRange(Handle, (double)_minimum, (double)_maximum);
-                NativeMethods.QDoubleSpinBox_SetSingleStep(Handle, (double)_increment);
-                NativeMethods.QDoubleSpinBox_SetValue(Handle, (double)_value);
+                NativeMethods.QDoubleSpinBox_SetRange(QtHandle, (double)_minimum, (double)_maximum);
+                NativeMethods.QDoubleSpinBox_SetSingleStep(QtHandle, (double)_increment);
+                NativeMethods.QDoubleSpinBox_SetValue(QtHandle, (double)_value);
 
-                NativeMethods.QDoubleSpinBox_ConnectValueChanged(Handle, &OnValueChangedCallback, GCHandlePtr);
+                NativeMethods.QDoubleSpinBox_ConnectValueChanged(QtHandle, &OnValueChangedCallback, GCHandlePtr);
             }
         }
 
@@ -47,7 +47,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    _value = (decimal)NativeMethods.QDoubleSpinBox_GetValue(Handle);
+                    _value = (decimal)NativeMethods.QDoubleSpinBox_GetValue(QtHandle);
                 }
                 return _value;
             }
@@ -63,7 +63,7 @@ namespace System.Windows.Forms
                     _value = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QDoubleSpinBox_SetValue(Handle, (double)_value);
+                        NativeMethods.QDoubleSpinBox_SetValue(QtHandle, (double)_value);
                     }
                     OnValueChanged(EventArgs.Empty);
                 }
@@ -86,7 +86,7 @@ namespace System.Windows.Forms
                 }
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QDoubleSpinBox_SetRange(Handle, (double)_minimum, (double)_maximum);
+                    NativeMethods.QDoubleSpinBox_SetRange(QtHandle, (double)_minimum, (double)_maximum);
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace System.Windows.Forms
                 }
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QDoubleSpinBox_SetRange(Handle, (double)_minimum, (double)_maximum);
+                    NativeMethods.QDoubleSpinBox_SetRange(QtHandle, (double)_minimum, (double)_maximum);
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace System.Windows.Forms
                 _increment = value;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QDoubleSpinBox_SetSingleStep(Handle, (double)_increment);
+                    NativeMethods.QDoubleSpinBox_SetSingleStep(QtHandle, (double)_increment);
                 }
             }
         }

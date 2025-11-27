@@ -27,19 +27,19 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            Handle = NativeMethods.QTreeWidget_Create(IntPtr.Zero);
-            NativeMethods.QTreeWidget_SetColumnCount(Handle, 2);
-            NativeMethods.QTreeWidget_SetHeaderHidden(Handle, false);
-            NativeMethods.QTreeWidget_SetHeaderLabels(Handle, new string[] { "Property", "Value" }, 2);
+            QtHandle = NativeMethods.QTreeWidget_Create(IntPtr.Zero);
+            NativeMethods.QTreeWidget_SetColumnCount(QtHandle, 2);
+            NativeMethods.QTreeWidget_SetHeaderHidden(QtHandle, false);
+            NativeMethods.QTreeWidget_SetHeaderLabels(QtHandle, new string[] { "Property", "Value" }, 2);
             
             RefreshProperties();
         }
 
         private void RefreshProperties()
         {
-            if (Handle == IntPtr.Zero) return;
+            if (QtHandle == IntPtr.Zero) return;
 
-            NativeMethods.QTreeWidget_Clear(Handle);
+            NativeMethods.QTreeWidget_Clear(QtHandle);
 
             if (_selectedObject == null) return;
 
@@ -50,7 +50,7 @@ namespace System.Windows.Forms
                 if (!prop.IsBrowsable) continue;
 
                 // Add item
-                IntPtr item = NativeMethods.QTreeWidget_AddTopLevelItem(Handle, prop.Name);
+                IntPtr item = NativeMethods.QTreeWidget_AddTopLevelItem(QtHandle, prop.Name);
                 
                 // Set value in second column
                 object? val = null;

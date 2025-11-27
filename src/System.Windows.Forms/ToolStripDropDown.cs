@@ -24,7 +24,7 @@ namespace System.Windows.Forms
 
         protected override void AddNativeItem(ToolStripItem item)
         {
-            NativeMethods.QMenu_AddAction(Handle, item.Handle);
+            NativeMethods.QMenu_AddAction(QtHandle, item.QtHandle);
         }
 
         protected override void CreateHandle()
@@ -39,7 +39,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectAboutToShow()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnAboutToShowCallback;
-            NativeMethods.QMenu_ConnectAboutToShow(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QMenu_ConnectAboutToShow(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -60,7 +60,7 @@ namespace System.Windows.Forms
             // For submenus, Qt handles showing. If we want to cancel, we might need to hide it.
             if (e.Cancel)
             {
-                NativeMethods.QWidget_Hide(Handle);
+                NativeMethods.QWidget_Hide(QtHandle);
             }
         }
     }

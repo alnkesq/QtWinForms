@@ -14,7 +14,7 @@ namespace System.Windows.Forms
             if (!IsHandleCreated)
             {
                 // Create a QAction for the button
-                Handle = NativeMethods.QAction_Create(string.Empty);
+                QtHandle = NativeMethods.QAction_Create(string.Empty);
                 UpdateImage();
                 UpdateTextAndTooltip();
                 ConnectClickEvent();
@@ -28,7 +28,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
-            NativeMethods.QAction_ConnectTriggered(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QAction_ConnectTriggered(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]

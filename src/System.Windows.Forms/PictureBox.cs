@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QPictureBox_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QPictureBox_Create(IntPtr.Zero);
                 SetCommonProperties();
                 UpdateImage();
                 UpdateSizeMode();
@@ -101,7 +101,7 @@ namespace System.Windows.Forms
             if (_image != null)
             {
                 IntPtr pixmap = _image.GetQPixmap();
-                NativeMethods.QPictureBox_SetImage(Handle, pixmap);
+                NativeMethods.QPictureBox_SetImage(QtHandle, pixmap);
             }
             //else if (!string.IsNullOrEmpty(_imageLocation))
             //{
@@ -109,13 +109,13 @@ namespace System.Windows.Forms
             //}
             else
             {
-                NativeMethods.QPictureBox_SetImage(Handle, IntPtr.Zero);
+                NativeMethods.QPictureBox_SetImage(QtHandle, IntPtr.Zero);
             }
         }
 
         private void UpdateSizeMode()
         {
-            NativeMethods.QPictureBox_SetSizeMode(Handle, (int)_sizeMode);
+            NativeMethods.QPictureBox_SetSizeMode(QtHandle, (int)_sizeMode);
         }
     }
 }

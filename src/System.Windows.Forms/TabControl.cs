@@ -19,7 +19,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QTabWidget_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QTabWidget_Create(IntPtr.Zero);
                 SetCommonProperties();
 
                 // Add any existing tab pages
@@ -45,7 +45,7 @@ namespace System.Windows.Forms
                 {
                     page.EnsureCreated();
                 }
-                NativeMethods.QTabWidget_AddTab(Handle, page.Handle, page.Text);
+                NativeMethods.QTabWidget_AddTab(QtHandle, page.QtHandle, page.Text);
             }
         }
 
@@ -56,7 +56,7 @@ namespace System.Windows.Forms
                 int index = _tabPages.IndexOf(page);
                 if (index >= 0)
                 {
-                    NativeMethods.QTabWidget_RemoveTab(Handle, index);
+                    NativeMethods.QTabWidget_RemoveTab(QtHandle, index);
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    return NativeMethods.QTabWidget_GetCurrentIndex(Handle);
+                    return NativeMethods.QTabWidget_GetCurrentIndex(QtHandle);
                 }
                 return -1;
             }
@@ -132,7 +132,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QTabWidget_SetCurrentIndex(Handle, value);
+                    NativeMethods.QTabWidget_SetCurrentIndex(QtHandle, value);
                 }
             }
         }
@@ -163,7 +163,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectCurrentChangedEvent()
         {
             delegate* unmanaged[Cdecl]<nint, int, void> callback = &OnCurrentChangedCallback;
-            NativeMethods.QTabWidget_ConnectCurrentChanged(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QTabWidget_ConnectCurrentChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

@@ -34,7 +34,7 @@ namespace System.Windows.Forms
                     _useSystemPasswordChar = value;
                     if (IsHandleCreated && !_multiline)
                     {
-                        NativeMethods.QLineEdit_SetEchoMode(Handle, value ? 2 : 0);
+                        NativeMethods.QLineEdit_SetEchoMode(QtHandle, value ? 2 : 0);
                     }
                 }
             }
@@ -46,14 +46,14 @@ namespace System.Windows.Forms
             {
                 if (_multiline)
                 {
-                    Handle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
+                    QtHandle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
                 }
                 else
                 {
-                    Handle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
+                    QtHandle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
                     if (_useSystemPasswordChar)
                     {
-                        NativeMethods.QLineEdit_SetEchoMode(Handle, 2);
+                        NativeMethods.QLineEdit_SetEchoMode(QtHandle, 2);
                     }
                 }
                 SetCommonProperties();
@@ -77,11 +77,11 @@ namespace System.Windows.Forms
 
                 if (_multiline)
                 {
-                    NativeMethods.QPlainTextEdit_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                    NativeMethods.QPlainTextEdit_GetText_Invoke(QtHandle, &Callback, GCHandle<string>.ToIntPtr(box));
                 }
                 else
                 {
-                    NativeMethods.QLineEdit_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                    NativeMethods.QLineEdit_GetText_Invoke(QtHandle, &Callback, GCHandle<string>.ToIntPtr(box));
                 }
                 return box.Target;
             }
@@ -92,11 +92,11 @@ namespace System.Windows.Forms
                 {
                     if (_multiline)
                     {
-                        NativeMethods.QPlainTextEdit_SetText(Handle, _text);
+                        NativeMethods.QPlainTextEdit_SetText(QtHandle, _text);
                     }
                     else
                     {
-                        NativeMethods.QLineEdit_SetText(Handle, _text);
+                        NativeMethods.QLineEdit_SetText(QtHandle, _text);
                     }
                 }
             }

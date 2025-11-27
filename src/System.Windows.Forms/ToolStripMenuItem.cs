@@ -21,12 +21,12 @@ namespace System.Windows.Forms
                 if (_hasChildren)
                 {
                     DropDown.EnsureCreated();
-                    Handle = NativeMethods.QAction_Create(Text);
-                    NativeMethods.QAction_SetMenu(Handle, DropDown.Handle);
+                    QtHandle = NativeMethods.QAction_Create(Text);
+                    NativeMethods.QAction_SetMenu(QtHandle, DropDown.QtHandle);
                 }
                 else
                 {
-                    Handle = NativeMethods.QAction_Create(Text);
+                    QtHandle = NativeMethods.QAction_Create(Text);
 
                     // Connect click event if handler is already attached
                     if (_clickHandler != null)
@@ -45,7 +45,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QAction_SetText(Handle, _text);
+                    NativeMethods.QAction_SetText(QtHandle, _text);
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace System.Windows.Forms
                      // This is tricky. QAction::setMenu can be called anytime.
                      // But we need to ensure DropDown is created.
                      _owner.DropDown.EnsureCreated();
-                     NativeMethods.QAction_SetMenu(_owner.Handle, _owner.DropDown.Handle);
+                     NativeMethods.QAction_SetMenu(_owner.QtHandle, _owner.DropDown.QtHandle);
                 }
             }
 
@@ -112,7 +112,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
-            NativeMethods.QAction_ConnectTriggered(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QAction_ConnectTriggered(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]

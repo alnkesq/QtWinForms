@@ -17,7 +17,7 @@ namespace System.Windows.Forms
 
         protected unsafe override void CreateHandle()
         {
-            Handle = NativeMethods.QSlider_Create(Parent?.Handle ?? IntPtr.Zero);
+            QtHandle = NativeMethods.QSlider_Create(Parent?.QtHandle ?? IntPtr.Zero);
             SetCommonProperties();
             UpdateRange();
             UpdateValue();
@@ -81,17 +81,17 @@ namespace System.Windows.Forms
 
         private void UpdateRange()
         {
-            NativeMethods.QSlider_SetRange(Handle, _minimum, _maximum);
+            NativeMethods.QSlider_SetRange(QtHandle, _minimum, _maximum);
         }
 
         private void UpdateValue()
         {
-            NativeMethods.QSlider_SetValue(Handle, _value);
+            NativeMethods.QSlider_SetValue(QtHandle, _value);
         }
 
         private unsafe void ConnectValueChanged()
         {
-            NativeMethods.QSlider_ConnectValueChanged(Handle, &OnValueChangedCallback, GCHandlePtr);
+            NativeMethods.QSlider_ConnectValueChanged(QtHandle, &OnValueChangedCallback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]

@@ -41,11 +41,11 @@ namespace System.Windows.Forms
             item.EnsureCreated();
 
             // Set parent relationship in Qt
-            NativeMethods.QWidget_SetParent(item.Handle, _owner.Handle);
+            NativeMethods.QWidget_SetParent(item.QtHandle, _owner.QtHandle);
 
             // Apply position and size (Qt needs this after setParent)
-            NativeMethods.QWidget_Move(item.Handle, item.Location.X, item.Location.Y);
-            NativeMethods.QWidget_Resize(item.Handle, item.Size.Width, item.Size.Height);
+            NativeMethods.QWidget_Move(item.QtHandle, item.Location.X, item.Location.Y);
+            NativeMethods.QWidget_Resize(item.QtHandle, item.Size.Width, item.Size.Height);
 
             // Initialize anchor bounds now that parent is set
             item.InitializeAnchorBounds();
@@ -53,7 +53,7 @@ namespace System.Windows.Forms
             // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
             if (item.Visible)
             {
-                NativeMethods.QWidget_Show(item.Handle);
+                NativeMethods.QWidget_Show(item.QtHandle);
             }
 
             // Trigger layout to handle docking/anchoring
@@ -70,7 +70,7 @@ namespace System.Windows.Forms
 
             if (item.IsHandleCreated)
             {
-                NativeMethods.QWidget_SetParent(item.Handle, IntPtr.Zero);
+                NativeMethods.QWidget_SetParent(item.QtHandle, IntPtr.Zero);
             }
 
             // Trigger layout to reflow remaining controls

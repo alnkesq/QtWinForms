@@ -11,7 +11,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
+                QtHandle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
                 SetCommonProperties();
 
                 if (_clickHandler != null)
@@ -29,7 +29,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QPushButton_SetText(Handle, _text);
+                    NativeMethods.QPushButton_SetText(QtHandle, _text);
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectClickEvent()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnClickedCallback;
-            NativeMethods.QPushButton_ConnectClicked(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QPushButton_ConnectClicked(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

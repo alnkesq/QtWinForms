@@ -22,13 +22,13 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QComboBox_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QComboBox_Create(IntPtr.Zero);
                 SetCommonProperties();
 
                 // Apply items
                 foreach (var item in _items)
                 {
-                    NativeMethods.QComboBox_AddItem(Handle, ItemToString(item));
+                    NativeMethods.QComboBox_AddItem(QtHandle, ItemToString(item));
                 }
 
                 // Apply DropDownStyle
@@ -41,21 +41,21 @@ namespace System.Windows.Forms
 
                 if (_dropDownStyle == ComboBoxStyle.DropDownList)
                 {
-                    NativeMethods.QComboBox_SetEditable(Handle, false);
+                    NativeMethods.QComboBox_SetEditable(QtHandle, false);
                 }
                 else
                 {
-                    NativeMethods.QComboBox_SetEditable(Handle, true);
+                    NativeMethods.QComboBox_SetEditable(QtHandle, true);
                 }
 
                 if (_selectedIndex != -1)
                 {
-                    NativeMethods.QComboBox_SetSelectedIndex(Handle, _selectedIndex);
+                    NativeMethods.QComboBox_SetSelectedIndex(QtHandle, _selectedIndex);
                 }
 
                 if (!string.IsNullOrEmpty(_text))
                 {
-                    NativeMethods.QComboBox_SetText(Handle, _text);
+                    NativeMethods.QComboBox_SetText(QtHandle, _text);
                 }
 
                 ConnectSelectedIndexChanged();
@@ -75,7 +75,7 @@ namespace System.Windows.Forms
                     _dropDownStyle = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QComboBox_SetEditable(Handle, _dropDownStyle == ComboBoxStyle.DropDown);
+                        NativeMethods.QComboBox_SetEditable(QtHandle, _dropDownStyle == ComboBoxStyle.DropDown);
                     }
                 }
             }
@@ -89,7 +89,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    return NativeMethods.QComboBox_GetSelectedIndex(Handle);
+                    return NativeMethods.QComboBox_GetSelectedIndex(QtHandle);
                 }
                 return _selectedIndex;
             }
@@ -100,7 +100,7 @@ namespace System.Windows.Forms
                     _selectedIndex = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QComboBox_SetSelectedIndex(Handle, value);
+                        NativeMethods.QComboBox_SetSelectedIndex(QtHandle, value);
                     }
                     OnSelectedIndexChanged(EventArgs.Empty);
                 }
@@ -127,7 +127,7 @@ namespace System.Windows.Forms
                     string s = Marshal.PtrToStringUni((nint)utf16, length);
                     box.Target = s;
                 }
-                NativeMethods.QComboBox_GetText_Invoke(Handle, &Callback, GCHandle<string>.ToIntPtr(box));
+                NativeMethods.QComboBox_GetText_Invoke(QtHandle, &Callback, GCHandle<string>.ToIntPtr(box));
                 return box.Target ?? string.Empty;
             }
             set
@@ -135,7 +135,7 @@ namespace System.Windows.Forms
                 _text = value ?? string.Empty;
                 if (IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_SetText(Handle, _text);
+                    NativeMethods.QComboBox_SetText(QtHandle, _text);
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectCurrentTextChanged()
         {
             delegate* unmanaged[Cdecl]<void*, int, nint, void> callback = &OnCurrentTextChangedCallback;
-            NativeMethods.QComboBox_ConnectCurrentTextChanged(Handle, callback, GCHandlePtr);
+            NativeMethods.QComboBox_ConnectCurrentTextChanged(QtHandle, callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -182,7 +182,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectSelectedIndexChanged()
         {
             delegate* unmanaged[Cdecl]<nint, int, void> callback = &OnSelectedIndexChangedCallback;
-            NativeMethods.QComboBox_ConnectSelectedIndexChanged(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QComboBox_ConnectSelectedIndexChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -237,7 +237,7 @@ namespace System.Windows.Forms
                 int index = _innerList.Add(item);
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_AddItem(_owner.Handle, _owner.ItemToString(item));
+                    NativeMethods.QComboBox_AddItem(_owner.QtHandle, _owner.ItemToString(item));
                 }
                 return index;
             }
@@ -255,7 +255,7 @@ namespace System.Windows.Forms
                 _innerList.Clear();
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_Clear(_owner.Handle);
+                    NativeMethods.QComboBox_Clear(_owner.QtHandle);
                 }
             }
 
@@ -269,7 +269,7 @@ namespace System.Windows.Forms
                 // Actually QComboBox has insertItem.
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_InsertItem(_owner.Handle, index, _owner.ItemToString(item));
+                    NativeMethods.QComboBox_InsertItem(_owner.QtHandle, index, _owner.ItemToString(item));
                 }
             }
 
@@ -287,7 +287,7 @@ namespace System.Windows.Forms
                 _innerList.RemoveAt(index);
                 if (_owner.IsHandleCreated)
                 {
-                    NativeMethods.QComboBox_RemoveItem(_owner.Handle, index);
+                    NativeMethods.QComboBox_RemoveItem(_owner.QtHandle, index);
                 }
             }
 

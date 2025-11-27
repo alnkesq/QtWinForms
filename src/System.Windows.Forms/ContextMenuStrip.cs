@@ -30,7 +30,7 @@ namespace System.Windows.Forms
         public void Show(Point screenPos)
         {
             EnsureCreated();
-            NativeMethods.QMenu_Popup(Handle, screenPos.X, screenPos.Y);
+            NativeMethods.QMenu_Popup(QtHandle, screenPos.X, screenPos.Y);
         }
     }
 }

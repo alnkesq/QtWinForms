@@ -18,7 +18,7 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated)
             {
-                Handle = NativeMethods.QTreeWidget_Create(IntPtr.Zero);
+                QtHandle = NativeMethods.QTreeWidget_Create(IntPtr.Zero);
                 SetCommonProperties();
 
                 // Add all existing nodes
@@ -96,7 +96,7 @@ namespace System.Windows.Forms
             {
                 if (IsHandleCreated)
                 {
-                    IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(Handle);
+                    IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(QtHandle);
                     if (nativeItem != IntPtr.Zero)
                     {
                         return FindNodeByNativeItem(nativeItem);
@@ -112,7 +112,7 @@ namespace System.Windows.Forms
                     value.EnsureNativeItem();
                     if (value._nativeItem != IntPtr.Zero)
                     {
-                        NativeMethods.QTreeWidget_SetCurrentItem(Handle, value._nativeItem);
+                        NativeMethods.QTreeWidget_SetCurrentItem(QtHandle, value._nativeItem);
                     }
                 }
             }
@@ -146,14 +146,14 @@ namespace System.Windows.Forms
         private unsafe void ConnectItemSelectionChanged()
         {
             delegate* unmanaged[Cdecl]<nint, void> callback = &OnItemSelectionChangedCallback;
-            NativeMethods.QTreeWidget_ConnectItemSelectionChanged(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QTreeWidget_ConnectItemSelectionChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static unsafe void OnItemSelectionChangedCallback(nint userData)
         {
             var control = ObjectFromGCHandle<TreeView>(userData);
-            IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(control.Handle);
+            IntPtr nativeItem = NativeMethods.QTreeWidget_GetCurrentItem(control.QtHandle);
             
             // Store the previous selected node to update its icon
             TreeNode? previousNode = control._selectedNode;
@@ -181,7 +181,7 @@ namespace System.Windows.Forms
         private unsafe void ConnectItemExpanded()
         {
             delegate* unmanaged[Cdecl]<nint, nint, void> callback = &OnItemExpandedCallback;
-            NativeMethods.QTreeWidget_ConnectItemExpanded(Handle, (IntPtr)callback, GCHandlePtr);
+            NativeMethods.QTreeWidget_ConnectItemExpanded(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
