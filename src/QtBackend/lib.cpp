@@ -1304,6 +1304,26 @@ extern "C" {
         });
     }
 
+    EXPORT void QTreeWidget_SetColumnCount(void* treeWidget, int count) {
+        ((QTreeWidget*)treeWidget)->setColumnCount(count);
+    }
+
+    EXPORT void QTreeWidget_SetHeaderHidden(void* treeWidget, bool hidden) {
+        ((QTreeWidget*)treeWidget)->setHeaderHidden(hidden);
+    }
+
+    EXPORT void QTreeWidget_SetHeaderLabels(void* treeWidget, const char** labels, int count) {
+        QStringList list;
+        for (int i = 0; i < count; i++) {
+            list << QString::fromUtf8(labels[i]);
+        }
+        ((QTreeWidget*)treeWidget)->setHeaderLabels(list);
+    }
+
+    EXPORT void QTreeWidget_Clear(void* treeWidget) {
+        ((QTreeWidget*)treeWidget)->clear();
+    }
+
     static bool isIcoMagic(const void* ptr, size_t len)
     {
         if (len < 4) return false;

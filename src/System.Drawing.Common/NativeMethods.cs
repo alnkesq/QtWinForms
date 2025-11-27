@@ -449,6 +449,18 @@ namespace System.Windows.Forms
         public unsafe static extern void QTreeWidget_ConnectItemExpanded(IntPtr treeWidget, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_SetColumnCount(IntPtr treeWidget, int count);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_SetHeaderHidden(IntPtr treeWidget, bool hidden);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_SetHeaderLabels(IntPtr treeWidget, [In, MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] labels, int count);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_Clear(IntPtr treeWidget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QIcon_CreateFromData(byte[] data, int length);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

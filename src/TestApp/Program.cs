@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.ComponentModel;
 using WinFormsApp1;
 
 namespace TestApp
@@ -42,6 +43,7 @@ namespace TestApp
                 Console.WriteLine("21. ContextMenu Test");
                 Console.WriteLine("22. Key Events Test");
                 Console.WriteLine("23. TreeView Test");
+                Console.WriteLine("24. PropertyGrid Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -165,6 +167,11 @@ namespace TestApp
                     case "23":
                         Console.WriteLine("Running TreeView Test...");
                         testForm = CreateTreeViewTest();
+                        break;
+
+                    case "24":
+                        Console.WriteLine("Running PropertyGrid Test...");
+                        testForm = CreatePropertyGridTest();
                         break;
 
                     default:
@@ -2224,6 +2231,44 @@ namespace TestApp
             }
 
             return new Bitmap(image);
+        }
+        static Form CreatePropertyGridTest()
+        {
+            var form = new Form();
+            form.Text = "PropertyGrid Test";
+            form.Size = new Size(600, 400);
+
+            var propertyGrid = new PropertyGrid();
+            propertyGrid.Dock = DockStyle.Fill;
+            form.Controls.Add(propertyGrid);
+
+            // Create a test object
+            var testObj = new TestObject
+            {
+                Name = "Test Object",
+                Age = 42,
+                Description = "This is a test object for PropertyGrid.",
+                IsEnabled = true
+            };
+
+            propertyGrid.SelectedObject = testObj;
+
+            return form;
+        }
+
+        public class TestObject
+        {
+            [Category("General")]
+            public string Name { get; set; }
+
+            [Category("General")]
+            public int Age { get; set; }
+
+            [Category("Details")]
+            public string Description { get; set; }
+
+            [Category("Details")]
+            public bool IsEnabled { get; set; }
         }
     }
 }
