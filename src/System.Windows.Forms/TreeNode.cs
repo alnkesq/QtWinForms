@@ -41,6 +41,8 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        public bool IsExpanded => _nativeItem != default && NativeMethods.QTreeWidgetItem_IsExpanded(_nativeItem) != 0;
         
         [Obsolete(Control.NotImplementedWarning)] public Color ForeColor { get; set; }
         [Obsolete(Control.NotImplementedWarning)] public Color BackColor { get; set; }
