@@ -550,6 +550,14 @@ extern "C" {
         }
     }
 
+    EXPORT void QWidget_SetWindowModality(void* widget, int modality) {
+        QWidget* w = (QWidget*)widget;
+        Qt::WindowModality mode = Qt::NonModal;
+        if (modality == 1) mode = Qt::WindowModal;
+        else if (modality == 2) mode = Qt::ApplicationModal;
+        w->setWindowModality(mode);
+    }
+
     EXPORT void QWidget_SetWindowState(void* widget, int state) {
         QWidget* w = (QWidget*)widget;
         Qt::WindowStates qtState = Qt::WindowNoState;

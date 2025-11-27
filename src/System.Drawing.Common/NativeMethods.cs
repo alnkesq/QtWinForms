@@ -156,6 +156,9 @@ namespace System.Windows.Forms
 
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetWindowModality(IntPtr widget, int modality);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetWindowState(IntPtr widget, int state);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

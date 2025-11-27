@@ -364,12 +364,25 @@ namespace System.Windows.Forms
         public Task<DialogResult> ShowDialogAsync(IWin32Window? owner = null)
         {
             this.Owner = owner as Form;
+
+            if (!IsHandleCreated) CreateControl();
+
+            NativeMethods.QWidget_SetWindowModality(Handle, 2);
+
+            _isModal = true;
             this.Visible = true;
             var tcs = new TaskCompletionSource<DialogResult>();
-            this.FormClosed += (_, _) =>
+            
+            FormClosedEventHandler handler = null!;
+            handler = (_, _) =>
             {
+                this.FormClosed -= handler;
+                _isModal = false;
+                NativeMethods.QWidget_SetWindowModality(Handle, 0);
                 tcs.TrySetResult(this.DialogResult);
             };
+            this.FormClosed += handler;
+            
             return tcs.Task;
         }
 
