@@ -17,13 +17,11 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QPictureBox_Create(IntPtr.Zero);
-                SetCommonProperties();
-                UpdateImage();
-                UpdateSizeMode();
-            }
+
+            QtHandle = NativeMethods.QPictureBox_Create(IntPtr.Zero);
+            SetCommonProperties();
+            UpdateImage();
+            UpdateSizeMode();
         }
 
         public Image? Image

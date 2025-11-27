@@ -10,11 +10,8 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
-                SetCommonProperties();
-            }
+            QtHandle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
+            SetCommonProperties();
         }
 
         public override string Text

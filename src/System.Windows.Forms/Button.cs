@@ -8,12 +8,9 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
-                SetCommonProperties();
-                ConnectClickEvent();
-            }
+            QtHandle = NativeMethods.QPushButton_Create(IntPtr.Zero, Text);
+            SetCommonProperties();
+            ConnectClickEvent();
         }
 
         public override string Text

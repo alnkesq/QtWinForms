@@ -20,47 +20,44 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+            QtHandle = NativeMethods.QComboBox_Create(IntPtr.Zero);
+            SetCommonProperties();
+
+            // Apply items
+            foreach (var item in _items)
             {
-                QtHandle = NativeMethods.QComboBox_Create(IntPtr.Zero);
-                SetCommonProperties();
-
-                // Apply items
-                foreach (var item in _items)
-                {
-                    NativeMethods.QComboBox_AddItem(QtHandle, ItemToString(item));
-                }
-
-                // Apply DropDownStyle
-                // We only support DropDownList as per request, but we can set editable state based on it.
-                // DropDownList -> Not Editable
-                // DropDown -> Editable
-                bool editable = _dropDownStyle == ComboBoxStyle.DropDown;
-                // However, user said "you only need to implement the ComboBoxStyle.DropDownList mode".
-                // So I will ensure it behaves as DropDownList (not editable) if that style is set.
-
-                if (_dropDownStyle == ComboBoxStyle.DropDownList)
-                {
-                    NativeMethods.QComboBox_SetEditable(QtHandle, false);
-                }
-                else
-                {
-                    NativeMethods.QComboBox_SetEditable(QtHandle, true);
-                }
-
-                if (_selectedIndex != -1)
-                {
-                    NativeMethods.QComboBox_SetSelectedIndex(QtHandle, _selectedIndex);
-                }
-
-                if (!string.IsNullOrEmpty(_text))
-                {
-                    NativeMethods.QComboBox_SetText(QtHandle, _text);
-                }
-
-                ConnectSelectedIndexChanged();
-                ConnectCurrentTextChanged();
+                NativeMethods.QComboBox_AddItem(QtHandle, ItemToString(item));
             }
+
+            // Apply DropDownStyle
+            // We only support DropDownList as per request, but we can set editable state based on it.
+            // DropDownList -> Not Editable
+            // DropDown -> Editable
+            bool editable = _dropDownStyle == ComboBoxStyle.DropDown;
+            // However, user said "you only need to implement the ComboBoxStyle.DropDownList mode".
+            // So I will ensure it behaves as DropDownList (not editable) if that style is set.
+
+            if (_dropDownStyle == ComboBoxStyle.DropDownList)
+            {
+                NativeMethods.QComboBox_SetEditable(QtHandle, false);
+            }
+            else
+            {
+                NativeMethods.QComboBox_SetEditable(QtHandle, true);
+            }
+
+            if (_selectedIndex != -1)
+            {
+                NativeMethods.QComboBox_SetSelectedIndex(QtHandle, _selectedIndex);
+            }
+
+            if (!string.IsNullOrEmpty(_text))
+            {
+                NativeMethods.QComboBox_SetText(QtHandle, _text);
+            }
+
+            ConnectSelectedIndexChanged();
+            ConnectCurrentTextChanged();
         }
 
         [Obsolete(NotImplementedWarning)] public bool FormattingEnabled { get; set; }

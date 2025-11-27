@@ -20,22 +20,18 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+            
+            QtHandle = NativeMethods.QListWidget_Create(IntPtr.Zero);
+            SetCommonProperties();
+
+            foreach (var item in _items)
             {
-                QtHandle = NativeMethods.QListWidget_Create(IntPtr.Zero);
-                SetCommonProperties();
-
-                // Apply items
-                foreach (var item in _items)
-                {
-                    NativeMethods.QListWidget_AddItem(QtHandle, item?.ToString() ?? "");
-                }
-
-                // Apply SelectionMode
-                NativeMethods.QListWidget_SetSelectionMode(QtHandle, (int)_selectionMode);
-
-                ConnectSelectedIndexChanged();
+                NativeMethods.QListWidget_AddItem(QtHandle, item?.ToString() ?? "");
             }
+
+            NativeMethods.QListWidget_SetSelectionMode(QtHandle, (int)_selectionMode);
+
+            ConnectSelectedIndexChanged();
         }
 
         public ObjectCollection Items => _items;

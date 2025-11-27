@@ -13,23 +13,22 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                // MenuStrip doesn't have its own widget - it's added to a form
-                // We'll create a QMenuBar when this is added to a form
-                QtHandle = NativeMethods.QMenuBar_Create(IntPtr.Zero);
-                SetCommonProperties();
+            
+            // MenuStrip doesn't have its own widget - it's added to a form
+            // We'll create a QMenuBar when this is added to a form
+            QtHandle = NativeMethods.QMenuBar_Create(IntPtr.Zero);
+            SetCommonProperties();
 
-                // Add any items that were added before handle creation
-                foreach (var item in _items)
+            // Add any items that were added before handle creation
+            foreach (var item in _items)
+            {
+                if (!item.IsHandleCreated)
                 {
-                    if (!item.IsHandleCreated)
-                    {
-                        item.CreateControl();
-                    }
-                    AddItemToMenuBar(item);
+                    item.CreateControl();
                 }
+                AddItemToMenuBar(item);
             }
+            
         }
 
         private void AddItemToMenuBar(ToolStripMenuItem item)

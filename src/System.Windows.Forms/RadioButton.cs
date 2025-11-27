@@ -10,18 +10,17 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+
+            QtHandle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text);
+            SetCommonProperties();
+
+            if (_checked)
             {
-                QtHandle = NativeMethods.QRadioButton_Create(IntPtr.Zero, Text);
-                SetCommonProperties();
-
-                if (_checked)
-                {
-                    NativeMethods.QRadioButton_SetChecked(QtHandle, _checked);
-                }
-
-                ConnectToggledEvent();
+                NativeMethods.QRadioButton_SetChecked(QtHandle, _checked);
             }
+
+            ConnectToggledEvent();
+            
         }
 
         public override string Text

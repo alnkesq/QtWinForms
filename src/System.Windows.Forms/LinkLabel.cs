@@ -25,14 +25,11 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QLinkLabel_Create(IntPtr.Zero, GetHtmlText());
-                SetCommonProperties();
+            QtHandle = NativeMethods.QLinkLabel_Create(IntPtr.Zero, GetHtmlText());
+            SetCommonProperties();
 
-                _linkClickedCallback = new LinkClickedCallbackDelegate(OnLinkClickedCallback);
-                NativeMethods.QLinkLabel_ConnectLinkClicked(QtHandle, Marshal.GetFunctionPointerForDelegate(_linkClickedCallback), IntPtr.Zero);
-            }
+            _linkClickedCallback = new LinkClickedCallbackDelegate(OnLinkClickedCallback);
+            NativeMethods.QLinkLabel_ConnectLinkClicked(QtHandle, Marshal.GetFunctionPointerForDelegate(_linkClickedCallback), IntPtr.Zero);
         }
 
         protected override void UpdateNativeText()

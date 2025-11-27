@@ -10,17 +10,14 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
-                SetCommonProperties();
+            QtHandle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
+            SetCommonProperties();
 
-                if (_checked)
-                {
-                    NativeMethods.QCheckBox_SetChecked(QtHandle, _checked);
-                }
-                ConnectStateChangedEvent();
+            if (_checked)
+            {
+                NativeMethods.QCheckBox_SetChecked(QtHandle, _checked);
             }
+            ConnectStateChangedEvent();
         }
 
         public override string Text

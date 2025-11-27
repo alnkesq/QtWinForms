@@ -15,17 +15,16 @@ namespace System.Windows.Forms
 
         protected unsafe override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QDoubleSpinBox_Create(IntPtr.Zero);
-                SetCommonProperties();
 
-                NativeMethods.QDoubleSpinBox_SetRange(QtHandle, (double)_minimum, (double)_maximum);
-                NativeMethods.QDoubleSpinBox_SetSingleStep(QtHandle, (double)_increment);
-                NativeMethods.QDoubleSpinBox_SetValue(QtHandle, (double)_value);
+            QtHandle = NativeMethods.QDoubleSpinBox_Create(IntPtr.Zero);
+            SetCommonProperties();
 
-                NativeMethods.QDoubleSpinBox_ConnectValueChanged(QtHandle, &OnValueChangedCallback, GCHandlePtr);
-            }
+            NativeMethods.QDoubleSpinBox_SetRange(QtHandle, (double)_minimum, (double)_maximum);
+            NativeMethods.QDoubleSpinBox_SetSingleStep(QtHandle, (double)_increment);
+            NativeMethods.QDoubleSpinBox_SetValue(QtHandle, (double)_value);
+
+            NativeMethods.QDoubleSpinBox_ConnectValueChanged(QtHandle, &OnValueChangedCallback, GCHandlePtr);
+            
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]

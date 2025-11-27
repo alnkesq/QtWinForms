@@ -17,22 +17,20 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+            QtHandle = NativeMethods.QTabWidget_Create(IntPtr.Zero);
+            SetCommonProperties();
+
+            // Add any existing tab pages
+            // Note: We don't call base.CreateHandle() because TabPages need special handling
+            // via QTabWidget_AddTab, not regular QWidget_SetParent
+            foreach (TabPage page in _tabPages)
             {
-                QtHandle = NativeMethods.QTabWidget_Create(IntPtr.Zero);
-                SetCommonProperties();
-
-                // Add any existing tab pages
-                // Note: We don't call base.CreateHandle() because TabPages need special handling
-                // via QTabWidget_AddTab, not regular QWidget_SetParent
-                foreach (TabPage page in _tabPages)
-                {
-                    AddTabPageToNative(page);
-                }
-
-                // Connect the selected index changed event
-                ConnectCurrentChangedEvent();
+                AddTabPageToNative(page);
             }
+
+            // Connect the selected index changed event
+            ConnectCurrentChangedEvent();
+            
         }
 
         public TabPageCollection TabPages => _tabPages;

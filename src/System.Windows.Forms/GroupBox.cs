@@ -15,12 +15,9 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = NativeMethods.QGroupBox_Create(IntPtr.Zero, _text);
-                SetCommonProperties();
-                CreateChildren();
-            }
+            QtHandle = NativeMethods.QGroupBox_Create(IntPtr.Zero, _text);
+            SetCommonProperties();
+            CreateChildren();
         }
 
         public override string Text

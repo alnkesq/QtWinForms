@@ -365,7 +365,7 @@ namespace System.Windows.Forms
         {
             this.Owner = owner as Form;
 
-            if (!IsHandleCreated) CreateControl();
+            CreateControl();
 
             NativeMethods.QWidget_SetWindowModality(QtHandle, 2);
 
@@ -391,7 +391,7 @@ namespace System.Windows.Forms
         public DialogResult ShowDialog(IWin32Window? owner = null)
         {
             this.Owner = owner as Form;
-            if (!IsHandleCreated) CreateControl();
+            CreateControl();
 
 
             _isModal = true;
