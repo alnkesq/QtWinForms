@@ -39,6 +39,7 @@ namespace System.Drawing
         public void SetPixel(int x, int y, Color color)
         {
             ImageSharpImage[x, y] = Helpers.Rgba32FromDrawingColor(color);
+            _bytes = null;
         }
 
     }
