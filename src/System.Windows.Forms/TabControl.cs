@@ -43,7 +43,7 @@ namespace System.Windows.Forms
             {
                 if (!page.IsHandleCreated)
                 {
-                    page.EnsureCreated();
+                    page.CreateControl();
                 }
                 NativeMethods.QTabWidget_AddTab(QtHandle, page.QtHandle, page.Text);
             }

@@ -40,7 +40,7 @@ namespace System.Windows.Forms
                 {
                     if (!child.IsHandleCreated)
                     {
-                        child.EnsureCreated();
+                        child.CreateControl();
                     }
 
                     // Set parent relationship in Qt

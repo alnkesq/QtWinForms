@@ -58,7 +58,7 @@ namespace System.Windows.Forms
             {
                 if (!_mainMenuStrip.IsHandleCreated)
                 {
-                    _mainMenuStrip.EnsureCreated();
+                    _mainMenuStrip.CreateControl();
                 }
                 NativeMethods.QWidget_SetMenuBar(QtHandle, _mainMenuStrip.QtHandle);
 
@@ -72,7 +72,7 @@ namespace System.Windows.Forms
 
             if (_owner != null)
             {
-                _owner.EnsureCreated();
+                _owner.CreateControl();
                 NativeMethods.Form_SetOwner(QtHandle, _owner.QtHandle);
             }
 
@@ -178,7 +178,7 @@ namespace System.Windows.Forms
                 {
                     if (!_mainMenuStrip.IsHandleCreated)
                     {
-                        _mainMenuStrip.EnsureCreated();
+                        _mainMenuStrip.CreateControl();
                     }
                     NativeMethods.QWidget_SetMenuBar(QtHandle, _mainMenuStrip.QtHandle);
 
@@ -416,7 +416,7 @@ namespace System.Windows.Forms
                 _owner = value;
                 if (IsHandleCreated)
                 {
-                    _owner?.EnsureCreated();
+                    _owner?.CreateControl();
                     NativeMethods.Form_SetOwner(QtHandle, _owner?.QtHandle ?? default);
                 }
             }

@@ -19,7 +19,7 @@ namespace System.Windows.Forms
                 // If this item has children, create a QMenu; otherwise create a QAction
                 if (_hasChildren)
                 {
-                    DropDown.EnsureCreated();
+                    DropDown.CreateControl();
                     QtHandle = NativeMethods.QAction_Create(Text);
                     NativeMethods.QAction_SetMenu(QtHandle, DropDown.QtHandle);
                 }
@@ -73,7 +73,7 @@ namespace System.Windows.Forms
                 {
                      // This is tricky. QAction::setMenu can be called anytime.
                      // But we need to ensure DropDown is created.
-                     _owner.DropDown.EnsureCreated();
+                     _owner.DropDown.CreateControl();
                      NativeMethods.QAction_SetMenu(_owner.QtHandle, _owner.DropDown.QtHandle);
                 }
             }

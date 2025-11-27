@@ -38,7 +38,7 @@ namespace System.Windows.Forms
         protected virtual void PerformQtParenting(Control item)
         {
             // Ensure child widget is created
-            item.EnsureCreated();
+            item.CreateControl();
 
             // Set parent relationship in Qt
             NativeMethods.QWidget_SetParent(item.QtHandle, _owner.QtHandle);

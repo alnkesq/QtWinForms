@@ -15,10 +15,6 @@ namespace System.Windows.Forms
         public bool InvokeRequired => Environment.CurrentManagedThreadId != Application._mainThreadId;
         [Obsolete(NotImplementedWarning)] public static bool CheckForIllegalCrossThreadCalls { get; set; }
 
-        public void CreateControl()
-        {
-            EnsureCreated();
-        }
         public void Invoke(Action action)
         {
             if (InvokeRequired) Application._synchronizationContext!.Send(a => ((Action)a!)(), action);
@@ -114,7 +110,7 @@ namespace System.Windows.Forms
 
         public ControlCollection Controls { get; protected set; }
 
-        internal void EnsureCreated()
+        public void CreateControl()
         {
             if (!IsHandleCreated)
             {
@@ -161,7 +157,7 @@ namespace System.Windows.Forms
             // Create handles for any child controls that were added before this control was created
             foreach (Control child in Controls)
             {
-                child.EnsureCreated();
+                child.CreateControl();
 
                 // Set parent relationship in Qt
                 NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
@@ -235,7 +231,7 @@ namespace System.Windows.Forms
                 if (_visible != value)
                 {
                     _visible = value;
-                    if (value) EnsureCreated();
+                    if (value) CreateControl();
 
                     if (IsHandleCreated)
                     {
@@ -799,7 +795,7 @@ namespace System.Windows.Forms
         {
             get
             {
-                EnsureCreated();
+                CreateControl();
                 return QtHandle;
             }
         }

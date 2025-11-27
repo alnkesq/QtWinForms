@@ -22,7 +22,7 @@ namespace System.Windows.Forms
                 {
                     if (!item.IsHandleCreated)
                     {
-                        item.EnsureCreated();
+                        item.CreateControl();
                     }
                     AddNativeItem(item);
                 }
@@ -63,7 +63,7 @@ namespace System.Windows.Forms
 
                 if (_owner.IsHandleCreated)
                 {
-                    item.EnsureCreated();
+                    item.CreateControl();
                     _owner.AddNativeItem(item);
                 }
             }

@@ -25,7 +25,7 @@ namespace System.Windows.Forms
                 {
                     if (!item.IsHandleCreated)
                     {
-                        item.EnsureCreated();
+                        item.CreateControl();
                     }
                     AddItemToMenuBar(item);
                 }
@@ -59,7 +59,7 @@ namespace System.Windows.Forms
                 {
                     if (!item.IsHandleCreated)
                     {
-                        item.EnsureCreated();
+                        item.CreateControl();
                     }
                     _owner.AddItemToMenuBar(menuItem);
                 }

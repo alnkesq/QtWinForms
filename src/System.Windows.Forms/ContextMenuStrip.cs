@@ -20,7 +20,7 @@ namespace System.Windows.Forms
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
 
-            EnsureCreated();
+            CreateControl();
 
             // Map client point to screen point
             Point screenPoint = control.PointToScreen(position);
@@ -29,7 +29,7 @@ namespace System.Windows.Forms
 
         public void Show(Point screenPos)
         {
-            EnsureCreated();
+            CreateControl();
             NativeMethods.QMenu_Popup(QtHandle, screenPos.X, screenPos.Y);
         }
     }
