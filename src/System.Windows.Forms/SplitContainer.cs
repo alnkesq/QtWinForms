@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Cdecl = System.Runtime.CompilerServices.CallConvCdecl;
 
@@ -145,11 +146,8 @@ namespace System.Windows.Forms
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
         private static unsafe void OnResizeCallback(nint userData, int width, int height)
         {
-            GCHandle handle = GCHandle.FromIntPtr(userData);
-            if (handle.Target is SplitContainer container)
-            {
-                container.OnSplitterResize(width, height);
-            }
+            var container = ObjectFromGCHandle<SplitContainer>(userData);
+            container.OnSplitterResize(width, height);
         }
 
         private void OnSplitterResize(int width, int height, bool allowReschedule = true)
@@ -191,14 +189,11 @@ namespace System.Windows.Forms
             }
         }
 
-        [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static void OnSplitterMovedCallback(IntPtr userData, int pos, int index)
         {
-            GCHandle handle = GCHandle.FromIntPtr(userData);
-            if (handle.Target is SplitContainer container)
-            {
-                container.OnSplitterMoved(pos, index);
-            }
+            var container = ObjectFromGCHandle<SplitContainer>(userData);
+            container.OnSplitterMoved(pos, index);
         }
 
         private void OnSplitterMoved(int pos, int index)
