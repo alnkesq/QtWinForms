@@ -5,6 +5,10 @@ namespace System.Windows.Forms
 {
     public class ToolStrip : Control
     {
+        public ToolStrip()
+        {
+            Dock = DockStyle.Top;
+        }
         private readonly List<ToolStripItem> _items = new List<ToolStripItem>();
 
         protected override void CreateHandle()
