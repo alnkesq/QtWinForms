@@ -45,7 +45,7 @@ namespace System.Windows.Forms
 
         private void UpdateZOrder()
         {
-            if (!_owner.IsHandleCreated || Count == 0) return;
+            if (!_owner.IsQWidgetCreated || Count == 0) return;
 
             // In WinForms, index 0 is top-most (front), index Count-1 is bottom-most (back).
             // In Qt, raise() brings to front.
@@ -55,7 +55,7 @@ namespace System.Windows.Forms
             // 2. Stack subsequent controls under the previous one.
             
             var first = this[0];
-            if (first.IsHandleCreated)
+            if (first.IsQWidgetCreated)
             {
                 NativeMethods.QWidget_Raise(first.QtHandle);
             }
@@ -65,7 +65,7 @@ namespace System.Windows.Forms
                 var current = this[i];
                 var previous = this[i - 1];
                 
-                if (current.IsHandleCreated && previous.IsHandleCreated)
+                if (current.IsQWidgetCreated && previous.IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_StackUnder(current.QtHandle, previous.QtHandle);
                 }
@@ -82,21 +82,21 @@ namespace System.Windows.Forms
             item.Parent = _owner;
 
             // Only perform Qt operations if the owner control already has a handle
-            if (_owner.IsHandleCreated)
+            if (_owner.IsQWidgetCreated)
             {
                 PerformQtParenting(item);
+
+                if (index == Count - 1)
+                {
+                    NativeMethods.QWidget_Lower(item.QtHandle);
+                }
+                else
+                {
+                    UpdateZOrder();
+                }
             }
-            
-            // New items are added to the end (bottom of Z-order) by default in WinForms logic if added via Add,
-            // but Insert can put them anywhere.
-            // We should probably update Z-order if we are inserting not at the end, 
-            // but for now let's assume the user will call SetChildIndex if they care about Z-order 
-            // or we rely on the fact that new widgets are on top in Qt by default, which contradicts WinForms 
-            // (where index 0 is top). 
-            // If we just add a child in Qt, it goes to top.
-            // If we add to ControlCollection, it goes to end (index Count-1), which is bottom.
-            // So we might need to lower it?
-            // Let's leave it for now as the request is specifically about SetChildIndex.
+
+
         }
 
         /// <summary>
@@ -108,14 +108,15 @@ namespace System.Windows.Forms
             // Ensure child widget is created
             item.CreateControl();
 
-            // Set parent relationship in Qt
+
+            _owner.EnsureIsQWidget();
+            item.EnsureIsQWidget();
+
             NativeMethods.QWidget_SetParent(item.QtHandle, _owner.QtHandle);
 
-            // Apply position and size (Qt needs this after setParent)
             NativeMethods.QWidget_Move(item.QtHandle, item.Location.X, item.Location.Y);
             NativeMethods.QWidget_Resize(item.QtHandle, item.Size.Width, item.Size.Height);
 
-            // Initialize anchor bounds now that parent is set
             item.InitializeAnchorBounds();
 
             // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
@@ -124,7 +125,6 @@ namespace System.Windows.Forms
                 NativeMethods.QWidget_Show(item.QtHandle);
             }
 
-            // Trigger layout to handle docking/anchoring
             _owner.PerformLayout();
         }
 
@@ -138,7 +138,7 @@ namespace System.Windows.Forms
             // Clear parent relationship
             item.Parent = null;
 
-            if (item.IsHandleCreated)
+            if (item.IsQWidgetCreated)
             {
                 NativeMethods.QWidget_SetParent(item.QtHandle, IntPtr.Zero);
             }

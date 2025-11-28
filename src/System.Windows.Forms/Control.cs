@@ -221,7 +221,7 @@ namespace System.Windows.Forms
             }
         }
 
-        private void EnsureIsQWidget()
+        internal void EnsureIsQWidget()
         {
             if (!IsQWidgetCreated)
                 throw new InvalidOperationException("Control is not backed by QWidget: " + this.GetType().FullName);
