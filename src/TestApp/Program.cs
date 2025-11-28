@@ -46,6 +46,7 @@ namespace TestApp
                 Console.WriteLine("24. PropertyGrid Test");
                 Console.WriteLine("25. ShowDialog Test");
                 Console.WriteLine("26. DataGridView Test");
+                Console.WriteLine("27. DataGridView VirtualMode Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -184,6 +185,11 @@ namespace TestApp
                     case "26":
                         Console.WriteLine("Running DataGridView Test...");
                         testForm = CreateDataGridViewTest();
+                        break;
+
+                    case "27":
+                        Console.WriteLine("Running DataGridView VirtualMode Test...");
+                        testForm = CreateDataGridViewVirtualModeTest();
                         break;
 
                     default:
@@ -2520,6 +2526,134 @@ namespace TestApp
                 }
             };
             form.Controls.Add(btnRemoveSecondRow);
+
+            return form;
+        }
+
+        static Form CreateDataGridViewVirtualModeTest()
+        {
+            var form = new Form();
+            form.Text = "DataGridView VirtualMode Test";
+            form.Size = new Size(800, 600);
+
+            var grid = new DataGridView();
+            grid.Location = new Point(20, 20);
+            grid.Size = new Size(750, 400);
+            grid.VirtualMode = true;
+
+            // Add columns
+            var col1 = new DataGridViewColumn();
+            col1.HeaderText = "ID";
+            grid.Columns.Add(col1);
+
+            var col2 = new DataGridViewColumn();
+            col2.HeaderText = "Name";
+            grid.Columns.Add(col2);
+
+            var col3 = new DataGridViewColumn();
+            col3.HeaderText = "Value";
+            grid.Columns.Add(col3);
+
+            var col4 = new DataGridViewColumn();
+            col4.HeaderText = "Status";
+            grid.Columns.Add(col4);
+
+            // Simulate a large dataset (1 million rows)
+            int totalRows = 1000000;
+            grid.RowCount = totalRows;
+
+            // Handle CellValueNeeded event to provide data on demand
+            grid.CellValueNeeded += (sender, e) =>
+            {
+                // Generate data dynamically based on row and column
+                switch (e.ColumnIndex)
+                {
+                    case 0: // ID
+                        e.Value = e.RowIndex + 1;
+                        break;
+                    case 1: // Name
+                        e.Value = $"Item {e.RowIndex + 1}";
+                        break;
+                    case 2: // Value
+                        e.Value = (e.RowIndex * 123.45).ToString("F2");
+                        break;
+                    case 3: // Status
+                        e.Value = e.RowIndex % 2 == 0 ? "Active" : "Inactive";
+                        break;
+                }
+            };
+
+            form.Controls.Add(grid);
+
+            // Label to show info
+            var lblInfo = new Label();
+            lblInfo.Text = $"Virtual Mode: {totalRows:N0} rows (data loaded on demand)";
+            lblInfo.Location = new Point(20, 440);
+            lblInfo.Size = new Size(500, 30);
+            form.Controls.Add(lblInfo);
+
+            // TextBox for row count
+            var txtRowCount = new TextBox();
+            txtRowCount.Text = totalRows.ToString();
+            txtRowCount.Location = new Point(20, 480);
+            txtRowCount.Size = new Size(150, 30);
+            form.Controls.Add(txtRowCount);
+
+            // Button to change row count
+            var btnChangeRowCount = new Button();
+            btnChangeRowCount.Text = "Change Row Count";
+            btnChangeRowCount.Location = new Point(180, 480);
+            btnChangeRowCount.Size = new Size(150, 30);
+            btnChangeRowCount.Click += (s, e) =>
+            {
+                if (int.TryParse(txtRowCount.Text, out int newCount) && newCount >= 0)
+                {
+                    grid.RowCount = newCount;
+                    lblInfo.Text = $"Virtual Mode: {newCount:N0} rows (data loaded on demand)";
+                    Console.WriteLine($"Row count changed to {newCount:N0}");
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid positive number", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            };
+            form.Controls.Add(btnChangeRowCount);
+
+            // Button to set to 10 million rows
+            var btn10M = new Button();
+            btn10M.Text = "10 Million Rows";
+            btn10M.Location = new Point(340, 480);
+            btn10M.Size = new Size(130, 30);
+            btn10M.Click += (s, e) =>
+            {
+                grid.RowCount = 10000000;
+                txtRowCount.Text = "10000000";
+                lblInfo.Text = $"Virtual Mode: 10,000,000 rows (data loaded on demand)";
+                Console.WriteLine("Row count set to 10 million");
+            };
+            form.Controls.Add(btn10M);
+
+            // Button to refresh/invalidate
+            var btnRefresh = new Button();
+            btnRefresh.Text = "Refresh Grid";
+            btnRefresh.Location = new Point(480, 480);
+            btnRefresh.Size = new Size(120, 30);
+            btnRefresh.Click += (s, e) =>
+            {
+                // Force repaint by changing row count slightly
+                int current = grid.RowCount;
+                grid.RowCount = current + 1;
+                grid.RowCount = current;
+                Console.WriteLine("Grid refreshed");
+            };
+            form.Controls.Add(btnRefresh);
+
+            // Info label
+            var lblInstructions = new Label();
+            lblInstructions.Text = "Scroll through the grid to see data loaded on demand.\nNo actual data is stored in memory!";
+            lblInstructions.Location = new Point(20, 520);
+            lblInstructions.Size = new Size(750, 40);
+            form.Controls.Add(lblInstructions);
 
             return form;
         }

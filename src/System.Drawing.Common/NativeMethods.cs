@@ -546,5 +546,8 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTableWidget_RemoveColumn(IntPtr table, int column);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_ConnectCellDataNeeded(IntPtr table, IntPtr callback, IntPtr userData);
     }
 }

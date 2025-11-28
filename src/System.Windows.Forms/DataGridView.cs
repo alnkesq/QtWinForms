@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Text;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
@@ -11,6 +13,9 @@ namespace System.Windows.Forms
         private DataGridViewColumnCollection _columns;
         private DataGridViewRowCollection _rows;
         private DataGridViewSelectedCellCollection _selectedCells;
+        private bool _virtualMode;
+        private int _virtualRowCount;
+        
         public DataGridView()
         {
             _columns = new DataGridViewColumnCollection { _owner = this };
@@ -36,18 +41,59 @@ namespace System.Windows.Forms
                 }
             }
 
-            if (_rows.Count > 0)
+            if (VirtualMode)
             {
-                NativeMethods.QTableWidget_SetRowCount(QtHandle, _rows.Count);
+                // In virtual mode, set row count and connect to data request callback
+                NativeMethods.QTableWidget_SetRowCount(QtHandle, _virtualRowCount);
+                ConnectCellDataNeeded();
             }
-
-            UpdateCellsStructure();
-
-            foreach (var row in Rows)
+            else
             {
-                foreach (var cell in row.Cells)
+                // In normal mode, populate with actual data
+                if (_rows.Count > 0)
                 {
-                    NativeMethods.QTableWidget_SetCellText(QtHandle, cell.RowIndex, cell.ColumnIndex, cell.Text);
+                    NativeMethods.QTableWidget_SetRowCount(QtHandle, _rows.Count);
+                }
+
+                UpdateCellsStructure();
+
+                foreach (var row in Rows)
+                {
+                    foreach (var cell in row.Cells)
+                    {
+                        NativeMethods.QTableWidget_SetCellText(QtHandle, cell.RowIndex, cell.ColumnIndex, cell.Text);
+                    }
+                }
+            }
+        }
+        
+        private void ConnectCellDataNeeded()
+        {
+            unsafe
+            {
+                var callback = (delegate* unmanaged[Cdecl]<IntPtr, int, int, void>)&OnCellDataNeededCallback;
+                NativeMethods.QTableWidget_ConnectCellDataNeeded(QtHandle, (IntPtr)callback, GCHandlePtr);
+            }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+        private static unsafe void OnCellDataNeededCallback(IntPtr userData, int row, int column)
+        {
+            var grid = ObjectFromGCHandle<DataGridView>(userData);
+            grid.OnCellDataNeeded(row, column);
+        }
+
+        private void OnCellDataNeeded(int rowIndex, int columnIndex)
+        {
+            if (CellValueNeeded != null)
+            {
+                var args = new DataGridViewCellValueEventArgs(columnIndex, rowIndex);
+                CellValueNeeded(this, args);
+                
+                if (args.Value != null)
+                {
+                    string text = args.Value.ToString() ?? "";
+                    NativeMethods.QTableWidget_SetCellText(QtHandle, rowIndex, columnIndex, text);
                 }
             }
         }
@@ -88,19 +134,39 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellContentClick;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellDoubleClick;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellFormattingEventHandler? CellFormatting;
-        [Obsolete(NotImplementedWarning)] public event DataGridViewCellValueEventHandler? CellValueNeeded;
+        public event DataGridViewCellValueEventHandler? CellValueNeeded;
         [Obsolete(NotImplementedWarning)] public DataGridViewCell? CurrentCell { get; set; }
-        [Obsolete(NotImplementedWarning)] public bool VirtualMode { get; set; }
+        
+        public bool VirtualMode 
+        { 
+            get => _virtualMode;
+            set
+            {
+                if (_virtualMode != value)
+                {
+                    if (IsHandleCreated)
+                        throw new InvalidOperationException("Cannot change VirtualMode after the handle has been created.");
+                    _virtualMode = value;
+                }
+            }
+        }
+        
         public int RowCount
         {
             get
             {
-                return Rows.Count;
+                return VirtualMode ? _virtualRowCount : Rows.Count;
             }
             set
             {
-                if (!VirtualMode) throw new InvalidOperationException();
-                throw new NotImplementedException();
+                if (!VirtualMode) 
+                    throw new InvalidOperationException("RowCount can only be set when VirtualMode is true.");
+                
+                _virtualRowCount = value;
+                if (IsHandleCreated)
+                {
+                    NativeMethods.QTableWidget_SetRowCount(QtHandle, _virtualRowCount);
+                }
             }
         }
 

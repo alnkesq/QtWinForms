@@ -42,6 +42,7 @@
 #include <QHeaderView>
 #include <QMap>
 #include <QEventLoop>
+#include <QStyledItemDelegate>
 
 #include <iostream>
 using namespace std;
@@ -1555,5 +1556,29 @@ extern "C" {
 
     EXPORT void QTableWidget_RemoveColumn(void* table, int column) {
         ((QTableWidget*)table)->removeColumn(column);
+    }
+
+    class VirtualModeDelegate : public QStyledItemDelegate {
+    private:
+        void (*dataNeededCallback)(void*, int, int);
+        void* userData;
+
+    public:
+        VirtualModeDelegate(void (*callback)(void*, int, int), void* data, QObject* parent = nullptr)
+            : QStyledItemDelegate(parent), dataNeededCallback(callback), userData(data) {}
+
+        void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override {
+            // Request data before painting if callback is set
+            if (dataNeededCallback) {
+                dataNeededCallback(userData, index.row(), index.column());
+            }
+            QStyledItemDelegate::paint(painter, option, index);
+        }
+    };
+
+    EXPORT void QTableWidget_ConnectCellDataNeeded(void* table, void (*callback)(void*, int, int), void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        VirtualModeDelegate* delegate = new VirtualModeDelegate(callback, userData, t);
+        t->setItemDelegate(delegate);
     }
 }
