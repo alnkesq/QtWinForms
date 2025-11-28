@@ -54,6 +54,7 @@ using namespace std;
 
 extern "C" {
 
+    
     typedef void (*ReadQStringCallback)(const void* dataUtf16, int length, void* userData);
 
     // Custom event for executing callbacks on the main thread
@@ -150,8 +151,8 @@ extern "C" {
         ((QWidget*)widget)->stackUnder((QWidget*)under);
     }
     
-    EXPORT void QWidget_SetTitle(void* widget, const char* title) {
-        ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));
+    EXPORT void QWidget_SetTitle(void* widget, const char16_t* title) {
+        ((QWidget*)widget)->setWindowTitle(QString::fromUtf16(title));
     }
 
     EXPORT void QWidget_SetIcon(void* widget, void* icon) {
@@ -164,13 +165,13 @@ extern "C" {
         }
     }
     
-    EXPORT void* QPushButton_Create(void* parent, const char* text) {
-        QPushButton* widget = new QPushButton(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QPushButton_Create(void* parent, const char16_t* text) {
+        QPushButton* widget = new QPushButton(QString::fromUtf16(text), (QWidget*)parent);
         return widget;
     }
     
-    EXPORT void QPushButton_SetText(void* widget, const char* text) {
-        ((QPushButton*)widget)->setText(QString::fromUtf8(text));
+    EXPORT void QPushButton_SetText(void* widget, const char16_t* text) {
+        ((QPushButton*)widget)->setText(QString::fromUtf16(text));
     }
     
     EXPORT void QPushButton_ConnectClicked(void* widget, void (*callback)(void*), void* userData) {
@@ -179,22 +180,22 @@ extern "C" {
         });
     }
     
-    EXPORT void* QLabel_Create(void* parent, const char* text) {
-        QLabel* widget = new QLabel(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QLabel_Create(void* parent, const char16_t* text) {
+        QLabel* widget = new QLabel(QString::fromUtf16(text), (QWidget*)parent);
         return widget;
     }
     
-    EXPORT void QLabel_SetText(void* label, const char* text) {
-        ((QLabel*)label)->setText(QString::fromUtf8(text));
+    EXPORT void QLabel_SetText(void* label, const char16_t* text) {
+        ((QLabel*)label)->setText(QString::fromUtf16(text));
     }
     
-    EXPORT void* QCheckBox_Create(void* parent, const char* text) {
-        QCheckBox* widget = new QCheckBox(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QCheckBox_Create(void* parent, const char16_t* text) {
+        QCheckBox* widget = new QCheckBox(QString::fromUtf16(text), (QWidget*)parent);
         return widget;
     }
     
-    EXPORT void QCheckBox_SetText(void* widget, const char* text) {
-        ((QCheckBox*)widget)->setText(QString::fromUtf8(text));
+    EXPORT void QCheckBox_SetText(void* widget, const char16_t* text) {
+        ((QCheckBox*)widget)->setText(QString::fromUtf16(text));
     }
     
     EXPORT void QCheckBox_SetChecked(void* widget, bool isChecked) {
@@ -207,13 +208,13 @@ extern "C" {
         });
     }
 
-    EXPORT void* QRadioButton_Create(void* parent, const char* text) {
-        QRadioButton* widget = new QRadioButton(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QRadioButton_Create(void* parent, const char16_t* text) {
+        QRadioButton* widget = new QRadioButton(QString::fromUtf16(text), (QWidget*)parent);
         return widget;
     }
     
-    EXPORT void QRadioButton_SetText(void* widget, const char* text) {
-        ((QRadioButton*)widget)->setText(QString::fromUtf8(text));
+    EXPORT void QRadioButton_SetText(void* widget, const char16_t* text) {
+        ((QRadioButton*)widget)->setText(QString::fromUtf16(text));
     }
     
     EXPORT void QRadioButton_SetChecked(void* widget, bool isChecked) {
@@ -245,8 +246,8 @@ extern "C" {
         ((QWidget*)widget)->setEnabled(enabled);
     }
 
-    EXPORT void QWidget_SetFont(void* widget, const char* family, float size, bool bold, bool italic, bool underline, bool strikeout) {
-        QFont font(QString::fromUtf8(family));
+    EXPORT void QWidget_SetFont(void* widget, const char16_t* family, float size, bool bold, bool italic, bool underline, bool strikeout) {
+        QFont font(QString::fromUtf16(family));
         font.setPointSizeF(size);
         font.setBold(bold);
         font.setItalic(italic);
@@ -255,13 +256,13 @@ extern "C" {
         ((QWidget*)widget)->setFont(font);
     }
     
-    EXPORT void* QLineEdit_Create(void* parent, const char* text) {
-        QLineEdit* widget = new QLineEdit(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QLineEdit_Create(void* parent, const char16_t* text) {
+        QLineEdit* widget = new QLineEdit(QString::fromUtf16(text), (QWidget*)parent);
         return widget;
     }
     
-    EXPORT void QLineEdit_SetText(void* lineEdit, const char* text) {
-        ((QLineEdit*)lineEdit)->setText(QString::fromUtf8(text));
+    EXPORT void QLineEdit_SetText(void* lineEdit, const char16_t* text) {
+        ((QLineEdit*)lineEdit)->setText(QString::fromUtf16(text));
     }
 
     EXPORT void QLineEdit_GetText_Invoke(void* label, ReadQStringCallback cb, void* userData) {
@@ -274,13 +275,13 @@ extern "C" {
         ((QLineEdit*)lineEdit)->setEchoMode((QLineEdit::EchoMode)mode);
     }
 
-    EXPORT void* QPlainTextEdit_Create(void* parent, const char* text) {
-        QPlainTextEdit* widget = new QPlainTextEdit(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QPlainTextEdit_Create(void* parent, const char16_t* text) {
+        QPlainTextEdit* widget = new QPlainTextEdit(QString::fromUtf16(text), (QWidget*)parent);
         return widget;
     }
 
-    EXPORT void QPlainTextEdit_SetText(void* widget, const char* text) {
-        ((QPlainTextEdit*)widget)->setPlainText(QString::fromUtf8(text));
+    EXPORT void QPlainTextEdit_SetText(void* widget, const char16_t* text) {
+        ((QPlainTextEdit*)widget)->setPlainText(QString::fromUtf16(text));
     }
 
     EXPORT void QPlainTextEdit_GetText_Invoke(void* widget, ReadQStringCallback cb, void* userData) {
@@ -401,13 +402,13 @@ extern "C" {
         w->close();
     }
 
-    EXPORT void* QGroupBox_Create(void* parent, const char* title) {
-        QGroupBox* widget = new QGroupBox(QString::fromUtf8(title), (QWidget*)parent);
+    EXPORT void* QGroupBox_Create(void* parent, const char16_t* title) {
+        QGroupBox* widget = new QGroupBox(QString::fromUtf16(title), (QWidget*)parent);
         return widget;
     }
 
-    EXPORT void QGroupBox_SetTitle(void* groupBox, const char* title) {
-        ((QGroupBox*)groupBox)->setTitle(QString::fromUtf8(title));
+    EXPORT void QGroupBox_SetTitle(void* groupBox, const char16_t* title) {
+        ((QGroupBox*)groupBox)->setTitle(QString::fromUtf16(title));
     }
 
     EXPORT void* QTabWidget_Create(void* parent) {
@@ -415,10 +416,10 @@ extern "C" {
         return widget;
     }
 
-    EXPORT void QTabWidget_AddTab(void* tabWidget, void* page, const char* label) {
+    EXPORT void QTabWidget_AddTab(void* tabWidget, void* page, const char16_t* label) {
         QTabWidget* tw = (QTabWidget*)tabWidget;
         QWidget* pageWidget = (QWidget*)page;
-        tw->addTab(pageWidget, QString::fromUtf8(label));
+        tw->addTab(pageWidget, QString::fromUtf16(label));
     }
 
     EXPORT void QTabWidget_RemoveTab(void* tabWidget, int index) {
@@ -442,13 +443,13 @@ extern "C" {
         });
     }
 
-    EXPORT int QMessageBox_Show(void* parent, const char* text, const char* caption, int buttons, int icon, int defaultButton, int options) {
+    EXPORT int QMessageBox_Show(void* parent, const char16_t* text, const char16_t* caption, int buttons, int icon, int defaultButton, int options) {
         QWidget* parentWidget = (QWidget*)parent;
         
         // Create message box
         QMessageBox msgBox(parentWidget);
-        msgBox.setText(QString::fromUtf8(text));
-        msgBox.setWindowTitle(QString::fromUtf8(caption));
+        msgBox.setText(QString::fromUtf16(text));
+        msgBox.setWindowTitle(QString::fromUtf16(caption));
         
         // Remove minimize button (unnecessary for message boxes)
         // Use explicit flags: Dialog with title bar and close button only
@@ -689,13 +690,13 @@ extern "C" {
         ((QMenuBar*)menuBar)->addAction((QAction*)action);
     }
 
-    EXPORT void* QAction_Create(const char* text) {
-        QAction* action = new QAction(QString::fromUtf8(text));
+    EXPORT void* QAction_Create(const char16_t* text) {
+        QAction* action = new QAction(QString::fromUtf16(text));
         return action;
     }
 
-    EXPORT void QAction_SetText(void* action, const char* text) {
-        ((QAction*)action)->setText(QString::fromUtf8(text));
+    EXPORT void QAction_SetText(void* action, const char16_t* text) {
+        ((QAction*)action)->setText(QString::fromUtf16(text));
     }
 
     EXPORT void QAction_ConnectTriggered(void* action, void (*callback)(void*), void* userData) {
@@ -720,8 +721,8 @@ extern "C" {
         }
     }
 
-    EXPORT void QAction_SetToolTip(void* action, const char* toolTip) {
-        ((QAction*)action)->setToolTip(QString::fromUtf8(toolTip));
+    EXPORT void QAction_SetToolTip(void* action, const char16_t* toolTip) {
+        ((QAction*)action)->setToolTip(QString::fromUtf16(toolTip));
     }
 
     EXPORT void QAction_SetVisible(void* action, bool visible) {
@@ -744,8 +745,8 @@ extern "C" {
         mb->setGeometry(0, 0, w->width(), mb->sizeHint().height());
     }
 
-    EXPORT void* QMenu_Create(const char* title) {
-        QMenu* menu = new QMenu(QString::fromUtf8(title));
+    EXPORT void* QMenu_Create(const char16_t* title) {
+        QMenu* menu = new QMenu(QString::fromUtf16(title));
         return menu;
     }
 
@@ -772,16 +773,16 @@ extern "C" {
     }
 
 
-    EXPORT void* QLinkLabel_Create(void* parent, const char* text) {
-        QLabel* widget = new QLabel(QString::fromUtf8(text), (QWidget*)parent);
+    EXPORT void* QLinkLabel_Create(void* parent, const char16_t* text) {
+        QLabel* widget = new QLabel(QString::fromUtf16(text), (QWidget*)parent);
         widget->setTextInteractionFlags(Qt::TextBrowserInteraction);
         widget->setOpenExternalLinks(false); 
         return widget;
     }
 
-    EXPORT void QLinkLabel_ConnectLinkClicked(void* widget, void (*callback)(void*, const char*), void* userData) {
+    EXPORT void QLinkLabel_ConnectLinkClicked(void* widget, void (*callback)(void*), void* userData) {
         QObject::connect((QLabel*)widget, &QLabel::linkActivated, [callback, userData](const QString &link) {
-            callback(userData, link.toUtf8().constData());
+            callback(userData);
         });
     }
 
@@ -790,8 +791,8 @@ extern "C" {
         return widget;
     }
 
-    EXPORT void QComboBox_AddItem(void* comboBox, const char* text) {
-        ((QComboBox*)comboBox)->addItem(QString::fromUtf8(text));
+    EXPORT void QComboBox_AddItem(void* comboBox, const char16_t* text) {
+        ((QComboBox*)comboBox)->addItem(QString::fromUtf16(text));
     }
 
     EXPORT void QComboBox_SetEditable(void* comboBox, bool editable) {
@@ -816,16 +817,16 @@ extern "C" {
         ((QComboBox*)comboBox)->clear();
     }
 
-    EXPORT void QComboBox_InsertItem(void* comboBox, int index, const char* text) {
-        ((QComboBox*)comboBox)->insertItem(index, QString::fromUtf8(text));
+    EXPORT void QComboBox_InsertItem(void* comboBox, int index, const char16_t* text) {
+        ((QComboBox*)comboBox)->insertItem(index, QString::fromUtf16(text));
     }
 
     EXPORT void QComboBox_RemoveItem(void* comboBox, int index) {
         ((QComboBox*)comboBox)->removeItem(index);
     }
 
-    EXPORT void QComboBox_SetText(void* comboBox, const char* text) {
-        ((QComboBox*)comboBox)->setCurrentText(QString::fromUtf8(text));
+    EXPORT void QComboBox_SetText(void* comboBox, const char16_t* text) {
+        ((QComboBox*)comboBox)->setCurrentText(QString::fromUtf16(text));
     }
 
     EXPORT void QComboBox_GetText_Invoke(void* comboBox, ReadQStringCallback cb, void* userData) {
@@ -839,7 +840,7 @@ extern "C" {
         });
     }
 
-    EXPORT void QFileDialog_GetExistingDirectory(void* parent, const char* initialDirectory, const char* title, bool showNewFolderButton, ReadQStringCallback callback, void* userData) {
+    EXPORT void QFileDialog_GetExistingDirectory(void* parent, const char16_t* initialDirectory, const char16_t* title, bool showNewFolderButton, ReadQStringCallback callback, void* userData) {
         QWidget* parentWidget = (QWidget*)parent;
         
         QFileDialog::Options options = QFileDialog::ShowDirsOnly;
@@ -847,27 +848,27 @@ extern "C" {
             options |= QFileDialog::ReadOnly;
         }
 
-        QString dir = QFileDialog::getExistingDirectory(parentWidget, QString::fromUtf8(title), QString::fromUtf8(initialDirectory), options);
+        QString dir = QFileDialog::getExistingDirectory(parentWidget, QString::fromUtf16(title), QString::fromUtf16(initialDirectory), options);
         
         if (!dir.isEmpty()) {
              callback((const void*)dir.constData(), dir.size(), userData);
         }
     }
 
-    EXPORT void QFileDialog_GetOpenFileName(void* parent, const char* initialDirectory, const char* title, const char* filter, ReadQStringCallback callback, void* userData) {
+    EXPORT void QFileDialog_GetOpenFileName(void* parent, const char16_t* initialDirectory, const char16_t* title, const char16_t* filter, ReadQStringCallback callback, void* userData) {
         QWidget* parentWidget = (QWidget*)parent;
         
-        QString fileName = QFileDialog::getOpenFileName(parentWidget, QString::fromUtf8(title), QString::fromUtf8(initialDirectory), QString::fromUtf8(filter));
+        QString fileName = QFileDialog::getOpenFileName(parentWidget, QString::fromUtf16(title), QString::fromUtf16(initialDirectory), QString::fromUtf16(filter));
         
         if (!fileName.isEmpty()) {
              callback((const void*)fileName.constData(), fileName.size(), userData);
         }
     }
 
-    EXPORT void QFileDialog_GetSaveFileName(void* parent, const char* initialDirectory, const char* title, const char* filter, ReadQStringCallback callback, void* userData) {
+    EXPORT void QFileDialog_GetSaveFileName(void* parent, const char16_t* initialDirectory, const char16_t* title, const char16_t* filter, ReadQStringCallback callback, void* userData) {
         QWidget* parentWidget = (QWidget*)parent;
         
-        QString fileName = QFileDialog::getSaveFileName(parentWidget, QString::fromUtf8(title), QString::fromUtf8(initialDirectory), QString::fromUtf8(filter));
+        QString fileName = QFileDialog::getSaveFileName(parentWidget, QString::fromUtf16(title), QString::fromUtf16(initialDirectory), QString::fromUtf16(filter));
         
         if (!fileName.isEmpty()) {
              callback((const void*)fileName.constData(), fileName.size(), userData);
@@ -954,16 +955,16 @@ extern "C" {
         return widget;
     }
 
-    EXPORT void QListWidget_AddItem(void* listWidget, const char* text) {
-        ((QListWidget*)listWidget)->addItem(QString::fromUtf8(text));
+    EXPORT void QListWidget_AddItem(void* listWidget, const char16_t* text) {
+        ((QListWidget*)listWidget)->addItem(QString::fromUtf16(text));
     }
 
     EXPORT void QListWidget_Clear(void* listWidget) {
         ((QListWidget*)listWidget)->clear();
     }
 
-    EXPORT void QListWidget_InsertItem(void* listWidget, int index, const char* text) {
-        ((QListWidget*)listWidget)->insertItem(index, QString::fromUtf8(text));
+    EXPORT void QListWidget_InsertItem(void* listWidget, int index, const char16_t* text) {
+        ((QListWidget*)listWidget)->insertItem(index, QString::fromUtf16(text));
     }
 
     EXPORT void QListWidget_RemoveItem(void* listWidget, int index) {
@@ -1071,7 +1072,7 @@ extern "C" {
 
     EXPORT bool QFontDialog_GetFont(
         void* parent,
-        const char* initialFamily,
+        const char16_t* initialFamily,
         float initialSize,
         bool initialBold,
         bool initialItalic,
@@ -1087,7 +1088,7 @@ extern "C" {
     ) {
         QWidget* parentWidget = (QWidget*)parent;
         
-        QFont initialFont(QString::fromUtf8(initialFamily));
+        QFont initialFont(QString::fromUtf16(initialFamily));
         initialFont.setPointSizeF(initialSize);
         initialFont.setBold(initialBold);
         initialFont.setItalic(initialItalic);
@@ -1211,9 +1212,9 @@ extern "C" {
         }
     }
 
-    //EXPORT void QPictureBox_SetImageLocation(void* pictureBox, const char* path) {
+    //EXPORT void QPictureBox_SetImageLocation(void* pictureBox, const char16_t* path) {
     //    QPictureBox* pb = (QPictureBox*)pictureBox;
-    //    QPixmap pixmap(QString::fromUtf8(path));
+    //    QPixmap pixmap(QString::fromUtf16(path));
     //    pb->setOriginalPixmap(pixmap);
     //}
 
@@ -1279,24 +1280,24 @@ extern "C" {
         return widget;
     }
 
-    EXPORT void* QTreeWidget_AddTopLevelItem(void* treeWidget, const char* text) {
+    EXPORT void* QTreeWidget_AddTopLevelItem(void* treeWidget, const char16_t* text) {
         QTreeWidget* tw = (QTreeWidget*)treeWidget;
         QTreeWidgetItem* item = new QTreeWidgetItem();
-        item->setText(0, QString::fromUtf8(text));
+        item->setText(0, QString::fromUtf16(text));
         tw->addTopLevelItem(item);
         return item;
     }
 
-    EXPORT void* QTreeWidgetItem_AddChild(void* parentItem, const char* text) {
+    EXPORT void* QTreeWidgetItem_AddChild(void* parentItem, const char16_t* text) {
         QTreeWidgetItem* parent = (QTreeWidgetItem*)parentItem;
         QTreeWidgetItem* child = new QTreeWidgetItem();
-        child->setText(0, QString::fromUtf8(text));
+        child->setText(0, QString::fromUtf16(text));
         parent->addChild(child);
         return child;
     }
 
-    EXPORT void QTreeWidgetItem_SetText(void* item, int column, const char* text) {
-        ((QTreeWidgetItem*)item)->setText(column, QString::fromUtf8(text));
+    EXPORT void QTreeWidgetItem_SetText(void* item, int column, const char16_t* text) {
+        ((QTreeWidgetItem*)item)->setText(column, QString::fromUtf16(text));
     }
 
     EXPORT void QTreeWidgetItem_RemoveChild(void* parentItem, void* childItem) {
@@ -1342,10 +1343,10 @@ extern "C" {
         ((QTreeWidget*)treeWidget)->setHeaderHidden(hidden);
     }
 
-    EXPORT void QTreeWidget_SetHeaderLabels(void* treeWidget, const char** labels, int count) {
+    EXPORT void QTreeWidget_SetHeaderLabels(void* treeWidget, const char16_t** labels, int count) {
         QStringList list;
         for (int i = 0; i < count; i++) {
-            list << QString::fromUtf8(labels[i]);
+            list << QString::fromUtf16(labels[i]);
         }
         ((QTreeWidget*)treeWidget)->setHeaderLabels(list);
     }
@@ -1400,8 +1401,8 @@ extern "C" {
         }
     }
 
-    EXPORT void QTreeWidgetItem_SetToolTip(void* item, int column, const char* toolTip) {
-        ((QTreeWidgetItem*)item)->setToolTip(column, QString::fromUtf8(toolTip));
+    EXPORT void QTreeWidgetItem_SetToolTip(void* item, int column, const char16_t* toolTip) {
+        ((QTreeWidgetItem*)item)->setToolTip(column, QString::fromUtf16(toolTip));
     }
 
     EXPORT void* QSplitter_Create(void* parent, int orientation) {
@@ -1524,14 +1525,14 @@ extern "C" {
         return ((QTableWidget*)table)->columnCount();
     }
 
-    EXPORT void QTableWidget_SetCellText(void* table, int row, int column, const char* text) {
+    EXPORT void QTableWidget_SetCellText(void* table, int row, int column, const char16_t* text) {
         QTableWidget* t = (QTableWidget*)table;
         QTableWidgetItem* item = t->item(row, column);
         if (!item) {
             item = new QTableWidgetItem();
             t->setItem(row, column, item);
         }
-        item->setText(QString::fromUtf8(text));
+        item->setText(QString::fromUtf16(text));
     }
 
     EXPORT void QTableWidget_GetCellText_Invoke(void* table, int row, int column, ReadQStringCallback cb, void* userData) {
@@ -1541,9 +1542,9 @@ extern "C" {
         cb((const void*)text.constData(), text.size(), userData);
     }
 
-    EXPORT void QTableWidget_SetColumnHeaderText(void* table, int column, const char* text) {
+    EXPORT void QTableWidget_SetColumnHeaderText(void* table, int column, const char16_t* text) {
         QTableWidget* t = (QTableWidget*)table;
-        QTableWidgetItem* header = new QTableWidgetItem(QString::fromUtf8(text));
+        QTableWidgetItem* header = new QTableWidgetItem(QString::fromUtf16(text));
         t->setHorizontalHeaderItem(column, header);
     }
 

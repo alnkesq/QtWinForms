@@ -55,31 +55,31 @@ namespace System.Windows.Forms
         public static extern void QWidget_StackUnder(IntPtr widget, IntPtr under);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QWidget_SetTitle(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string title);
+        public static extern void QWidget_SetTitle(IntPtr widget, [MarshalAs(UnmanagedType.LPWStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetIcon(IntPtr widget, IntPtr icon);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QPushButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QPushButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QPushButton_SetText(IntPtr button, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QPushButton_SetText(IntPtr button, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QPushButton_ConnectClicked(IntPtr button, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QLabel_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QLabel_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QLabel_SetText(IntPtr label, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QLabel_SetText(IntPtr label, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QCheckBox_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QCheckBox_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QCheckBox_SetText(IntPtr checkBox, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QCheckBox_SetText(IntPtr checkBox, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QCheckBox_SetChecked(IntPtr checkBox, bool isChecked);
@@ -88,10 +88,10 @@ namespace System.Windows.Forms
         public static extern void QCheckBox_ConnectStateChanged(IntPtr checkBox, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QRadioButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QRadioButton_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QRadioButton_SetText(IntPtr radioButton, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QRadioButton_SetText(IntPtr radioButton, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QRadioButton_SetChecked(IntPtr radioButton, bool isChecked);
@@ -109,13 +109,13 @@ namespace System.Windows.Forms
         public static extern void QWidget_SetEnabled(IntPtr widget, bool enabled);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QWidget_SetFont(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string family, float size, bool bold, bool italic, bool underline, bool strikeout);
+        public static extern void QWidget_SetFont(IntPtr widget, [MarshalAs(UnmanagedType.LPWStr)] string family, float size, bool bold, bool italic, bool underline, bool strikeout);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QLineEdit_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QLineEdit_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QLineEdit_SetText(IntPtr lineEdit, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QLineEdit_SetText(IntPtr lineEdit, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QLineEdit_GetText_Invoke(IntPtr label, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
@@ -124,10 +124,10 @@ namespace System.Windows.Forms
         public static extern void QLineEdit_SetEchoMode(IntPtr lineEdit, int mode);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QPlainTextEdit_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QPlainTextEdit_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QPlainTextEdit_SetText(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QPlainTextEdit_SetText(IntPtr widget, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QPlainTextEdit_GetText_Invoke(IntPtr widget, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
@@ -136,16 +136,16 @@ namespace System.Windows.Forms
         public static extern void QWidget_ConnectResize(IntPtr widget, IntPtr resizeCallback, IntPtr moveCallback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QGroupBox_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string title);
+        public static extern IntPtr QGroupBox_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QGroupBox_SetTitle(IntPtr groupBox, [MarshalAs(UnmanagedType.LPStr)] string title);
+        public static extern void QGroupBox_SetTitle(IntPtr groupBox, [MarshalAs(UnmanagedType.LPWStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QTabWidget_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QTabWidget_AddTab(IntPtr tabWidget, IntPtr page, [MarshalAs(UnmanagedType.LPStr)] string label);
+        public static extern void QTabWidget_AddTab(IntPtr tabWidget, IntPtr page, [MarshalAs(UnmanagedType.LPWStr)] string label);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTabWidget_RemoveTab(IntPtr tabWidget, int index);
@@ -160,7 +160,7 @@ namespace System.Windows.Forms
         public static extern void QTabWidget_ConnectCurrentChanged(IntPtr tabWidget, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int QMessageBox_Show(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text, [MarshalAs(UnmanagedType.LPStr)] string caption, int buttons, int icon, int defaultButton, int options);
+        public static extern int QMessageBox_Show(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text, [MarshalAs(UnmanagedType.LPWStr)] string caption, int buttons, int icon, int defaultButton, int options);
 
 
 
@@ -213,10 +213,10 @@ namespace System.Windows.Forms
         public static extern void QMenuBar_AddAction(IntPtr menuBar, IntPtr action);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QAction_Create([MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QAction_Create([MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QAction_SetText(IntPtr action, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QAction_SetText(IntPtr action, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QAction_ConnectTriggered(IntPtr action, IntPtr callback, IntPtr userData);
@@ -228,7 +228,7 @@ namespace System.Windows.Forms
         public static extern void QAction_SetIcon(IntPtr action, IntPtr icon);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QAction_SetToolTip(IntPtr action, [MarshalAs(UnmanagedType.LPStr)] string toolTip);
+        public static extern void QAction_SetToolTip(IntPtr action, [MarshalAs(UnmanagedType.LPWStr)] string toolTip);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QAction_SetVisible(IntPtr action, bool visible);
@@ -237,7 +237,7 @@ namespace System.Windows.Forms
         public static extern void QWidget_SetMenuBar(IntPtr widget, IntPtr menuBar);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QMenu_Create([MarshalAs(UnmanagedType.LPStr)] string title);
+        public static extern IntPtr QMenu_Create([MarshalAs(UnmanagedType.LPWStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QMenu_AddAction(IntPtr menu, IntPtr action);
@@ -255,7 +255,7 @@ namespace System.Windows.Forms
         public static extern void QAction_SetMenu(IntPtr action, IntPtr menu);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QLinkLabel_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QLinkLabel_Create(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QLinkLabel_ConnectLinkClicked(IntPtr label, IntPtr callback, IntPtr userData);
@@ -263,7 +263,7 @@ namespace System.Windows.Forms
         public static extern IntPtr QComboBox_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QComboBox_AddItem(IntPtr comboBox, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QComboBox_AddItem(IntPtr comboBox, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QComboBox_SetEditable(IntPtr comboBox, bool editable);
@@ -281,13 +281,13 @@ namespace System.Windows.Forms
         public static extern void QComboBox_Clear(IntPtr comboBox);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QComboBox_InsertItem(IntPtr comboBox, int index, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QComboBox_InsertItem(IntPtr comboBox, int index, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QComboBox_RemoveItem(IntPtr comboBox, int index);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QComboBox_SetText(IntPtr comboBox, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QComboBox_SetText(IntPtr comboBox, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QComboBox_GetText_Invoke(IntPtr comboBox, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
@@ -298,13 +298,13 @@ namespace System.Windows.Forms
         public unsafe delegate void ReadQStringCallback(void* data, int length, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public unsafe static extern void QFileDialog_GetExistingDirectory(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPStr)] string title, bool showNewFolderButton, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
+        public unsafe static extern void QFileDialog_GetExistingDirectory(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPWStr)] string title, bool showNewFolderButton, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public unsafe static extern void QFileDialog_GetOpenFileName(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPStr)] string title, [MarshalAs(UnmanagedType.LPStr)] string filter, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
+        public unsafe static extern void QFileDialog_GetOpenFileName(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPWStr)] string title, [MarshalAs(UnmanagedType.LPWStr)] string filter, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public unsafe static extern void QFileDialog_GetSaveFileName(IntPtr parent, [MarshalAs(UnmanagedType.LPStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPStr)] string title, [MarshalAs(UnmanagedType.LPStr)] string filter, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
+        public unsafe static extern void QFileDialog_GetSaveFileName(IntPtr parent, [MarshalAs(UnmanagedType.LPWStr)] string initialDirectory, [MarshalAs(UnmanagedType.LPWStr)] string title, [MarshalAs(UnmanagedType.LPWStr)] string filter, delegate* unmanaged[Cdecl]<void*, int, IntPtr, void> callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern int QColorDialog_GetColor(IntPtr parent, int initialColor, bool showAlphaChannel);
@@ -343,13 +343,13 @@ namespace System.Windows.Forms
         public static extern IntPtr QListWidget_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QListWidget_AddItem(IntPtr listWidget, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QListWidget_AddItem(IntPtr listWidget, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QListWidget_Clear(IntPtr listWidget);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QListWidget_InsertItem(IntPtr listWidget, int index, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QListWidget_InsertItem(IntPtr listWidget, int index, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QListWidget_RemoveItem(IntPtr listWidget, int index);
@@ -388,7 +388,7 @@ namespace System.Windows.Forms
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool QFontDialog_GetFont(
             IntPtr parent,
-            [MarshalAs(UnmanagedType.LPStr)] string initialFamily,
+            [MarshalAs(UnmanagedType.LPWStr)] string initialFamily,
             float initialSize,
             bool initialBold,
             bool initialItalic,
@@ -416,7 +416,7 @@ namespace System.Windows.Forms
         public static extern void QPixmap_Destroy(IntPtr pixmap);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QPictureBox_SetImageLocation(IntPtr pictureBox, [MarshalAs(UnmanagedType.LPStr)] string path);
+        public static extern void QPictureBox_SetImageLocation(IntPtr pictureBox, [MarshalAs(UnmanagedType.LPWStr)] string path);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QPictureBox_SetSizeMode(IntPtr pictureBox, int mode);
@@ -434,13 +434,13 @@ namespace System.Windows.Forms
         public static extern IntPtr QTreeWidget_Create(IntPtr parent);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QTreeWidget_AddTopLevelItem(IntPtr treeWidget, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QTreeWidget_AddTopLevelItem(IntPtr treeWidget, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr QTreeWidgetItem_AddChild(IntPtr parentItem, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern IntPtr QTreeWidgetItem_AddChild(IntPtr parentItem, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QTreeWidgetItem_SetText(IntPtr item, int column, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QTreeWidgetItem_SetText(IntPtr item, int column, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_RemoveChild(IntPtr parentItem, IntPtr childItem);
@@ -470,7 +470,7 @@ namespace System.Windows.Forms
         public static extern void QTreeWidget_SetHeaderHidden(IntPtr treeWidget, bool hidden);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QTreeWidget_SetHeaderLabels(IntPtr treeWidget, [In, MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] labels, int count);
+        public static extern void QTreeWidget_SetHeaderLabels(IntPtr treeWidget, [In, MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] labels, int count);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidget_Clear(IntPtr treeWidget);
@@ -485,7 +485,7 @@ namespace System.Windows.Forms
         public static extern void QTreeWidgetItem_SetIcon(IntPtr item, int column, IntPtr icon);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QTreeWidgetItem_SetToolTip(IntPtr item, int column, [MarshalAs(UnmanagedType.LPStr)] string toolTip);
+        public static extern void QTreeWidgetItem_SetToolTip(IntPtr item, int column, [MarshalAs(UnmanagedType.LPWStr)] string toolTip);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QSplitter_Create(IntPtr parent, int orientation);
@@ -533,13 +533,13 @@ namespace System.Windows.Forms
         public static extern int QTableWidget_GetColumnCount(IntPtr table);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QTableWidget_SetCellText(IntPtr table, int row, int column, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QTableWidget_SetCellText(IntPtr table, int row, int column, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QTableWidget_GetCellText_Invoke(IntPtr table, int row, int column, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QTableWidget_SetColumnHeaderText(IntPtr table, int column, [MarshalAs(UnmanagedType.LPStr)] string text);
+        public static extern void QTableWidget_SetColumnHeaderText(IntPtr table, int column, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QTableWidget_GetColumnHeaderText_Invoke(IntPtr table, int column, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);

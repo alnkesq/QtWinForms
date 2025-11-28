@@ -19,7 +19,7 @@ namespace System.Windows.Forms
     {
         public event LinkLabelLinkClickedEventHandler? LinkClicked;
 
-        private delegate void LinkClickedCallbackDelegate(IntPtr userData, [MarshalAs(UnmanagedType.LPStr)] string link);
+        private delegate void LinkClickedCallbackDelegate(IntPtr userData);
         private LinkClickedCallbackDelegate? _linkClickedCallback;
         [Obsolete(NotImplementedWarning)] public Color LinkColor { get; set; }
 
@@ -42,7 +42,7 @@ namespace System.Windows.Forms
             return $"<a href=\"#\">{_text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;")}</a>";
         }
 
-        private void OnLinkClickedCallback(IntPtr userData, string link)
+        private void OnLinkClickedCallback(IntPtr userData)
         {
             LinkClicked?.Invoke(this, new LinkLabelLinkClickedEventArgs(string.Empty));
         }
