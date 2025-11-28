@@ -17,10 +17,10 @@ namespace System.Windows.Forms
 
     public class LinkLabel : Label
     {
-        public event LinkLabelLinkClickedEventHandler LinkClicked;
+        public event LinkLabelLinkClickedEventHandler? LinkClicked;
 
         private delegate void LinkClickedCallbackDelegate(IntPtr userData, [MarshalAs(UnmanagedType.LPStr)] string link);
-        private LinkClickedCallbackDelegate _linkClickedCallback;
+        private LinkClickedCallbackDelegate? _linkClickedCallback;
         [Obsolete(NotImplementedWarning)] public Color LinkColor { get; set; }
 
         protected override void CreateHandle()

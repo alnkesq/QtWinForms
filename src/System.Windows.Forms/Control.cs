@@ -799,5 +799,7 @@ namespace System.Windows.Forms
                 return QtHandle;
             }
         }
+
+        internal bool DoubleBuffered { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 
@@ -9,11 +10,12 @@ namespace System.Windows.Forms
     {
         private DataGridViewColumnCollection _columns;
         private DataGridViewRowCollection _rows;
-
+        private DataGridViewSelectedCellCollection _selectedCells;
         public DataGridView()
         {
             _columns = new DataGridViewColumnCollection { _owner = this };
             _rows = new DataGridViewRowCollection { _owner = this };
+            _selectedCells = new DataGridViewSelectedCellCollection { _owner = this };
         }
 
         protected override void CreateHandle()
@@ -82,13 +84,26 @@ namespace System.Windows.Forms
         public DataGridViewRowCollection Rows => _rows;
 
         [Obsolete(NotImplementedWarning)] public DataGridViewRow RowTemplate { get; set; } = new();
-        [Obsolete(NotImplementedWarning)] public DataGridViewSelectedCellCollection SelectedCells => throw new NotImplementedException();
         [Obsolete(NotImplementedWarning)] public event EventHandler? SelectionChanged;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellContentClick;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellDoubleClick;
+        [Obsolete(NotImplementedWarning)] public event DataGridViewCellFormattingEventHandler? CellFormatting;
+        [Obsolete(NotImplementedWarning)] public event DataGridViewCellValueEventHandler? CellValueNeeded;
         [Obsolete(NotImplementedWarning)] public DataGridViewCell? CurrentCell { get; set; }
         [Obsolete(NotImplementedWarning)] public bool VirtualMode { get; set; }
-        public int RowCount => Rows.Count;
+        public int RowCount
+        {
+            get
+            {
+                return Rows.Count;
+            }
+            set
+            {
+                if (!VirtualMode) throw new InvalidOperationException();
+                throw new NotImplementedException();
+            }
+        }
+
         public int ColumnCount => Columns.Count;
         [Obsolete(NotImplementedWarning)] public bool AllowUserToAddRows { get; set; }
         [Obsolete(NotImplementedWarning)] public bool AllowUserToDeleteRows { get; set; }
@@ -133,5 +148,6 @@ namespace System.Windows.Forms
             }
         }
 
+        public DataGridViewSelectedCellCollection SelectedCells => _selectedCells;
     }
 }
