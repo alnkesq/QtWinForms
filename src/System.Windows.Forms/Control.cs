@@ -282,10 +282,6 @@ namespace System.Windows.Forms
             {
                 Parent.Controls.SetChildIndex(this, 0);
             }
-            else if (IsHandleCreated)
-            {
-                NativeMethods.QWidget_Raise(QtHandle);
-            }
         }
 
         public void SendToBack()
@@ -293,10 +289,6 @@ namespace System.Windows.Forms
             if (Parent != null)
             {
                 Parent.Controls.SetChildIndex(this, Parent.Controls.Count - 1);
-            }
-            else if (IsHandleCreated)
-            {
-                NativeMethods.QWidget_Lower(QtHandle);
             }
         }
 
