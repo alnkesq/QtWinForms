@@ -1,4 +1,3 @@
-using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -2250,17 +2249,12 @@ namespace TestApp
 
         private static Bitmap MakeMonochromeImage(Color color)
         {
-            var imageSharpColor = new Rgba32(color.R, color.G, color.B);
-            var image = new SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>(16, 16);
-            for (int y = 0; y < 16; y++)
+            var image = new Bitmap(16, 16);
+            using (var g = Graphics.FromImage(image))
             {
-                for (int x = 0; x < 16; x++)
-                {
-                    image[x, y] = imageSharpColor;
-                }
+                g.Clear(color);
             }
-
-            return new Bitmap(image);
+            return image;
         }
         static Form CreatePropertyGridTest()
         {
