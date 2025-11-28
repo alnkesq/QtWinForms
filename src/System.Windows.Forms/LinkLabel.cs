@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -20,16 +21,15 @@ namespace System.Windows.Forms
         public event LinkLabelLinkClickedEventHandler? LinkClicked;
 
         private delegate void LinkClickedCallbackDelegate(IntPtr userData);
-        private LinkClickedCallbackDelegate? _linkClickedCallback;
         [Obsolete(NotImplementedWarning)] public Color LinkColor { get; set; }
 
-        protected override void CreateHandle()
+        protected unsafe override void CreateHandle()
         {
             QtHandle = NativeMethods.QLinkLabel_Create(IntPtr.Zero, GetHtmlText());
             SetCommonProperties();
 
-            _linkClickedCallback = new LinkClickedCallbackDelegate(OnLinkClickedCallback);
-            NativeMethods.QLinkLabel_ConnectLinkClicked(QtHandle, Marshal.GetFunctionPointerForDelegate(_linkClickedCallback), IntPtr.Zero);
+            delegate* unmanaged[Cdecl]<nint, void> callback = &OnLinkClickedCallback;
+            NativeMethods.QLinkLabel_ConnectLinkClicked(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
 
         protected override void UpdateNativeText()
@@ -42,9 +42,11 @@ namespace System.Windows.Forms
             return $"<a href=\"#\">{_text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;")}</a>";
         }
 
-        private void OnLinkClickedCallback(IntPtr userData)
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+        private static void OnLinkClickedCallback(IntPtr userData)
         {
-            LinkClicked?.Invoke(this, new LinkLabelLinkClickedEventArgs(string.Empty));
+            var control = ObjectFromGCHandle<LinkLabel>(userData);
+            control.LinkClicked?.Invoke(control, new LinkLabelLinkClickedEventArgs(string.Empty));
         }
     }
 }
