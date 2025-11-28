@@ -158,9 +158,12 @@ namespace System.Windows.Forms
         {
             EnsureIsQWidget();
 
-            // Create handles for any child controls that were added before this control was created
-            foreach (Control child in Controls)
+
+            // 0th element in WinForms is topmost
+            // 0th element in Qt is bottommost, so we reverse-traverse
+            for (int i = Controls.Count - 1; i >= 0; i--)
             {
+                var child = Controls[i];
                 child.CreateControl();
 
                 // Set parent relationship in Qt
