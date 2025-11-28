@@ -50,7 +50,7 @@ namespace TestApp
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
-                string? choice = Console.ReadLine();
+                string? choice = args.FirstOrDefault() ?? Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(choice)) choice = "1";
 
                 Form testForm;
