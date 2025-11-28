@@ -86,7 +86,6 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QWidget_SetWindowState(QtHandle, (int)_windowState);
             }
-            UpdateFormStyles();
             UpdateIcon();
 
             // Attach menu bar if set
@@ -111,6 +110,7 @@ namespace System.Windows.Forms
                 _owner.CreateControl();
                 NativeMethods.Form_SetOwner(QtHandle, _owner.QtHandle);
             }
+            UpdateFormStyles();
 
             // Connect resize and move events
             ConnectResizeEvent();
@@ -442,6 +442,7 @@ namespace System.Windows.Forms
                 {
                     _owner?.CreateControl();
                     NativeMethods.Form_SetOwner(QtHandle, _owner?.QtHandle ?? default);
+                    UpdateFormStyles();
                 }
             }
         }
