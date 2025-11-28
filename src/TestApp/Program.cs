@@ -47,6 +47,7 @@ namespace TestApp
                 Console.WriteLine("25. ShowDialog Test");
                 Console.WriteLine("26. DataGridView Test");
                 Console.WriteLine("27. DataGridView VirtualMode Test");
+                Console.WriteLine("28. Z-Order Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -190,6 +191,11 @@ namespace TestApp
                     case "27":
                         Console.WriteLine("Running DataGridView VirtualMode Test...");
                         testForm = CreateDataGridViewVirtualModeTest();
+                        break;
+
+                    case "28":
+                        Console.WriteLine("Running Z-Order Test...");
+                        testForm = CreateZOrderTest();
                         break;
 
                     default:
@@ -2660,6 +2666,67 @@ namespace TestApp
             lblInstructions.Location = new Point(20, 520);
             lblInstructions.Size = new Size(750, 40);
             form.Controls.Add(lblInstructions);
+
+            return form;
+        }
+        static Form CreateZOrderTest()
+        {
+            var form = new Form();
+            form.Text = "Z-Order Test";
+            form.Size = new Size(400, 400);
+
+            var btn1 = new Button();
+            btn1.Text = "Button 1 (Red)";
+            btn1.BackColor = Color.Red;
+            btn1.Location = new Point(50, 50);
+            btn1.Size = new Size(200, 100);
+            btn1.Click += (s, e) => {
+                Console.WriteLine("Button 1 clicked - Bringing to front");
+                btn1.BringToFront();
+            };
+            form.Controls.Add(btn1);
+
+            var btn2 = new Button();
+            btn2.Text = "Button 2 (Green)";
+            btn2.BackColor = Color.Green;
+            btn2.Location = new Point(80, 80);
+            btn2.Size = new Size(200, 100);
+            btn2.Click += (s, e) => {
+                Console.WriteLine("Button 2 clicked - Bringing to front");
+                btn2.BringToFront();
+            };
+            form.Controls.Add(btn2);
+
+            var btn3 = new Button();
+            btn3.Text = "Button 3 (Blue)";
+            btn3.BackColor = Color.Blue;
+            btn3.Location = new Point(110, 110);
+            btn3.Size = new Size(200, 100);
+            btn3.Click += (s, e) => {
+                Console.WriteLine("Button 3 clicked - Bringing to front");
+                btn3.BringToFront();
+            };
+            form.Controls.Add(btn3);
+
+            var btnSendBack = new Button();
+            btnSendBack.Text = "Send Button 3 to Back";
+            btnSendBack.Location = new Point(20, 300);
+            btnSendBack.Size = new Size(150, 30);
+            btnSendBack.Click += (s, e) => {
+                Console.WriteLine("Sending Button 3 to back");
+                btn3.SendToBack();
+            };
+            form.Controls.Add(btnSendBack);
+
+            var btnSetIndex = new Button();
+            btnSetIndex.Text = "Set Button 2 Index to 0";
+            btnSetIndex.Location = new Point(200, 300);
+            btnSetIndex.Size = new Size(150, 30);
+            btnSetIndex.Click += (s, e) => {
+                Console.WriteLine("Setting Button 2 index to 0");
+                form.Controls.SetChildIndex(btn2, 0);
+            };
+            form.Controls.Add(btnSetIndex);
 
             return form;
         }

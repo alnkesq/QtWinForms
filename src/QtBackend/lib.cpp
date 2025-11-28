@@ -137,6 +137,18 @@ extern "C" {
     EXPORT void QWidget_Resize(void* widget, int width, int height) {
         ((QWidget*)widget)->resize(width, height);
     }
+
+    EXPORT void QWidget_Raise(void* widget) {
+        ((QWidget*)widget)->raise();
+    }
+
+    EXPORT void QWidget_Lower(void* widget) {
+        ((QWidget*)widget)->lower();
+    }
+
+    EXPORT void QWidget_StackUnder(void* widget, void* under) {
+        ((QWidget*)widget)->stackUnder((QWidget*)under);
+    }
     
     EXPORT void QWidget_SetTitle(void* widget, const char* title) {
         ((QWidget*)widget)->setWindowTitle(QString::fromUtf8(title));

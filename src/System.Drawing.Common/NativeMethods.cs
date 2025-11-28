@@ -46,6 +46,15 @@ namespace System.Windows.Forms
         public static extern void QWidget_GetSize(IntPtr widget, out int width, out int height);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_Raise(IntPtr widget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_Lower(IntPtr widget);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_StackUnder(IntPtr widget, IntPtr under);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetTitle(IntPtr widget, [MarshalAs(UnmanagedType.LPStr)] string title);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

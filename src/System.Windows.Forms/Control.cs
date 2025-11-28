@@ -276,6 +276,30 @@ namespace System.Windows.Forms
             Visible = false;
         }
 
+        public void BringToFront()
+        {
+            if (Parent != null)
+            {
+                Parent.Controls.SetChildIndex(this, 0);
+            }
+            else if (IsHandleCreated)
+            {
+                NativeMethods.QWidget_Raise(QtHandle);
+            }
+        }
+
+        public void SendToBack()
+        {
+            if (Parent != null)
+            {
+                Parent.Controls.SetChildIndex(this, Parent.Controls.Count - 1);
+            }
+            else if (IsHandleCreated)
+            {
+                NativeMethods.QWidget_Lower(QtHandle);
+            }
+        }
+
         public Point Location
         {
             get => _location;
