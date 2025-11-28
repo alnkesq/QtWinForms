@@ -7,6 +7,10 @@ namespace System.Windows.Forms
 {
     public abstract class CommonDialog : Component
     {
+        public CommonDialog()
+        {
+            Application.InitializeQt();
+        }
         public abstract void Reset();
         public object? Tag { get; set; }
 
