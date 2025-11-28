@@ -415,7 +415,7 @@ namespace System.Windows.Forms
             {
                 this.FormClosed -= handler;
                 _isModal = false;
-                NativeMethods.QWidget_SetWindowModality(QtHandle, 0);
+                NativeMethods.QWidget_SetWindowModality(QtHandle, 1);
                 tcs.TrySetResult(this.DialogResult);
             };
             this.FormClosed += handler;
