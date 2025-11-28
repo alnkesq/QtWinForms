@@ -26,8 +26,8 @@ namespace System.Windows.Forms
         [Obsolete(Control.NotImplementedWarning)] public int FillWeight { get; set; }
         [Obsolete(Control.NotImplementedWarning)] public int Width { get; set; }
         [Obsolete(Control.NotImplementedWarning)] public DataGridViewCell? CellTemplate { get; set; }
-        [Obsolete(Control.NotImplementedWarning)] public DataGridViewCell? HeaderCell { get; set; }
-        [Obsolete(Control.NotImplementedWarning)] public DataGridViewCellStyle? DefaultCellStyle { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public DataGridViewCell? HeaderCell { get; set; } = new();
+        [Obsolete(Control.NotImplementedWarning)] public DataGridViewCellStyle? DefaultCellStyle { get; set; } = new();
         public string? Name { get; set; }
     }
 }

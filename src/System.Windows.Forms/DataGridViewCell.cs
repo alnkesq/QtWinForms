@@ -38,7 +38,7 @@ namespace System.Windows.Forms
         }
 
         [Obsolete(Control.NotImplementedWarning)] public bool Selected { get; set; }
-        [Obsolete(Control.NotImplementedWarning)] public DataGridViewCellStyle? Style { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public DataGridViewCellStyle? Style { get; set; } = new();
 
         public override string? ToString()
         {
