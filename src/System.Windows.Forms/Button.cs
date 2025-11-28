@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -34,10 +35,24 @@ namespace System.Windows.Forms
         }
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static unsafe void OnClickedCallback(nint userData)
+        private static void OnClickedCallback(nint userData)
         {
             var button = ObjectFromGCHandle<Button>(userData);
             button.OnClick(EventArgs.Empty);
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+            base.OnClick(e);
+            if (DialogResult != DialogResult.None)
+            {
+                var form = this.FindForm();
+                if (form != null && form._isModal)
+                {
+                    form.DialogResult = DialogResult;
+                    form.Close();
+                }
+            }
         }
 
         public DialogResult DialogResult { get; set; }

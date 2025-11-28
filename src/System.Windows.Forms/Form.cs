@@ -384,20 +384,7 @@ namespace System.Windows.Forms
             }
         }
 
-        private DialogResult _dialogResult;
-        public DialogResult DialogResult
-        {
-            get => _dialogResult;
-            set
-            {
-                _dialogResult = value;
-                if (_isModal && _dialogResult != DialogResult.None)
-                {
-                    Close();
-                }
-            }
-        }
-
+        public DialogResult DialogResult { get; set; }
         public Task<DialogResult> ShowDialogAsync(IWin32Window? owner = null)
         {
             this.Owner = owner as Form;
@@ -423,7 +410,7 @@ namespace System.Windows.Forms
             return tcs.Task;
         }
 
-        private bool _isModal = false;
+        internal bool _isModal;
 
         public DialogResult ShowDialog(IWin32Window? owner = null)
         {
