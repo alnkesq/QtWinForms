@@ -45,6 +45,7 @@ namespace TestApp
                 Console.WriteLine("23. TreeView Test");
                 Console.WriteLine("24. PropertyGrid Test");
                 Console.WriteLine("25. ShowDialog Test");
+                Console.WriteLine("26. DataGridView Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -178,6 +179,11 @@ namespace TestApp
                     case "25":
                         Console.WriteLine("Running ShowDialog Test...");
                         testForm = CreateShowDialogTest();
+                        break;
+
+                    case "26":
+                        Console.WriteLine("Running DataGridView Test...");
+                        testForm = CreateDataGridViewTest();
                         break;
 
                     default:
@@ -2329,6 +2335,191 @@ namespace TestApp
             };
             form.Controls.Add(btnShowModal);
             form.Controls.Add(btnShowModalAsync);
+
+            return form;
+        }
+
+        static Form CreateDataGridViewTest()
+        {
+            var form = new Form();
+            form.Text = "DataGridView Test";
+            form.Size = new Size(800, 600);
+
+            var grid = new DataGridView();
+            grid.Location = new Point(20, 20);
+            grid.Size = new Size(750, 400);
+
+            // Add columns
+            var col1 = new DataGridViewColumn();
+            col1.HeaderText = "Name";
+            grid.Columns.Add(col1);
+
+            var col2 = new DataGridViewColumn();
+            col2.HeaderText = "Age";
+            grid.Columns.Add(col2);
+
+            var col3 = new DataGridViewColumn();
+            col3.HeaderText = "City";
+            grid.Columns.Add(col3);
+
+            // Add rows with data
+            int row1 = grid.Rows.Add();
+            grid.Rows[row1].Cells[0].Text = "Alice";
+            grid.Rows[row1].Cells[1].Text = "25";
+            grid.Rows[row1].Cells[2].Text = "New York";
+
+            int row2 = grid.Rows.Add();
+            grid.Rows[row2].Cells[0].Text = "Bob";
+            grid.Rows[row2].Cells[1].Text = "30";
+            grid.Rows[row2].Cells[2].Text = "London";
+
+            int row3 = grid.Rows.Add();
+            grid.Rows[row3].Cells[0].Text = "Charlie";
+            grid.Rows[row3].Cells[1].Text = "35";
+            grid.Rows[row3].Cells[2].Text = "Paris";
+
+            form.Controls.Add(grid);
+
+            // Add Row button
+            var btnAddRow = new Button();
+            btnAddRow.Text = "Add Row";
+            btnAddRow.Location = new Point(20, 440);
+            btnAddRow.Size = new Size(100, 30);
+            btnAddRow.Click += (s, e) =>
+            {
+                int newRow = grid.Rows.Add();
+                grid.Rows[newRow].Cells[0].Text = $"Person {newRow + 1}";
+                grid.Rows[newRow].Cells[1].Text = (20 + newRow).ToString();
+                grid.Rows[newRow].Cells[2].Text = "Unknown";
+                Console.WriteLine($"Added row {newRow}, total rows: {grid.Rows.Count}");
+            };
+            form.Controls.Add(btnAddRow);
+
+            // Remove Row button
+            var btnRemoveRow = new Button();
+            btnRemoveRow.Text = "Remove Last Row";
+            btnRemoveRow.Location = new Point(130, 440);
+            btnRemoveRow.Size = new Size(120, 30);
+            btnRemoveRow.Click += (s, e) =>
+            {
+                if (grid.Rows.Count > 0)
+                {
+                    int lastIndex = grid.Rows.Count - 1;
+                    grid.Rows.RemoveAt(lastIndex);
+                    Console.WriteLine($"Removed row {lastIndex}, total rows: {grid.Rows.Count}");
+                }
+            };
+            form.Controls.Add(btnRemoveRow);
+
+            // Add Column button
+            var btnAddColumn = new Button();
+            btnAddColumn.Text = "Add Column";
+            btnAddColumn.Location = new Point(260, 440);
+            btnAddColumn.Size = new Size(100, 30);
+            btnAddColumn.Click += (s, e) =>
+            {
+                var newCol = new DataGridViewColumn();
+                newCol.HeaderText = $"Column {grid.Columns.Count + 1}";
+                grid.Columns.Add(newCol);
+                Console.WriteLine($"Added column, total columns: {grid.Columns.Count}");
+            };
+            form.Controls.Add(btnAddColumn);
+
+            // Remove Column button
+            var btnRemoveColumn = new Button();
+            btnRemoveColumn.Text = "Remove Last Column";
+            btnRemoveColumn.Location = new Point(370, 440);
+            btnRemoveColumn.Size = new Size(140, 30);
+            btnRemoveColumn.Click += (s, e) =>
+            {
+                if (grid.Columns.Count > 0)
+                {
+                    int lastIndex = grid.Columns.Count - 1;
+                    grid.Columns.RemoveAt(lastIndex);
+                    Console.WriteLine($"Removed column {lastIndex}, total columns: {grid.Columns.Count}");
+                }
+            };
+            form.Controls.Add(btnRemoveColumn);
+
+            // Clear Rows button
+            var btnClearRows = new Button();
+            btnClearRows.Text = "Clear Rows";
+            btnClearRows.Location = new Point(520, 440);
+            btnClearRows.Size = new Size(100, 30);
+            btnClearRows.Click += (s, e) =>
+            {
+                grid.Rows.Clear();
+                Console.WriteLine("Cleared all rows");
+            };
+            form.Controls.Add(btnClearRows);
+
+            // Print Data button
+            var btnPrintData = new Button();
+            btnPrintData.Text = "Print Data";
+            btnPrintData.Location = new Point(630, 440);
+            btnPrintData.Size = new Size(100, 30);
+            btnPrintData.Click += (s, e) =>
+            {
+                Console.WriteLine("=== DataGridView Contents ===");
+                Console.WriteLine($"Columns: {grid.Columns.Count}, Rows: {grid.Rows.Count}");
+                
+                // Print headers
+                for (int c = 0; c < grid.Columns.Count; c++)
+                {
+                    Console.Write(grid.Columns[c].HeaderText + "\t");
+                }
+                Console.WriteLine();
+
+                // Print rows
+                for (int r = 0; r < grid.Rows.Count; r++)
+                {
+                    for (int c = 0; c < grid.Columns.Count; c++)
+                    {
+                        Console.Write(grid.Rows[r].Cells[c].Text + "\t");
+                    }
+                    Console.WriteLine();
+                }
+                Console.WriteLine("==============================");
+            };
+            form.Controls.Add(btnPrintData);
+
+            // Remove Second Column button
+            var btnRemoveSecondColumn = new Button();
+            btnRemoveSecondColumn.Text = "Remove 2nd Column";
+            btnRemoveSecondColumn.Location = new Point(20, 480);
+            btnRemoveSecondColumn.Size = new Size(140, 30);
+            btnRemoveSecondColumn.Click += (s, e) =>
+            {
+                if (grid.Columns.Count >= 2)
+                {
+                    grid.Columns.RemoveAt(1);
+                    Console.WriteLine($"Removed column at index 1, total columns: {grid.Columns.Count}");
+                }
+                else
+                {
+                    Console.WriteLine("Not enough columns to remove second column");
+                }
+            };
+            form.Controls.Add(btnRemoveSecondColumn);
+
+            // Remove Second Row button
+            var btnRemoveSecondRow = new Button();
+            btnRemoveSecondRow.Text = "Remove 2nd Row";
+            btnRemoveSecondRow.Location = new Point(170, 480);
+            btnRemoveSecondRow.Size = new Size(140, 30);
+            btnRemoveSecondRow.Click += (s, e) =>
+            {
+                if (grid.Rows.Count >= 2)
+                {
+                    grid.Rows.RemoveAt(1);
+                    Console.WriteLine($"Removed row at index 1, total rows: {grid.Rows.Count}");
+                }
+                else
+                {
+                    Console.WriteLine("Not enough rows to remove second row");
+                }
+            };
+            form.Controls.Add(btnRemoveSecondRow);
 
             return form;
         }

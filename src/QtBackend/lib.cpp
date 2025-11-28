@@ -38,6 +38,8 @@
 #include <QTreeWidgetItem>
 #include <QImageReader>
 #include <QSplitter>
+#include <QTableWidget>
+#include <QHeaderView>
 #include <QMap>
 #include <QEventLoop>
 
@@ -1483,5 +1485,75 @@ extern "C" {
         QWidget* o = (QWidget*)owner;
         // Set parent with Qt::Window flag to keep it as a top-level window but owned
         c->setParent(o, Qt::Window);
+    }
+
+    // DataGridView / QTableWidget Support
+    EXPORT void* QTableWidget_Create(void* parent) {
+        QTableWidget* table = new QTableWidget((QWidget*)parent);
+        table->setEditTriggers(QAbstractItemView::NoEditTriggers); // Read-only by default
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        return table;
+    }
+
+    EXPORT void QTableWidget_SetRowCount(void* table, int count) {
+        ((QTableWidget*)table)->setRowCount(count);
+    }
+
+    EXPORT int QTableWidget_GetRowCount(void* table) {
+        return ((QTableWidget*)table)->rowCount();
+    }
+
+    EXPORT void QTableWidget_SetColumnCount(void* table, int count) {
+        ((QTableWidget*)table)->setColumnCount(count);
+    }
+
+    EXPORT int QTableWidget_GetColumnCount(void* table) {
+        return ((QTableWidget*)table)->columnCount();
+    }
+
+    EXPORT void QTableWidget_SetCellText(void* table, int row, int column, const char* text) {
+        QTableWidget* t = (QTableWidget*)table;
+        QTableWidgetItem* item = t->item(row, column);
+        if (!item) {
+            item = new QTableWidgetItem();
+            t->setItem(row, column, item);
+        }
+        item->setText(QString::fromUtf8(text));
+    }
+
+    EXPORT void QTableWidget_GetCellText_Invoke(void* table, int row, int column, ReadQStringCallback cb, void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        QTableWidgetItem* item = t->item(row, column);
+        QString text = item ? item->text() : QString();
+        cb((const void*)text.constData(), text.size(), userData);
+    }
+
+    EXPORT void QTableWidget_SetColumnHeaderText(void* table, int column, const char* text) {
+        QTableWidget* t = (QTableWidget*)table;
+        QTableWidgetItem* header = new QTableWidgetItem(QString::fromUtf8(text));
+        t->setHorizontalHeaderItem(column, header);
+    }
+
+    EXPORT void QTableWidget_GetColumnHeaderText_Invoke(void* table, int column, ReadQStringCallback cb, void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        QTableWidgetItem* header = t->horizontalHeaderItem(column);
+        QString text = header ? header->text() : QString();
+        cb((const void*)text.constData(), text.size(), userData);
+    }
+
+    EXPORT void QTableWidget_InsertRow(void* table, int row) {
+        ((QTableWidget*)table)->insertRow(row);
+    }
+
+    EXPORT void QTableWidget_RemoveRow(void* table, int row) {
+        ((QTableWidget*)table)->removeRow(row);
+    }
+
+    EXPORT void QTableWidget_InsertColumn(void* table, int column) {
+        ((QTableWidget*)table)->insertColumn(column);
+    }
+
+    EXPORT void QTableWidget_RemoveColumn(void* table, int column) {
+        ((QTableWidget*)table)->removeColumn(column);
     }
 }

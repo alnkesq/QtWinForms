@@ -507,5 +507,44 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void Form_SetOwner(IntPtr child, IntPtr owner);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QTableWidget_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_SetRowCount(IntPtr table, int count);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QTableWidget_GetRowCount(IntPtr table);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_SetColumnCount(IntPtr table, int count);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QTableWidget_GetColumnCount(IntPtr table);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_SetCellText(IntPtr table, int row, int column, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTableWidget_GetCellText_Invoke(IntPtr table, int row, int column, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_SetColumnHeaderText(IntPtr table, int column, [MarshalAs(UnmanagedType.LPStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTableWidget_GetColumnHeaderText_Invoke(IntPtr table, int column, delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_InsertRow(IntPtr table, int row);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_RemoveRow(IntPtr table, int row);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_InsertColumn(IntPtr table, int column);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_RemoveColumn(IntPtr table, int column);
     }
 }
