@@ -159,32 +159,46 @@ namespace System.Windows.Forms
             EnsureIsQWidget();
 
 
-            // 0th element in WinForms is topmost
-            // 0th element in Qt is bottommost, so we reverse-traverse
-            for (int i = Controls.Count - 1; i >= 0; i--)
+            if (this is SplitContainer)
             {
-                var child = Controls[i];
-                child.CreateControl();
-
-                // Set parent relationship in Qt
-                NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
-
-                // Apply position and size (Qt needs this after setParent)
-                NativeMethods.QWidget_Move(child.QtHandle, child.Location.X, child.Location.Y);
-                NativeMethods.QWidget_Resize(child.QtHandle, child.Size.Width, child.Size.Height);
-
-                // Initialize anchor bounds now that parent is set
-                child.InitializeAnchorBounds();
-
-                // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
-                if (child.Visible)
+                foreach (var child in Controls)
                 {
-                    NativeMethods.QWidget_Show(child.QtHandle);
+                    CreateChild(child);
+                }
+            }
+            else
+            {
+                // 0th element in WinForms is topmost
+                // 0th element in Qt is bottommost, so we reverse-traverse
+                for (int i = Controls.Count - 1; i >= 0; i--)
+                {
+                    CreateChild(Controls[i]);
                 }
             }
 
             // Trigger layout to handle docking/anchoring
             PerformLayout();
+        }
+
+        private void CreateChild(Control child)
+        {
+            child.CreateControl();
+
+            // Set parent relationship in Qt
+            NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
+
+            // Apply position and size (Qt needs this after setParent)
+            NativeMethods.QWidget_Move(child.QtHandle, child.Location.X, child.Location.Y);
+            NativeMethods.QWidget_Resize(child.QtHandle, child.Size.Width, child.Size.Height);
+
+            // Initialize anchor bounds now that parent is set
+            child.InitializeAnchorBounds();
+
+            // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
+            if (child.Visible)
+            {
+                NativeMethods.QWidget_Show(child.QtHandle);
+            }
         }
 
         protected void SetCommonProperties()
