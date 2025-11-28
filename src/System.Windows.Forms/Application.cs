@@ -79,5 +79,9 @@ namespace System.Windows.Forms
         public static void SetCompatibleTextRenderingDefault(bool v)
         {
         }
+
+        public static void SetHighDpiMode(HighDpiMode mode)
+        {
+        }
     }
 }
