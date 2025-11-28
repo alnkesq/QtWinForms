@@ -338,7 +338,14 @@ namespace System.Windows.Forms
                 {
                     if (node._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                     {
-                        NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
+                        if (_owner is TreeView treeView)
+                        {
+                            NativeMethods.QTreeWidget_RemoveTopLevelItem(treeView.QtHandle, node._nativeItem);
+                        }
+                        else
+                        {
+                            NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
+                        }
                         node._nativeItem = IntPtr.Zero;
                     }
                     node._parent = null;
@@ -384,7 +391,14 @@ namespace System.Windows.Forms
                 TreeNode node = (TreeNode)_innerList[index]!;
                 if (node._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                 {
-                    NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
+                    if (_owner is TreeView treeView)
+                    {
+                        NativeMethods.QTreeWidget_RemoveTopLevelItem(treeView.QtHandle, node._nativeItem);
+                    }
+                    else
+                    {
+                        NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
+                    }
                     node._nativeItem = IntPtr.Zero;
                 }
                 node._parent = null;
@@ -399,7 +413,14 @@ namespace System.Windows.Forms
                     TreeNode oldNode = (TreeNode)_innerList[index]!;
                     if (oldNode._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                     {
-                        NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, oldNode._nativeItem);
+                        if (_owner is TreeView treeView)
+                        {
+                            NativeMethods.QTreeWidget_RemoveTopLevelItem(treeView.QtHandle, oldNode._nativeItem);
+                        }
+                        else
+                        {
+                            NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, oldNode._nativeItem);
+                        }
                         oldNode._nativeItem = IntPtr.Zero;
                     }
                     oldNode._parent = null;

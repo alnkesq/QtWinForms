@@ -1307,6 +1307,16 @@ extern "C" {
         delete child;
     }
 
+    EXPORT void QTreeWidget_RemoveTopLevelItem(void* treeWidget, void* item) {
+        QTreeWidget* tw = (QTreeWidget*)treeWidget;
+        QTreeWidgetItem* i = (QTreeWidgetItem*)item;
+        int index = tw->indexOfTopLevelItem(i);
+        if (index != -1) {
+            tw->takeTopLevelItem(index);
+            delete i;
+        }
+    }
+
     EXPORT void* QTreeWidget_GetCurrentItem(void* treeWidget) {
         return ((QTreeWidget*)treeWidget)->currentItem();
     }

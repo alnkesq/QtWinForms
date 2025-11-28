@@ -446,6 +446,9 @@ namespace System.Windows.Forms
         public static extern void QTreeWidgetItem_RemoveChild(IntPtr parentItem, IntPtr childItem);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_RemoveTopLevelItem(IntPtr treeWidget, IntPtr item);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QTreeWidget_GetCurrentItem(IntPtr treeWidget);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
