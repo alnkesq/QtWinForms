@@ -336,19 +336,7 @@ namespace System.Windows.Forms
             {
                 foreach (TreeNode node in _innerList)
                 {
-                    if (node._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
-                    {
-                        if (_owner is TreeView treeView)
-                        {
-                            NativeMethods.QTreeWidget_RemoveTopLevelItem(treeView.QtHandle, node._nativeItem);
-                        }
-                        else
-                        {
-                            NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, node._nativeItem);
-                        }
-                        node._nativeItem = IntPtr.Zero;
-                    }
-                    node._parent = null;
+                    RemoveNodeCore(node);
                 }
                 _innerList.Clear();
             }
@@ -389,6 +377,30 @@ namespace System.Windows.Forms
             public void RemoveAt(int index)
             {
                 TreeNode node = (TreeNode)_innerList[index]!;
+                RemoveNodeCore(node);
+                _innerList.RemoveAt(index);
+            }
+
+            public TreeNode this[int index]
+            {
+                get => (TreeNode)_innerList[index]!;
+                set
+                {
+                    TreeNode oldNode = (TreeNode)_innerList[index]!;
+                    RemoveNodeCore(oldNode);
+
+                    _innerList[index] = value;
+                    value._parent = Owner;
+
+                    if (Owner.IsNativeHandleCreated)
+                    {
+                        value.EnsureNativeItem();
+                    }
+                }
+            }
+
+            private void RemoveNodeCore(TreeNode node)
+            {
                 if (node._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
                 {
                     if (_owner is TreeView treeView)
@@ -402,37 +414,6 @@ namespace System.Windows.Forms
                     node._nativeItem = IntPtr.Zero;
                 }
                 node._parent = null;
-                _innerList.RemoveAt(index);
-            }
-
-            public TreeNode this[int index]
-            {
-                get => (TreeNode)_innerList[index]!;
-                set
-                {
-                    TreeNode oldNode = (TreeNode)_innerList[index]!;
-                    if (oldNode._nativeItem != IntPtr.Zero && _owner != null && _owner.IsNativeHandleCreated)
-                    {
-                        if (_owner is TreeView treeView)
-                        {
-                            NativeMethods.QTreeWidget_RemoveTopLevelItem(treeView.QtHandle, oldNode._nativeItem);
-                        }
-                        else
-                        {
-                            NativeMethods.QTreeWidgetItem_RemoveChild(((TreeNode)_owner)._nativeItem, oldNode._nativeItem);
-                        }
-                        oldNode._nativeItem = IntPtr.Zero;
-                    }
-                    oldNode._parent = null;
-
-                    _innerList[index] = value;
-                    value._parent = Owner;
-
-                    if (Owner.IsNativeHandleCreated)
-                    {
-                        value.EnsureNativeItem();
-                    }
-                }
             }
 
             object? IList.this[int index]
