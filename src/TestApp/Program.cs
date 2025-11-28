@@ -2374,21 +2374,20 @@ namespace TestApp
             col3.HeaderText = "City";
             grid.Columns.Add(col3);
 
-            // Add rows with data
             int row1 = grid.Rows.Add();
-            grid.Rows[row1].Cells[0].Text = "Alice";
-            grid.Rows[row1].Cells[1].Text = "25";
-            grid.Rows[row1].Cells[2].Text = "New York";
+            grid.Rows[row1].Cells[0].Value = "Alice";
+            grid.Rows[row1].Cells[1].Value = "25";
+            grid.Rows[row1].Cells[2].Value = "New York";
 
             int row2 = grid.Rows.Add();
-            grid.Rows[row2].Cells[0].Text = "Bob";
-            grid.Rows[row2].Cells[1].Text = "30";
-            grid.Rows[row2].Cells[2].Text = "London";
+            grid.Rows[row2].Cells[0].Value = "Bob";
+            grid.Rows[row2].Cells[1].Value = "30";
+            grid.Rows[row2].Cells[2].Value = "London";
 
             int row3 = grid.Rows.Add();
-            grid.Rows[row3].Cells[0].Text = "Charlie";
-            grid.Rows[row3].Cells[1].Text = "35";
-            grid.Rows[row3].Cells[2].Text = "Paris";
+            grid.Rows[row3].Cells[0].Value = "Charlie";
+            grid.Rows[row3].Cells[1].Value = "35";
+            grid.Rows[row3].Cells[2].Value = "Paris";
 
             form.Controls.Add(grid);
 
@@ -2400,9 +2399,9 @@ namespace TestApp
             btnAddRow.Click += (s, e) =>
             {
                 int newRow = grid.Rows.Add();
-                grid.Rows[newRow].Cells[0].Text = $"Person {newRow + 1}";
-                grid.Rows[newRow].Cells[1].Text = (20 + newRow).ToString();
-                grid.Rows[newRow].Cells[2].Text = "Unknown";
+                grid.Rows[newRow].Cells[0].Value = $"Person {newRow + 1}";
+                grid.Rows[newRow].Cells[1].Value = (20 + newRow).ToString();
+                grid.Rows[newRow].Cells[2].Value = "Unknown";
                 Console.WriteLine($"Added row {newRow}, total rows: {grid.Rows.Count}");
             };
             form.Controls.Add(btnAddRow);
@@ -2487,7 +2486,7 @@ namespace TestApp
                 {
                     for (int c = 0; c < grid.Columns.Count; c++)
                     {
-                        Console.Write(grid.Rows[r].Cells[c].Text + "\t");
+                        Console.Write(grid.Rows[r].Cells[c].Value + "\t");
                     }
                     Console.WriteLine();
                 }

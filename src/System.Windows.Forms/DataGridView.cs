@@ -61,7 +61,7 @@ namespace System.Windows.Forms
                 {
                     foreach (var cell in row.Cells)
                     {
-                        NativeMethods.QTableWidget_SetCellText(QtHandle, cell.RowIndex, cell.ColumnIndex, cell.Text);
+                        cell.ApplyValue();
                     }
                 }
             }
@@ -89,12 +89,8 @@ namespace System.Windows.Forms
             {
                 var args = new DataGridViewCellValueEventArgs(columnIndex, rowIndex);
                 CellValueNeeded(this, args);
-                
-                if (args.Value != null)
-                {
-                    string text = args.Value.ToString() ?? "";
-                    NativeMethods.QTableWidget_SetCellText(QtHandle, rowIndex, columnIndex, text);
-                }
+
+                NativeMethods.QTableWidget_SetCellText(QtHandle, rowIndex, columnIndex, DataGridViewCell.ValueToString(args.Value));
             }
         }
 

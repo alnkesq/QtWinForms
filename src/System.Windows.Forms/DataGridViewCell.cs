@@ -18,26 +18,31 @@ namespace System.Windows.Forms
         
         public object? Tag { get; set; }
 
-        private string _text = "";
-        public string Text
+        private object? _value;
+        public object? Value
         {
-            get => _text;
+            get => _value;
             set
             {
-                _text = value ?? "";
+                _value = value;
                 if (_owner != null && _owner.IsHandleCreated)
                 {
-                    NativeMethods.QTableWidget_SetCellText(_owner.QtHandle, _rowIndex, _columnIndex, _text);
+                    ApplyValue();
                 }
             }
+        }
+
+        internal void ApplyValue()
+        {
+            NativeMethods.QTableWidget_SetCellText(_owner!.QtHandle, _rowIndex, _columnIndex, ValueToString(_value));
         }
 
         [Obsolete(Control.NotImplementedWarning)] public bool Selected { get; set; }
         [Obsolete(Control.NotImplementedWarning)] public DataGridViewCellStyle? Style { get; set; }
 
-        public override string ToString()
+        public override string? ToString()
         {
-            return Text;
+            return Value?.ToString();
         }
 
         internal void ClearIndexes()
@@ -45,6 +50,11 @@ namespace System.Windows.Forms
             _rowIndex = -1;
             _columnIndex = -1;
             _owner = null;
+        }
+
+        internal static string ValueToString(object? value)
+        {
+            return value?.ToString() ?? string.Empty;
         }
     }
 }
