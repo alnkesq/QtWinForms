@@ -2013,8 +2013,14 @@ namespace TestApp
 
             // Add root nodes
             var node1 = treeView.Nodes.Add("Root Node 1");
+            node1.ForeColor = Color.Red;
+
             var node2 = treeView.Nodes.Add("Root Node 2");
+            node2.BackColor = Color.LightBlue;
+
             var node3 = treeView.Nodes.Add("Root Node 3");
+            node3.ForeColor = Color.Blue;
+            node3.BackColor = Color.LightGreen;
 
             // Add child nodes to Root Node 1
             var child1_1 = node1.Nodes.Add("Child 1.1");

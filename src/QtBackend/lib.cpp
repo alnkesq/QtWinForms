@@ -1581,4 +1581,24 @@ extern "C" {
         VirtualModeDelegate* delegate = new VirtualModeDelegate(callback, userData, t);
         t->setItemDelegate(delegate);
     }
+
+    EXPORT void QTreeWidgetItem_SetForeColor(void* item, int column, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+        QTreeWidgetItem* i = (QTreeWidgetItem*)item;
+        i->setForeground(column, QBrush(QColor(r, g, b, a)));
+    }
+
+    EXPORT void QTreeWidgetItem_SetBackColor(void* item, int column, unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+        QTreeWidgetItem* i = (QTreeWidgetItem*)item;
+        i->setBackground(column, QBrush(QColor(r, g, b, a)));
+    }
+
+    EXPORT void QTreeWidgetItem_ClearForeColor(void* item, int column) {
+        QTreeWidgetItem* i = (QTreeWidgetItem*)item;
+        i->setData(column, Qt::ForegroundRole, QVariant());
+    }
+
+    EXPORT void QTreeWidgetItem_ClearBackColor(void* item, int column) {
+        QTreeWidgetItem* i = (QTreeWidgetItem*)item;
+        i->setData(column, Qt::BackgroundRole, QVariant());
+    }
 }

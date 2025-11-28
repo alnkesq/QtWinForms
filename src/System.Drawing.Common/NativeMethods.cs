@@ -549,5 +549,17 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTableWidget_ConnectCellDataNeeded(IntPtr table, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_SetForeColor(IntPtr item, int column, byte r, byte g, byte b, byte a);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_SetBackColor(IntPtr item, int column, byte r, byte g, byte b, byte a);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_ClearForeColor(IntPtr item, int column);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_ClearBackColor(IntPtr item, int column);
     }
 }

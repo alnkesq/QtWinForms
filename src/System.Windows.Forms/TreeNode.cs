@@ -102,8 +102,53 @@ namespace System.Windows.Forms
 
         public bool IsExpanded => _nativeItem != default && NativeMethods.QTreeWidgetItem_IsExpanded(_nativeItem) != 0;
 
-        [Obsolete(Control.NotImplementedWarning)] public Color ForeColor { get; set; }
-        [Obsolete(Control.NotImplementedWarning)] public Color BackColor { get; set; }
+        private Color _foreColor = Color.Empty;
+        public Color ForeColor
+        {
+            get => _foreColor;
+            set
+            {
+                if (_foreColor != value)
+                {
+                    _foreColor = value;
+                    if (_nativeItem != IntPtr.Zero)
+                    {
+                        if (_foreColor.IsEmpty)
+                        {
+                            NativeMethods.QTreeWidgetItem_ClearForeColor(_nativeItem, 0);
+                        }
+                        else
+                        {
+                            NativeMethods.QTreeWidgetItem_SetForeColor(_nativeItem, 0, _foreColor.R, _foreColor.G, _foreColor.B, _foreColor.A);
+                        }
+                    }
+                }
+            }
+        }
+
+        private Color _backColor = Color.Empty;
+        public Color BackColor
+        {
+            get => _backColor;
+            set
+            {
+                if (_backColor != value)
+                {
+                    _backColor = value;
+                    if (_nativeItem != IntPtr.Zero)
+                    {
+                        if (_backColor.IsEmpty)
+                        {
+                            NativeMethods.QTreeWidgetItem_ClearBackColor(_nativeItem, 0);
+                        }
+                        else
+                        {
+                            NativeMethods.QTreeWidgetItem_SetBackColor(_nativeItem, 0, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
+                        }
+                    }
+                }
+            }
+        }
         public TreeNode()
         {
         }
@@ -186,6 +231,16 @@ namespace System.Windows.Forms
                 if (!string.IsNullOrEmpty(_toolTipText))
                 {
                     NativeMethods.QTreeWidgetItem_SetToolTip(_nativeItem, 0, _toolTipText);
+                }
+
+                if (!_foreColor.IsEmpty)
+                {
+                    NativeMethods.QTreeWidgetItem_SetForeColor(_nativeItem, 0, _foreColor.R, _foreColor.G, _foreColor.B, _foreColor.A);
+                }
+
+                if (!_backColor.IsEmpty)
+                {
+                    NativeMethods.QTreeWidgetItem_SetBackColor(_nativeItem, 0, _backColor.R, _backColor.G, _backColor.B, _backColor.A);
                 }
 
                 if (_nodes != null)
