@@ -47,6 +47,7 @@ namespace TestApp
                 Console.WriteLine("26. DataGridView Test");
                 Console.WriteLine("27. DataGridView VirtualMode Test");
                 Console.WriteLine("28. Z-Order Test");
+                Console.WriteLine("29. Accept/Cancel button Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -197,9 +198,15 @@ namespace TestApp
                         testForm = CreateZOrderTest();
                         break;
 
+                    case "29":
+                        Console.WriteLine("Running Accept/cancel Button Test...");
+                        testForm = CreateAcceptCancelButtonTest();
+                        break;
+
                     default:
-                        Console.WriteLine("Invalid choice, running Dock Test...");
-                        testForm = TestDock.CreateDockTestForm();
+                        Console.WriteLine("Invalid choice.");
+                        Environment.Exit(1);
+                        testForm = null!;
                         break;
                 }
 
@@ -348,6 +355,8 @@ namespace TestApp
             {
                 MessageBox.Show($"Link clicked!");
             };
+            form.AcceptButton = button;
+            form.CancelButton = button2;
             form.Controls.Add(linkLabel);
 
             form.Controls.Add(panel);
@@ -2720,6 +2729,82 @@ namespace TestApp
                 form.Controls.SetChildIndex(btn2, 0);
             };
             form.Controls.Add(btnSetIndex);
+
+            return form;
+        }
+
+        static Form CreateAcceptCancelButtonTest()
+        {
+            var form = new Form();
+            form.Text = "AcceptButton and CancelButton Test";
+            form.Size = new Size(500, 350);
+
+            var label = new Label();
+            label.Text = "Press Enter to trigger OK button\nPress Escape to trigger Cancel button";
+            label.Location = new Point(20, 20);
+            label.Size = new Size(450, 60);
+            form.Controls.Add(label);
+
+            var textBox = new TextBox();
+            textBox.Text = "Type here and press Enter...";
+            textBox.Location = new Point(20, 90);
+            textBox.Size = new Size(300, 30);
+            form.Controls.Add(textBox);
+
+            var resultLabel = new Label();
+            resultLabel.Text = "Result: (none)";
+            resultLabel.Location = new Point(20, 140);
+            resultLabel.Size = new Size(450, 30);
+            resultLabel.ForeColor = Color.Blue;
+            form.Controls.Add(resultLabel);
+
+            var okButton = new Button();
+            okButton.Text = "OK";
+            okButton.Location = new Point(20, 200);
+            okButton.Size = new Size(100, 40);
+            okButton.Click += (s, e) =>
+            {
+                resultLabel.Text = $"Result: OK clicked! Text = '{textBox.Text}'";
+                resultLabel.ForeColor = Color.Green;
+                Console.WriteLine("OK button clicked!");
+            };
+            form.Controls.Add(okButton);
+
+            var cancelButton = new Button();
+            cancelButton.Text = "Cancel";
+            cancelButton.Location = new Point(140, 200);
+            cancelButton.Size = new Size(100, 40);
+            cancelButton.Click += (s, e) =>
+            {
+                resultLabel.Text = "Result: Cancel clicked!";
+                resultLabel.ForeColor = Color.Red;
+                textBox.Text = "";
+                Console.WriteLine("Cancel button clicked!");
+            };
+            form.Controls.Add(cancelButton);
+
+            var applyButton = new Button();
+            applyButton.Text = "Apply";
+            applyButton.Location = new Point(260, 200);
+            applyButton.Size = new Size(100, 40);
+            applyButton.Click += (s, e) =>
+            {
+                resultLabel.Text = "Result: Apply clicked!";
+                resultLabel.ForeColor = Color.Orange;
+                Console.WriteLine("Apply button clicked!");
+            };
+            form.Controls.Add(applyButton);
+
+            // Set AcceptButton and CancelButton
+            form.AcceptButton = okButton;
+            form.CancelButton = cancelButton;
+
+            var infoLabel = new Label();
+            infoLabel.Text = "AcceptButton = OK, CancelButton = Cancel";
+            infoLabel.Location = new Point(20, 260);
+            infoLabel.Size = new Size(450, 30);
+            infoLabel.ForeColor = Color.DarkGreen;
+            form.Controls.Add(infoLabel);
 
             return form;
         }

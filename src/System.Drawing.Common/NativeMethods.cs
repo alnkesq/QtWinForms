@@ -573,5 +573,11 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_ClearBackColor(IntPtr item, int column);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QPushButton_Click(IntPtr button);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QWidget_SetAcceptCancelButtons(IntPtr form, IntPtr acceptButton, IntPtr cancelButton);
     }
 }

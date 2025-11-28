@@ -23,8 +23,44 @@ namespace System.Windows.Forms
         public event FormClosedEventHandler? FormClosed;
         public event FormClosingEventHandler? FormClosing;
 
-        [Obsolete(NotImplementedWarning)] public Button? AcceptButton { get; set; }
-        [Obsolete(NotImplementedWarning)] public Button? CancelButton { get; set; }
+        private Button? _acceptButton;
+        private Button? _cancelButton;
+
+        public Button? AcceptButton
+        {
+            get => _acceptButton;
+            set
+            {
+                _acceptButton = value;
+                UpdateAcceptCancelButtons();
+            }
+        }
+
+        public Button? CancelButton
+        {
+            get => _cancelButton;
+            set
+            {
+                _cancelButton = value;
+                UpdateAcceptCancelButtons();
+            }
+        }
+
+        private void UpdateAcceptCancelButtons()
+        {
+            if (IsHandleCreated)
+            {
+                _acceptButton?.CreateControl();
+                _cancelButton?.CreateControl();
+
+                NativeMethods.QWidget_SetAcceptCancelButtons(
+                    QtHandle,
+                    _acceptButton?.QtHandle ?? IntPtr.Zero,
+                    _cancelButton?.QtHandle ?? IntPtr.Zero
+                );
+            }
+        }
+
         [Obsolete(NotImplementedWarning)] public Size MinimumSize { get; set; }
 
         protected virtual void OnLoad(EventArgs e) => Load?.Invoke(this, e);
@@ -79,6 +115,7 @@ namespace System.Windows.Forms
             // Connect resize and move events
             ConnectResizeEvent();
             ConnectCloseEvent();
+            UpdateAcceptCancelButtons();
             Visible = prevVisible;
             OnLoad(EventArgs.Empty);
         }

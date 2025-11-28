@@ -1511,6 +1511,68 @@ extern "C" {
         c->setParent(o, Qt::Window);
     }
 
+    EXPORT void QPushButton_Click(void* button) {
+        QPushButton* btn = (QPushButton*)button;
+        btn->click();
+    }
+
+    // Event filter for handling Accept/Cancel buttons
+    class AcceptCancelEventFilter : public QObject {
+    private:
+        void* acceptButton;
+        void* cancelButton;
+
+    public:
+        AcceptCancelEventFilter(void* accept, void* cancel)
+            : acceptButton(accept), cancelButton(cancel) {}
+
+        void setAcceptButton(void* accept) { acceptButton = accept; }
+        void setCancelButton(void* cancel) { cancelButton = cancel; }
+
+    protected:
+        bool eventFilter(QObject* obj, QEvent* event) override {
+            if (event->type() == QEvent::KeyPress) {
+                QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+                
+                // Handle Enter/Return key for AcceptButton
+                if ((keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) && acceptButton) {
+                    QPushButton* btn = (QPushButton*)acceptButton;
+                    if (btn->isEnabled() && btn->isVisible()) {
+                        btn->click();
+                        return true; // Event handled
+                    }
+                }
+                
+                // Handle Escape key for CancelButton
+                if (keyEvent->key() == Qt::Key_Escape && cancelButton) {
+                    QPushButton* btn = (QPushButton*)cancelButton;
+                    if (btn->isEnabled() && btn->isVisible()) {
+                        btn->click();
+                        return true; // Event handled
+                    }
+                }
+            }
+            return QObject::eventFilter(obj, event);
+        }
+    };
+
+    static QMap<QWidget*, AcceptCancelEventFilter*> g_acceptCancelFilters;
+
+    EXPORT void QWidget_SetAcceptCancelButtons(void* form, void* acceptButton, void* cancelButton) {
+        QWidget* w = (QWidget*)form;
+        
+        // Get or create the event filter for this form
+        AcceptCancelEventFilter* filter = g_acceptCancelFilters.value(w, nullptr);
+        if (!filter) {
+            filter = new AcceptCancelEventFilter(acceptButton, cancelButton);
+            w->installEventFilter(filter);
+            g_acceptCancelFilters.insert(w, filter);
+        } else {
+            filter->setAcceptButton(acceptButton);
+            filter->setCancelButton(cancelButton);
+        }
+    }
+
     // DataGridView / QTableWidget Support
     EXPORT void* QTableWidget_Create(void* parent) {
         QTableWidget* table = new QTableWidget((QWidget*)parent);
