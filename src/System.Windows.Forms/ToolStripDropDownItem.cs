@@ -7,6 +7,7 @@ namespace System.Windows.Forms
     public abstract class ToolStripDropDownItem : ToolStripItem
     {
         private ToolStripDropDown? _dropDown;
+        internal override bool IsQWidgetCreated => false;
 
         public ToolStripDropDown DropDown
         {

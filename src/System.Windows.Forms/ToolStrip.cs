@@ -13,19 +13,16 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                QtHandle = CreateNativeControlCore();
-                SetCommonProperties();
+            QtHandle = CreateNativeControlCore();
+            SetCommonProperties();
 
-                foreach (var item in _items)
+            foreach (var item in _items)
+            {
+                if (!item.IsHandleCreated)
                 {
-                    if (!item.IsHandleCreated)
-                    {
-                        item.CreateControl();
-                    }
-                    AddNativeItem(item);
+                    item.CreateControl();
                 }
+                AddNativeItem(item);
             }
         }
 

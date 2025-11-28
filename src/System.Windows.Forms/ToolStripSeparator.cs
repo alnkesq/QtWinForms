@@ -4,13 +4,10 @@ namespace System.Windows.Forms
 {
     public class ToolStripSeparator : ToolStripItem
     {
+        internal override bool IsQWidgetCreated => false;
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                // Create a separator action
-                QtHandle = NativeMethods.QAction_CreateSeparator();
-            }
+            QtHandle = NativeMethods.QAction_CreateSeparator();
         }
     }
 }

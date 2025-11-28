@@ -108,6 +108,8 @@ namespace System.Windows.Forms
 
         public bool IsHandleCreated => QtHandle != default;
 
+        internal virtual bool IsQWidgetCreated => IsHandleCreated; // Not all controls are backed by QWidgets
+
         public ControlCollection Controls { get; protected set; }
 
         public void CreateControl()
@@ -127,6 +129,7 @@ namespace System.Windows.Forms
 
         private unsafe void ConnectKeyEvent()
         {
+            EnsureIsQWidget();
             delegate* unmanaged[Cdecl]<IntPtr, int, int, byte> callback = &OnKeyEventCallback;
             NativeMethods.QWidget_ConnectKeyEvent(QtHandle, callback, GCHandlePtr);
         }
@@ -153,6 +156,7 @@ namespace System.Windows.Forms
 
         protected void CreateChildren()
         {
+            EnsureIsQWidget();
 
             // Create handles for any child controls that were added before this control was created
             foreach (Control child in Controls)
@@ -182,6 +186,7 @@ namespace System.Windows.Forms
 
         protected void SetCommonProperties()
         {
+            EnsureIsQWidget();
             Application.SetMainThreadOrEnsureMainThread();
             UpdateContextMenuPolicy();
 
@@ -216,6 +221,12 @@ namespace System.Windows.Forms
             }
         }
 
+        private void EnsureIsQWidget()
+        {
+            if (!IsQWidgetCreated)
+                throw new InvalidOperationException("Control is not backed by QWidget: " + this.GetType().FullName);
+        }
+
         private string _unusedText = string.Empty;
         public virtual string Text
         {
@@ -244,6 +255,7 @@ namespace System.Windows.Forms
 
         protected virtual void UpdateVisibleCore(bool value)
         {
+            if (!IsQWidgetCreated) return;
             if (value)
             {
                 NativeMethods.QWidget_Show(QtHandle);
@@ -270,7 +282,7 @@ namespace System.Windows.Forms
             set
             {
                 _location = value;
-                if (IsHandleCreated)
+                if (IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_Move(QtHandle, value.X, value.Y);
                 }
@@ -284,7 +296,7 @@ namespace System.Windows.Forms
             set
             {
                 _size = value;
-                if (IsHandleCreated)
+                if (IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_Resize(QtHandle, value.Width, value.Height);
                 }
@@ -322,7 +334,7 @@ namespace System.Windows.Forms
             set
             {
                 _backColor = value;
-                if (IsHandleCreated)
+                if (IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_SetBackColor(QtHandle, value.R, value.G, value.B, value.A);
                 }
@@ -335,7 +347,7 @@ namespace System.Windows.Forms
             set
             {
                 _foreColor = value;
-                if (IsHandleCreated)
+                if (IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_SetForeColor(QtHandle, value.R, value.G, value.B, value.A);
                 }
@@ -349,7 +361,7 @@ namespace System.Windows.Forms
             set
             {
                 _enabled = value;
-                if (IsHandleCreated)
+                if (IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_SetEnabled(QtHandle, value);
                 }
@@ -439,7 +451,7 @@ namespace System.Windows.Forms
             _location = new Point(x, y);
             _size = new Size(width, height);
 
-            if (IsHandleCreated)
+            if (IsQWidgetCreated)
             {
                 if (positionChanged)
                     NativeMethods.QWidget_Move(QtHandle, x, y);
@@ -624,7 +636,10 @@ namespace System.Windows.Forms
 
             if (IsHandleCreated)
             {
-                NativeMethods.QWidget_Destroy(QtHandle);
+                if (IsQWidgetCreated)
+                    NativeMethods.QWidget_Destroy(QtHandle);
+                else
+                    Console.Error.WriteLine("TODO: dispose non-QWidget control");
                 QtHandle = IntPtr.Zero;
             }
 
@@ -645,7 +660,7 @@ namespace System.Windows.Forms
                 if (_font != value)
                 {
                     _font = value;
-                    if (IsHandleCreated && _font != null)
+                    if (IsQWidgetCreated && _font != null)
                     {
                         NativeMethods.QWidget_SetFont(QtHandle, _font.FontFamily.Name, _font.SizeInPoints, _font.Bold, _font.Italic, _font.Underline, _font.Strikeout);
                     }
@@ -680,7 +695,7 @@ namespace System.Windows.Forms
 
         private void UpdateContextMenuPolicy()
         {
-            if (IsHandleCreated)
+            if (IsQWidgetCreated)
             {
                 if (_contextMenuStrip != null)
                 {
@@ -696,6 +711,7 @@ namespace System.Windows.Forms
 
         private unsafe void ConnectCustomContextMenuRequested()
         {
+            EnsureIsQWidget();
             delegate* unmanaged[Cdecl]<nint, int, int, void> callback = &OnCustomContextMenuRequestedCallback;
             NativeMethods.QWidget_ConnectCustomContextMenuRequested(QtHandle, (IntPtr)callback, GCHandlePtr);
         }
@@ -718,7 +734,7 @@ namespace System.Windows.Forms
 
         public Point PointToScreen(Point p)
         {
-            if (!IsHandleCreated) return p;
+            if (!IsQWidgetCreated) return p;
             int sx = 0, sy = 0;
             NativeMethods.QWidget_MapToGlobal(QtHandle, p.X, p.Y, out sx, out sy);
             return new Point(sx, sy);

@@ -18,8 +18,6 @@ namespace System.Windows.Forms
 
         protected unsafe override void CreateHandle()
         {
-            if (IsHandleCreated) return;
-
             QtHandle = NativeMethods.QDateTimeEdit_Create(Parent?.QtHandle ?? IntPtr.Zero);
 
             // Set initial values

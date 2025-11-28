@@ -11,23 +11,20 @@ namespace System.Windows.Forms
         private bool _hasChildren = false;
 
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
-
+        internal override bool IsQWidgetCreated => false;
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+            // If this item has children, create a QMenu; otherwise create a QAction
+            if (_hasChildren)
             {
-                // If this item has children, create a QMenu; otherwise create a QAction
-                if (_hasChildren)
-                {
-                    DropDown.CreateControl();
-                    QtHandle = NativeMethods.QAction_Create(Text);
-                    NativeMethods.QAction_SetMenu(QtHandle, DropDown.QtHandle);
-                }
-                else
-                {
-                    QtHandle = NativeMethods.QAction_Create(Text);
-                    ConnectClickEvent();
-                }
+                DropDown.CreateControl();
+                QtHandle = NativeMethods.QAction_Create(Text);
+                NativeMethods.QAction_SetMenu(QtHandle, DropDown.QtHandle);
+            }
+            else
+            {
+                QtHandle = NativeMethods.QAction_Create(Text);
+                ConnectClickEvent();
             }
         }
 

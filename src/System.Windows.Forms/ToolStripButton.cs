@@ -9,16 +9,13 @@ namespace System.Windows.Forms
     /// </summary>
     public class ToolStripButton : ToolStripItem
     {
+        internal override bool IsQWidgetCreated => false;
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
-            {
-                // Create a QAction for the button
-                QtHandle = NativeMethods.QAction_Create(string.Empty);
-                UpdateImage();
-                UpdateTextAndTooltip();
-                ConnectClickEvent();
-            }
+            QtHandle = NativeMethods.QAction_Create(string.Empty);
+            UpdateImage();
+            UpdateTextAndTooltip();
+            ConnectClickEvent();
         }
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
         [Obsolete(NotImplementedWarning)] public bool Checked { get; set; }

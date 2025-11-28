@@ -30,10 +30,7 @@ namespace System.Windows.Forms
         protected override void CreateHandle()
         {
             base.CreateHandle();
-            if (IsHandleCreated)
-            {
-                ConnectAboutToShow();
-            }
+            ConnectAboutToShow();
         }
 
         private unsafe void ConnectAboutToShow()

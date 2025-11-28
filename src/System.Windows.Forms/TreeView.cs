@@ -16,21 +16,19 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+
+            QtHandle = NativeMethods.QTreeWidget_Create(IntPtr.Zero);
+            SetCommonProperties();
+
+            foreach (TreeNode node in _nodes)
             {
-                QtHandle = NativeMethods.QTreeWidget_Create(IntPtr.Zero);
-                SetCommonProperties();
-
-                // Add all existing nodes
-                foreach (TreeNode node in _nodes)
-                {
-                    node._parent = this;
-                    node.EnsureNativeItem();
-                }
-
-                ConnectItemSelectionChanged();
-                ConnectItemExpanded();
+                node._parent = this;
+                node.EnsureNativeItem();
             }
+
+            ConnectItemSelectionChanged();
+            ConnectItemExpanded();
+            
         }
 
         public void ExpandAll()

@@ -30,39 +30,38 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+
+            QtHandle = NativeMethods.QWidget_Create(IntPtr.Zero);
+            SetCommonProperties();
+
+            // Create handles for any child controls that were added before this control was created
+            foreach (Control child in Controls)
             {
-                QtHandle = NativeMethods.QWidget_Create(IntPtr.Zero);
-                SetCommonProperties();
-
-                // Create handles for any child controls that were added before this control was created
-                foreach (Control child in Controls)
+                if (!child.IsHandleCreated)
                 {
-                    if (!child.IsHandleCreated)
-                    {
-                        child.CreateControl();
-                    }
-
-                    // Set parent relationship in Qt
-                    NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
-
-                    // Apply position and size (Qt needs this after setParent)
-                    NativeMethods.QWidget_Move(child.QtHandle, child.Location.X, child.Location.Y);
-                    NativeMethods.QWidget_Resize(child.QtHandle, child.Size.Width, child.Size.Height);
-
-                    // Initialize anchor bounds now that parent is set
-                    child.InitializeAnchorBounds();
-
-                    // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
-                    if (child.Visible)
-                    {
-                        NativeMethods.QWidget_Show(child.QtHandle);
-                    }
+                    child.CreateControl();
                 }
 
-                // Trigger layout to handle docking/anchoring
-                PerformLayout();
+                // Set parent relationship in Qt
+                NativeMethods.QWidget_SetParent(child.QtHandle, QtHandle);
+
+                // Apply position and size (Qt needs this after setParent)
+                NativeMethods.QWidget_Move(child.QtHandle, child.Location.X, child.Location.Y);
+                NativeMethods.QWidget_Resize(child.QtHandle, child.Size.Width, child.Size.Height);
+
+                // Initialize anchor bounds now that parent is set
+                child.InitializeAnchorBounds();
+
+                // QWidget::setParent hides the widget, so we must show it again if it's supposed to be visible
+                if (child.Visible)
+                {
+                    NativeMethods.QWidget_Show(child.QtHandle);
+                }
             }
+
+            // Trigger layout to handle docking/anchoring
+            PerformLayout();
+            
         }
     }
 }

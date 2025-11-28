@@ -42,22 +42,19 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (!IsHandleCreated)
+            if (_multiline)
             {
-                if (_multiline)
-                {
-                    QtHandle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
-                }
-                else
-                {
-                    QtHandle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
-                    if (_useSystemPasswordChar)
-                    {
-                        NativeMethods.QLineEdit_SetEchoMode(QtHandle, 2);
-                    }
-                }
-                SetCommonProperties();
+                QtHandle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
             }
+            else
+            {
+                QtHandle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
+                if (_useSystemPasswordChar)
+                {
+                    NativeMethods.QLineEdit_SetEchoMode(QtHandle, 2);
+                }
+            }
+            SetCommonProperties();
         }
 
         public unsafe override string Text
