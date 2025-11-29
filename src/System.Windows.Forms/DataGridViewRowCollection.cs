@@ -20,6 +20,12 @@ namespace System.Windows.Forms
         public int Add()
         {
             var row = new DataGridViewRow();
+            Add(row);
+            return _rows.Count - 1;
+        }
+        public void Add(DataGridViewRow row)
+        {
+         
             row._owner = _owner;
             row.Index = _rows.Count;
             _rows.Add(row);
@@ -43,7 +49,6 @@ namespace System.Windows.Forms
                 }
             }
 
-            return _rows.Count - 1;
         }
 
         public void RemoveAt(int index)

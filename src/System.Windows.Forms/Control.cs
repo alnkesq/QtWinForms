@@ -650,6 +650,7 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public bool UseVisualStyleBackColor { get; set; } = true;
         [Obsolete(NotImplementedWarning)] public int TabIndex { get; set; } = 0;
         [Obsolete(NotImplementedWarning)] public bool AutoSize { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool Focused { get; set; }
 
         internal const string NotImplementedWarning = "Not implemented, NOP";
 

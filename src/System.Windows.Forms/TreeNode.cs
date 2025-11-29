@@ -102,6 +102,8 @@ namespace System.Windows.Forms
 
         public bool IsExpanded => _nativeItem != default && NativeMethods.QTreeWidgetItem_IsExpanded(_nativeItem) != 0;
 
+        [Obsolete(Control.NotImplementedWarning)] public Font? NodeFont { get; set; }
+
         private Color _foreColor = Color.Empty;
         public Color ForeColor
         {
