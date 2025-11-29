@@ -1,0 +1,179 @@
+using System.Collections;
+
+namespace System.Windows.Forms
+{
+    public class ListViewItem
+    {
+        private string _text = "";
+        internal ListView? _listView;
+        private ListViewSubItemCollection _subItems;
+        internal IntPtr _nativeItem = IntPtr.Zero;
+
+        public ListViewItem()
+        {
+            _subItems = new ListViewSubItemCollection(this);
+        }
+
+        public ListViewItem(string text) : this()
+        {
+            _text = text;
+        }
+
+        public ListViewItem(string[] items) : this()
+        {
+            if (items != null && items.Length > 0)
+            {
+                _text = items[0];
+                for (int i = 1; i < items.Length; i++)
+                {
+                    _subItems.Add(new ListViewSubItem(this, items[i]));
+                }
+            }
+        }
+
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                _listView?.UpdateItem(this);
+            }
+        }
+
+        public ListViewSubItemCollection SubItems => _subItems;
+
+        public int Index { get; internal set; } = -1;
+
+        internal ListView? ListView
+        {
+            get => _listView;
+            set => _listView = value;
+        }
+
+        internal void EnsureNativeItem()
+        {
+            if (_nativeItem == IntPtr.Zero && _listView != null && _listView.IsHandleCreated)
+            {
+                _listView.CreateNativeItem(this);
+            }
+        }
+
+        public class ListViewSubItemCollection : IList
+        {
+            private readonly ListViewItem _owner;
+            private readonly List<ListViewSubItem> _items = new List<ListViewSubItem>();
+
+            internal ListViewSubItemCollection(ListViewItem owner)
+            {
+                _owner = owner;
+            }
+
+            public ListViewSubItem this[int index]
+            {
+                get => _items[index];
+                set
+                {
+                    _items[index] = value;
+                    _owner._listView?.UpdateItem(_owner);
+                }
+            }
+
+            public int Count => _items.Count;
+
+            public bool IsReadOnly => false;
+
+            public bool IsFixedSize => false;
+
+            public object SyncRoot => ((ICollection)_items).SyncRoot;
+
+            public bool IsSynchronized => false;
+
+            object? IList.this[int index]
+            {
+                get => this[index];
+                set => this[index] = (ListViewSubItem)value!;
+            }
+
+            public ListViewSubItem Add(ListViewSubItem item)
+            {
+                _items.Add(item);
+                item.Owner = _owner;
+                _owner._listView?.UpdateItem(_owner);
+                return item;
+            }
+
+            public ListViewSubItem Add(string text)
+            {
+                var item = new ListViewSubItem(_owner, text);
+                return Add(item);
+            }
+
+            public void Clear()
+            {
+                _items.Clear();
+                _owner._listView?.UpdateItem(_owner);
+            }
+
+            public bool Contains(ListViewSubItem item) => _items.Contains(item);
+
+            public int IndexOf(ListViewSubItem item) => _items.IndexOf(item);
+
+            public void RemoveAt(int index)
+            {
+                _items.RemoveAt(index);
+                _owner._listView?.UpdateItem(_owner);
+            }
+
+            public IEnumerator GetEnumerator() => _items.GetEnumerator();
+
+            int IList.Add(object? value)
+            {
+                Add((ListViewSubItem)value!);
+                return _items.Count - 1;
+            }
+
+            bool IList.Contains(object? value) => Contains((ListViewSubItem)value!);
+
+            int IList.IndexOf(object? value) => IndexOf((ListViewSubItem)value!);
+
+            void IList.Insert(int index, object? value) => throw new NotImplementedException();
+
+            void IList.Remove(object? value) => throw new NotImplementedException();
+
+            void ICollection.CopyTo(Array array, int index) => ((ICollection)_items).CopyTo(array, index);
+        }
+    }
+
+    public class ListViewSubItem
+    {
+        private string _text = "";
+        private ListViewItem? _owner;
+
+        public ListViewSubItem()
+        {
+        }
+
+        public ListViewSubItem(ListViewItem owner, string text)
+        {
+            _owner = owner;
+            _text = text;
+        }
+
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                _text = value;
+                _owner?.ListView?.UpdateItem(_owner);
+            }
+        }
+
+        internal ListViewItem? Owner
+        {
+            get => _owner;
+            set => _owner = value;
+        }
+    }
+}

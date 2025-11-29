@@ -48,6 +48,7 @@ namespace TestApp
                 Console.WriteLine("27. DataGridView VirtualMode Test");
                 Console.WriteLine("28. Z-Order Test");
                 Console.WriteLine("29. Accept/Cancel button Test");
+                Console.WriteLine("30. ListView Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -201,6 +202,11 @@ namespace TestApp
                     case "29":
                         Console.WriteLine("Running Accept/cancel Button Test...");
                         testForm = CreateAcceptCancelButtonTest();
+                        break;
+
+                    case "30":
+                        Console.WriteLine("Running ListView Test...");
+                        testForm = CreateListViewTest();
                         break;
 
                     default:
@@ -2808,5 +2814,121 @@ namespace TestApp
 
             return form;
         }
+
+        static Form CreateListViewTest()
+        {
+            var form = new Form();
+            form.Text = "ListView Test";
+            form.Size = new Size(700, 500);
+
+            // Create ListView
+            var listView = new ListView();
+            listView.Location = new Point(20, 50);
+            listView.Size = new Size(650, 300);
+            listView.View = View.Details;
+
+            // Add columns for Details view
+            listView.Columns.Add("Name", 150);
+            listView.Columns.Add("Type", 100);
+            listView.Columns.Add("Size", 80);
+            listView.Columns.Add("Modified", 150);
+
+            // Add some sample items
+            listView.Items.Add(new ListViewItem(new[] { "Document1.txt", "Text File", "2 KB", "2024-01-15" }));
+            listView.Items.Add(new ListViewItem(new[] { "Image.png", "PNG Image", "156 KB", "2024-02-20" }));
+            listView.Items.Add(new ListViewItem(new[] { "Report.pdf", "PDF Document", "1.2 MB", "2024-03-10" }));
+            listView.Items.Add(new ListViewItem(new[] { "Spreadsheet.xlsx", "Excel File", "45 KB", "2024-03-25" }));
+            listView.Items.Add(new ListViewItem(new[] { "Presentation.pptx", "PowerPoint", "3.5 MB", "2024-04-01" }));
+
+            form.Controls.Add(listView);
+
+            // View mode buttons
+            var btnDetails = new Button();
+            btnDetails.Text = "Details View";
+            btnDetails.Location = new Point(20, 10);
+            btnDetails.Size = new Size(100, 30);
+            btnDetails.Click += (s, e) =>
+            {
+                listView.View = View.Details;
+                Console.WriteLine("Switched to Details view");
+            };
+            form.Controls.Add(btnDetails);
+
+            var btnLargeIcon = new Button();
+            btnLargeIcon.Text = "Large Icon";
+            btnLargeIcon.Location = new Point(130, 10);
+            btnLargeIcon.Size = new Size(100, 30);
+            btnLargeIcon.Click += (s, e) =>
+            {
+                listView.View = View.LargeIcon;
+                Console.WriteLine("Switched to Large Icon view");
+            };
+            form.Controls.Add(btnLargeIcon);
+
+            var btnSmallIcon = new Button();
+            btnSmallIcon.Text = "Small Icon";
+            btnSmallIcon.Location = new Point(240, 10);
+            btnSmallIcon.Size = new Size(100, 30);
+            btnSmallIcon.Click += (s, e) =>
+            {
+                listView.View = View.SmallIcon;
+                Console.WriteLine("Switched to Small Icon view");
+            };
+            form.Controls.Add(btnSmallIcon);
+
+            var btnList = new Button();
+            btnList.Text = "List View";
+            btnList.Location = new Point(350, 10);
+            btnList.Size = new Size(100, 30);
+            btnList.Click += (s, e) =>
+            {
+                listView.View = View.List;
+                Console.WriteLine("Switched to List view");
+            };
+            form.Controls.Add(btnList);
+
+            // Add item button
+            var btnAddItem = new Button();
+            btnAddItem.Text = "Add Item";
+            btnAddItem.Location = new Point(20, 360);
+            btnAddItem.Size = new Size(100, 30);
+            int itemCount = 6;
+            btnAddItem.Click += (s, e) =>
+            {
+                var newItem = new ListViewItem(new[] 
+                { 
+                    $"NewFile{itemCount}.txt", 
+                    "Text File", 
+                    $"{itemCount} KB", 
+                    DateTime.Now.ToString("yyyy-MM-dd") 
+                });
+                listView.Items.Add(newItem);
+                itemCount++;
+                Console.WriteLine($"Added item: NewFile{itemCount - 1}.txt");
+            };
+            form.Controls.Add(btnAddItem);
+
+            // Clear items button
+            var btnClear = new Button();
+            btnClear.Text = "Clear All";
+            btnClear.Location = new Point(130, 360);
+            btnClear.Size = new Size(100, 30);
+            btnClear.Click += (s, e) =>
+            {
+                listView.Items.Clear();
+                Console.WriteLine("Cleared all items");
+            };
+            form.Controls.Add(btnClear);
+
+            // Info label
+            var lblInfo = new Label();
+            lblInfo.Text = "Switch between different view modes and add/remove items";
+            lblInfo.Location = new Point(20, 400);
+            lblInfo.Size = new Size(650, 30);
+            form.Controls.Add(lblInfo);
+
+            return form;
+        }
     }
 }
+

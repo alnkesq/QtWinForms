@@ -1024,6 +1024,16 @@ extern "C" {
         });
     }
 
+    EXPORT void QListWidget_SetViewMode(void* listWidget, int mode) {
+        QListWidget* lw = (QListWidget*)listWidget;
+        // 0 = ListMode, 1 = IconMode
+        if (mode == 1) {
+            lw->setViewMode(QListView::IconMode);
+        } else {
+            lw->setViewMode(QListView::ListMode);
+        }
+    }
+
     EXPORT void* QDateTimeEdit_Create(void* parent) {
         QDateTimeEdit* widget = new QDateTimeEdit((QWidget*)parent);
         return widget;
@@ -1363,6 +1373,11 @@ extern "C" {
 
     EXPORT void QTreeWidget_Clear(void* treeWidget) {
         ((QTreeWidget*)treeWidget)->clear();
+    }
+
+    EXPORT void QTreeWidget_SetColumnWidth(void* treeWidget, int column, int width) {
+        QTreeWidget* tw = (QTreeWidget*)treeWidget;
+        tw->setColumnWidth(column, width);
     }
 
     static bool isIcoMagic(const void* ptr, size_t len)
