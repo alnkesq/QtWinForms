@@ -251,6 +251,12 @@ namespace System.Windows.Forms
             set => _unusedText = value ?? string.Empty;
         }
 
+        public event EventHandler? TextChanged;
+        protected virtual void OnTextChanged(EventArgs e)
+        {
+            TextChanged?.Invoke(this, e);
+        }
+
         public virtual bool Visible
         {
             get => _visible;

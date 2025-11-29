@@ -9,7 +9,12 @@ namespace System.Windows.Forms
         private string _text = string.Empty;
         private bool _multiline;
 
-        [Obsolete(NotImplementedWarning)] public EventHandler? TextChanged;
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
+        private static void OnTextChangedCallback(IntPtr userData)
+        {
+            var control = ObjectFromGCHandle<TextBox>(userData);
+            control.OnTextChanged(EventArgs.Empty);
+        }
 
         public bool Multiline
         {
@@ -47,16 +52,22 @@ namespace System.Windows.Forms
 
         protected override void CreateHandle()
         {
-            if (_multiline)
+            unsafe
             {
-                QtHandle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
-            }
-            else
-            {
-                QtHandle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
-                if (_useSystemPasswordChar)
+                delegate* unmanaged[Cdecl]<IntPtr, void> callback = &OnTextChangedCallback;
+                if (_multiline)
                 {
-                    NativeMethods.QLineEdit_SetEchoMode(QtHandle, 2);
+                    QtHandle = NativeMethods.QPlainTextEdit_Create(IntPtr.Zero, _text);
+                    NativeMethods.QPlainTextEdit_ConnectTextChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
+                }
+                else
+                {
+                    QtHandle = NativeMethods.QLineEdit_Create(IntPtr.Zero, _text);
+                    if (_useSystemPasswordChar)
+                    {
+                        NativeMethods.QLineEdit_SetEchoMode(QtHandle, 2);
+                    }
+                    NativeMethods.QLineEdit_ConnectTextChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
                 }
             }
             SetCommonProperties();
@@ -89,16 +100,23 @@ namespace System.Windows.Forms
             }
             set
             {
-                _text = value ?? "";
-                if (IsHandleCreated)
+                if (_text != value)
                 {
-                    if (_multiline)
+                    _text = value ?? "";
+                    if (IsHandleCreated)
                     {
-                        NativeMethods.QPlainTextEdit_SetText(QtHandle, _text);
+                        if (_multiline)
+                        {
+                            NativeMethods.QPlainTextEdit_SetText(QtHandle, _text);
+                        }
+                        else
+                        {
+                            NativeMethods.QLineEdit_SetText(QtHandle, _text);
+                        }
                     }
                     else
                     {
-                        NativeMethods.QLineEdit_SetText(QtHandle, _text);
+                        OnTextChanged(EventArgs.Empty);
                     }
                 }
             }

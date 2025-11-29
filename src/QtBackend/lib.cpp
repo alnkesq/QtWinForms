@@ -290,6 +290,18 @@ extern "C" {
         cb((const void*)s.constData(), s.size(), userData);
     }
 
+    EXPORT void QLineEdit_ConnectTextChanged(void* lineEdit, void (*callback)(void*), void* userData) {
+        QObject::connect((QLineEdit*)lineEdit, &QLineEdit::textChanged, [callback, userData](const QString &text) {
+            callback(userData);
+        });
+    }
+
+    EXPORT void QPlainTextEdit_ConnectTextChanged(void* widget, void (*callback)(void*), void* userData) {
+        QObject::connect((QPlainTextEdit*)widget, &QPlainTextEdit::textChanged, [callback, userData]() {
+            callback(userData);
+        });
+    }
+
     // Resize and Move event support
     class ResizeEventFilter : public QObject {
     private:

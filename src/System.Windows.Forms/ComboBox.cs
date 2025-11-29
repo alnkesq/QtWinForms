@@ -137,13 +137,6 @@ namespace System.Windows.Forms
             }
         }
 
-        public event EventHandler? TextChanged;
-
-        protected virtual void OnTextChanged(EventArgs e)
-        {
-            TextChanged?.Invoke(this, e);
-        }
-
         private unsafe void ConnectCurrentTextChanged()
         {
             delegate* unmanaged[Cdecl]<void*, int, nint, void> callback = &OnCurrentTextChangedCallback;
