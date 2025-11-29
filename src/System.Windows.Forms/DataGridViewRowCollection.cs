@@ -7,7 +7,7 @@ namespace System.Windows.Forms
 {
     public class DataGridViewRowCollection : IEnumerable<DataGridViewRow>
     {
-        internal DataGridView? _owner;
+        internal DataGridView _owner = null!;
         internal List<DataGridViewRow> _rows = new List<DataGridViewRow>();
 
         public DataGridViewRow this[int index]
@@ -30,23 +30,23 @@ namespace System.Windows.Forms
             row.Index = _rows.Count;
             _rows.Add(row);
 
-            if (_owner != null)
+ 
+            if (_owner.IsHandleCreated)
             {
-                if (_owner.IsHandleCreated)
+                NativeMethods.QTableWidget_SetRowCount(_owner.QtHandle, _rows.Count);
+            }
+
+
+
+            for (int c = 0; c < _owner.Columns.Count; c++)
+            {
+                var cell = new DataGridViewCell
                 {
-                    NativeMethods.QTableWidget_SetRowCount(_owner.QtHandle, _rows.Count);
-                }
-                
-                for (int c = 0; c < _owner.Columns.Count; c++)
-                {
-                    var cell = new DataGridViewCell
-                    {
-                        _owner = _owner,
-                        _rowIndex = row.Index,
-                        _columnIndex = c
-                    };
-                    row.Cells._cells.Add(cell);
-                }
+                    _owner = _owner,
+                    _rowIndex = row.Index,
+                    _columnIndex = c
+                };
+                row.Cells._cells.Add(cell);
             }
 
         }
@@ -66,7 +66,7 @@ namespace System.Windows.Forms
                 }
             }
 
-            if (_owner != null && _owner.IsHandleCreated)
+            if (_owner.IsHandleCreated)
             {
                 NativeMethods.QTableWidget_RemoveRow(_owner.QtHandle, index);
             }
@@ -79,7 +79,7 @@ namespace System.Windows.Forms
                 row.ClearIndexes();
             }
             _rows.Clear();
-            if (_owner != null && _owner.IsHandleCreated)
+            if (_owner.IsHandleCreated)
             {
                 NativeMethods.QTableWidget_SetRowCount(_owner.QtHandle, 0);
             }
