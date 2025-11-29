@@ -10,6 +10,20 @@ namespace System.Windows.Forms
         private ListViewItemCollection _items;
         private ColumnHeaderCollection _columns;
         private bool _isDetailsView = false;
+        private delegate void NativeCallback(IntPtr userData);
+        private NativeCallback? _onSelectedIndexChangedCallback;
+
+        public event EventHandler? SelectedIndexChanged;
+
+        protected virtual void OnSelectedIndexChanged(EventArgs e)
+        {
+            SelectedIndexChanged?.Invoke(this, e);
+        }
+
+        private void OnNativeSelectedIndexChanged(IntPtr userData)
+        {
+            OnSelectedIndexChanged(EventArgs.Empty);
+        }
 
         public ListView()
         {
@@ -38,7 +52,21 @@ namespace System.Windows.Forms
                 NativeMethods.QListWidget_SetViewMode(QtHandle, viewMode);
             }
 
+            // Connect selection changed signal
+            _onSelectedIndexChangedCallback = OnNativeSelectedIndexChanged;
+            var callbackPtr = Marshal.GetFunctionPointerForDelegate(_onSelectedIndexChangedCallback);
+            
+            if (_isDetailsView)
+            {
+                NativeMethods.QTreeWidget_ConnectItemSelectionChanged(QtHandle, callbackPtr, IntPtr.Zero);
+            }
+            else
+            {
+                NativeMethods.QListWidget_ConnectItemSelectionChanged(QtHandle, callbackPtr, IntPtr.Zero);
+            }
+
             SetCommonProperties();
+            UpdateSelectionMode();
 
             // Add existing columns (for Details view)
             if (_isDetailsView && _columns.Count > 0)
@@ -70,6 +98,157 @@ namespace System.Windows.Forms
                     }
                 }
             }
+        }
+
+        private bool _multiSelect = true;
+        public bool MultiSelect
+        {
+            get => _multiSelect;
+            set
+            {
+                if (_multiSelect != value)
+                {
+                    _multiSelect = value;
+                    if (IsHandleCreated)
+                    {
+                        UpdateSelectionMode();
+                    }
+                }
+            }
+        }
+
+        private void UpdateSelectionMode()
+        {
+             int mode = _multiSelect ? 3 : 1; // 3 = MultiExtended, 1 = Single
+             if (_isDetailsView)
+             {
+                 NativeMethods.QTreeWidget_SetSelectionMode(QtHandle, mode);
+             }
+             else
+             {
+                 NativeMethods.QListWidget_SetSelectionMode(QtHandle, mode);
+             }
+        }
+
+        private unsafe List<int> GetSelectedIndicesFromNative()
+        {
+            List<int> indices = new List<int>();
+            if (!IsHandleCreated) return indices;
+
+            var handle = GCHandle.Alloc(indices);
+            try
+            {
+                if (_isDetailsView)
+                {
+                    NativeMethods.QTreeWidget_GetSelectedRows(QtHandle, &OnSelectedRowsCallback, GCHandle.ToIntPtr(handle));
+                }
+                else
+                {
+                    NativeMethods.QListWidget_GetSelectedRows(QtHandle, &OnSelectedRowsCallback, GCHandle.ToIntPtr(handle));
+                }
+            }
+            finally
+            {
+                handle.Free();
+            }
+            
+            return indices;
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+        private static unsafe void OnSelectedRowsCallback(int* rows, int count, void* userData)
+        {
+            var handle = GCHandle.FromIntPtr((IntPtr)userData);
+            var indices = (List<int>)handle.Target!;
+            
+            for (int i = 0; i < count; i++)
+            {
+                indices.Add(rows[i]);
+            }
+        }
+
+        public SelectedIndexCollection SelectedIndices => new SelectedIndexCollection(this);
+        public SelectedListViewItemCollection SelectedItems => new SelectedListViewItemCollection(this);
+
+        public class SelectedIndexCollection : IList
+        {
+            private ListView _owner;
+            public SelectedIndexCollection(ListView owner) { _owner = owner; }
+            
+            public int Count => _owner.GetSelectedIndicesFromNative().Count;
+            public bool IsReadOnly => true;
+            public bool IsFixedSize => true;
+            public object SyncRoot => this;
+            public bool IsSynchronized => false;
+            
+            public int this[int index]
+            {
+                get 
+                {
+                    var indices = _owner.GetSelectedIndicesFromNative();
+                    return indices[index];
+                }
+                set => throw new NotSupportedException();
+            }
+            
+            public bool Contains(int index) => _owner.GetSelectedIndicesFromNative().Contains(index);
+            public int IndexOf(int index) => _owner.GetSelectedIndicesFromNative().IndexOf(index);
+            public IEnumerator GetEnumerator() => _owner.GetSelectedIndicesFromNative().GetEnumerator();
+            
+            public void CopyTo(Array array, int index) => ((ICollection)_owner.GetSelectedIndicesFromNative()).CopyTo(array, index);
+            
+            int IList.Add(object? value) => throw new NotSupportedException();
+            void IList.Clear() => throw new NotSupportedException();
+            bool IList.Contains(object? value) => value is int i && Contains(i);
+            int IList.IndexOf(object? value) => value is int i ? IndexOf(i) : -1;
+            void IList.Insert(int index, object? value) => throw new NotSupportedException();
+            void IList.Remove(object? value) => throw new NotSupportedException();
+            void IList.RemoveAt(int index) => throw new NotSupportedException();
+            object? IList.this[int index] { get => this[index]; set => throw new NotSupportedException(); }
+        }
+
+        public class SelectedListViewItemCollection : IList
+        {
+            private ListView _owner;
+            public SelectedListViewItemCollection(ListView owner) { _owner = owner; }
+            
+            private List<ListViewItem> GetItems()
+            {
+                var indices = _owner.GetSelectedIndicesFromNative();
+                var items = new List<ListViewItem>();
+                foreach(var index in indices)
+                {
+                    if (index >= 0 && index < _owner.Items.Count)
+                        items.Add(_owner.Items[index]);
+                }
+                return items;
+            }
+
+            public int Count => GetItems().Count;
+            public bool IsReadOnly => true;
+            public bool IsFixedSize => true;
+            public object SyncRoot => this;
+            public bool IsSynchronized => false;
+            
+            public ListViewItem this[int index]
+            {
+                get => GetItems()[index];
+                set => throw new NotSupportedException();
+            }
+            
+            public bool Contains(ListViewItem item) => GetItems().Contains(item);
+            public int IndexOf(ListViewItem item) => GetItems().IndexOf(item);
+            public IEnumerator GetEnumerator() => GetItems().GetEnumerator();
+            public void CopyTo(Array array, int index) => ((ICollection)GetItems()).CopyTo(array, index);
+            
+            int IList.Add(object? value) => throw new NotSupportedException();
+            void IList.Clear() => throw new NotSupportedException();
+            bool IList.Contains(object? value) => value is ListViewItem i && Contains(i);
+            int IList.IndexOf(object? value) => value is ListViewItem i ? IndexOf(i) : -1;
+            void IList.Insert(int index, object? value) => throw new NotSupportedException();
+            void IList.Remove(object? value) => throw new NotSupportedException();
+            void IList.RemoveAt(int index) => throw new NotSupportedException();
+            object? IList.this[int index] { get => this[index]; set => throw new NotSupportedException(); }
         }
 
         public ListViewItemCollection Items => _items;
@@ -200,6 +379,11 @@ namespace System.Windows.Forms
 
                 // Set icon
                 UpdateItemIcon(item);
+
+                if (item.Selected)
+                {
+                    NativeMethods.QTreeWidgetItem_SetSelected(item._nativeItem, true);
+                }
             }
             else
             {
@@ -210,6 +394,11 @@ namespace System.Windows.Forms
 
                 // Set icon
                 UpdateItemIcon(item);
+
+                if (item.Selected)
+                {
+                    NativeMethods.QListWidget_SetItemSelected(QtHandle, item.Index, true);
+                }
             }
         }
 

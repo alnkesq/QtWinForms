@@ -1025,6 +1025,12 @@ extern "C" {
         });
     }
 
+    EXPORT void QListWidget_ConnectItemSelectionChanged(void* listWidget, void (*callback)(void*), void* userData) {
+        QObject::connect((QListWidget*)listWidget, &QListWidget::itemSelectionChanged, [callback, userData]() {
+            callback(userData);
+        });
+    }
+
     EXPORT void QListWidget_SetViewMode(void* listWidget, int mode) {
         QListWidget* lw = (QListWidget*)listWidget;
         // 0 = ListMode, 1 = IconMode
@@ -1442,6 +1448,73 @@ extern "C" {
 
     EXPORT void QTreeWidgetItem_SetToolTip(void* item, int column, const char16_t* toolTip) {
         ((QTreeWidgetItem*)item)->setToolTip(column, QString::fromUtf16(toolTip));
+    }
+
+    EXPORT void QTreeWidget_SetSelectionMode(void* treeWidget, int mode) {
+        QTreeWidget* tw = (QTreeWidget*)treeWidget;
+        // Map WinForms SelectionMode to Qt SelectionMode
+        // None = 0, One = 1, MultiSimple = 2, MultiExtended = 3
+        switch (mode) {
+            case 0: // None
+                tw->setSelectionMode(QAbstractItemView::NoSelection);
+                break;
+            case 1: // One
+                tw->setSelectionMode(QAbstractItemView::SingleSelection);
+                break;
+            case 2: // MultiSimple
+                tw->setSelectionMode(QAbstractItemView::MultiSelection);
+                break;
+            case 3: // MultiExtended
+                tw->setSelectionMode(QAbstractItemView::ExtendedSelection);
+                break;
+            default:
+                tw->setSelectionMode(QAbstractItemView::SingleSelection);
+                break;
+        }
+    }
+
+    EXPORT void QTreeWidget_GetSelectedRows(void* treeWidget, void (*callback)(int*, int, void*), void* userData) {
+        QTreeWidget* tw = (QTreeWidget*)treeWidget;
+        QList<QTreeWidgetItem*> selectedItems = tw->selectedItems();
+        
+        if (selectedItems.isEmpty()) {
+            callback(nullptr, 0, userData);
+        } else {
+            QVector<int> rows;
+            for (QTreeWidgetItem* item : selectedItems) {
+                // Only consider top level items for ListView behavior
+                int index = tw->indexOfTopLevelItem(item);
+                if (index != -1) {
+                    rows.append(index);
+                }
+            }
+            callback(rows.data(), rows.size(), userData);
+        }
+    }
+
+    EXPORT void QTreeWidgetItem_SetSelected(void* item, bool selected) {
+        ((QTreeWidgetItem*)item)->setSelected(selected);
+    }
+
+    EXPORT bool QTreeWidgetItem_IsSelected(void* item) {
+        return ((QTreeWidgetItem*)item)->isSelected();
+    }
+
+    EXPORT void QListWidget_SetItemSelected(void* listWidget, int row, bool selected) {
+        QListWidget* lw = (QListWidget*)listWidget;
+        QListWidgetItem* item = lw->item(row);
+        if (item) {
+            item->setSelected(selected);
+        }
+    }
+
+    EXPORT bool QListWidget_IsItemSelected(void* listWidget, int row) {
+        QListWidget* lw = (QListWidget*)listWidget;
+        QListWidgetItem* item = lw->item(row);
+        if (item) {
+            return item->isSelected();
+        }
+        return false;
     }
 
     EXPORT void* QSplitter_Create(void* parent, int orientation) {

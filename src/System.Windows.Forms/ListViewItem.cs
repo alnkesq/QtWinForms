@@ -44,6 +44,43 @@ namespace System.Windows.Forms
         }
 
         public ListViewSubItemCollection SubItems => _subItems;
+        
+        private bool _selected;
+        public bool Selected
+        {
+            get
+            {
+                if (_listView != null && _listView.IsHandleCreated)
+                {
+                    if (_listView.View == View.Details)
+                    {
+                        if (_nativeItem != IntPtr.Zero)
+                            return NativeMethods.QTreeWidgetItem_IsSelected(_nativeItem);
+                    }
+                    else
+                    {
+                        return NativeMethods.QListWidget_IsItemSelected(_listView.QtHandle, Index);
+                    }
+                }
+                return _selected;
+            }
+            set
+            {
+                _selected = value;
+                if (_listView != null && _listView.IsHandleCreated)
+                {
+                    if (_listView.View == View.Details)
+                    {
+                        if (_nativeItem != IntPtr.Zero)
+                            NativeMethods.QTreeWidgetItem_SetSelected(_nativeItem, value);
+                    }
+                    else
+                    {
+                        NativeMethods.QListWidget_SetItemSelected(_listView.QtHandle, Index, value);
+                    }
+                }
+            }
+        }
 
         public int Index { get; internal set; } = -1;
 

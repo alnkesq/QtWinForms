@@ -370,6 +370,9 @@ namespace System.Windows.Forms
         public unsafe static extern void QListWidget_ConnectCurrentRowChanged(IntPtr listWidget, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QListWidget_ConnectItemSelectionChanged(IntPtr listWidget, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QListWidget_SetViewMode(IntPtr listWidget, int mode);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -498,6 +501,24 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_SetToolTip(IntPtr item, int column, [MarshalAs(UnmanagedType.LPWStr)] string toolTip);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidget_SetSelectionMode(IntPtr treeWidget, int mode);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTreeWidget_GetSelectedRows(IntPtr treeWidget, delegate* unmanaged[Cdecl]<int*, int, void*, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTreeWidgetItem_SetSelected(IntPtr item, bool selected);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool QTreeWidgetItem_IsSelected(IntPtr item);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidget_SetItemSelected(IntPtr listWidget, int row, bool selected);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool QListWidget_IsItemSelected(IntPtr listWidget, int row);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QSplitter_Create(IntPtr parent, int orientation);
