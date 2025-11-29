@@ -25,11 +25,27 @@ namespace System.Windows.Forms
             OnSelectedIndexChanged(EventArgs.Empty);
         }
 
+        private NativeCallback? _onItemActivateCallback;
+        public event EventHandler? ItemActivate;
+
+        protected virtual void OnItemActivate(EventArgs e)
+        {
+            ItemActivate?.Invoke(this, e);
+        }
+
+        private void OnNativeItemActivate(IntPtr userData)
+        {
+            OnItemActivate(EventArgs.Empty);
+        }
+
         public ListView()
         {
             _items = new ListViewItemCollection(this);
             _columns = new ColumnHeaderCollection(this);
         }
+
+        public void BeginUpdate() { }
+        public void EndUpdate() { }
 
         protected override void CreateHandle()
         {
@@ -63,6 +79,19 @@ namespace System.Windows.Forms
             else
             {
                 NativeMethods.QListWidget_ConnectItemSelectionChanged(QtHandle, callbackPtr, IntPtr.Zero);
+            }
+
+            // Connect item activated signal
+            _onItemActivateCallback = OnNativeItemActivate;
+            var activateCallbackPtr = Marshal.GetFunctionPointerForDelegate(_onItemActivateCallback);
+
+            if (_isDetailsView)
+            {
+                NativeMethods.QTreeWidget_ConnectItemActivated(QtHandle, activateCallbackPtr, IntPtr.Zero);
+            }
+            else
+            {
+                NativeMethods.QListWidget_ConnectItemActivated(QtHandle, activateCallbackPtr, IntPtr.Zero);
             }
 
             SetCommonProperties();

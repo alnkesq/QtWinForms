@@ -373,6 +373,9 @@ namespace System.Windows.Forms
         public unsafe static extern void QListWidget_ConnectItemSelectionChanged(IntPtr listWidget, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QListWidget_ConnectItemActivated(IntPtr listWidget, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QListWidget_SetViewMode(IntPtr listWidget, int mode);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
@@ -465,6 +468,9 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public unsafe static extern void QTreeWidget_ConnectItemSelectionChanged(IntPtr treeWidget, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTreeWidget_ConnectItemActivated(IntPtr treeWidget, IntPtr callback, IntPtr userData);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTreeWidgetItem_SetExpanded(IntPtr item, bool expanded);

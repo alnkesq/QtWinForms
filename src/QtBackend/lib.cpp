@@ -1031,6 +1031,12 @@ extern "C" {
         });
     }
 
+    EXPORT void QListWidget_ConnectItemActivated(void* listWidget, void (*callback)(void*), void* userData) {
+        QObject::connect((QListWidget*)listWidget, &QListWidget::itemActivated, [callback, userData](QListWidgetItem* item) {
+            callback(userData);
+        });
+    }
+
     EXPORT void QListWidget_SetViewMode(void* listWidget, int mode) {
         QListWidget* lw = (QListWidget*)listWidget;
         // 0 = ListMode, 1 = IconMode
@@ -1357,6 +1363,12 @@ extern "C" {
 
     EXPORT void QTreeWidget_ConnectItemSelectionChanged(void* treeWidget, void (*callback)(void*), void* userData) {
         QObject::connect((QTreeWidget*)treeWidget, &QTreeWidget::itemSelectionChanged, [callback, userData]() {
+            callback(userData);
+        });
+    }
+
+    EXPORT void QTreeWidget_ConnectItemActivated(void* treeWidget, void (*callback)(void*), void* userData) {
+        QObject::connect((QTreeWidget*)treeWidget, &QTreeWidget::itemActivated, [callback, userData](QTreeWidgetItem* item, int column) {
             callback(userData);
         });
     }
