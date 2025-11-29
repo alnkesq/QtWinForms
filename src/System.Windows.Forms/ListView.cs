@@ -252,24 +252,20 @@ namespace System.Windows.Forms
             if (!IsHandleCreated || !_isDetailsView)
                 return;
 
-            // Set column count
-            NativeMethods.QTreeWidget_SetColumnCount(QtHandle, _columns.Count + 1); // +1 for main column
+            NativeMethods.QTreeWidget_SetColumnCount(QtHandle, _columns.Count);
 
-            // Set header labels
-            string[] labels = new string[_columns.Count + 1];
-            labels[0] = ""; // Main column (usually empty or set separately)
+            string[] labels = new string[_columns.Count];
             
             for (int i = 0; i < _columns.Count; i++)
             {
-                labels[i + 1] = _columns[i].Text;
+                labels[i] = _columns[i].Text;
             }
 
             NativeMethods.QTreeWidget_SetHeaderLabels(QtHandle, labels, labels.Length);
 
-            // Set column widths
             for (int i = 0; i < _columns.Count; i++)
             {
-                NativeMethods.QTreeWidget_SetColumnWidth(QtHandle, i + 1, _columns[i].Width);
+                NativeMethods.QTreeWidget_SetColumnWidth(QtHandle, i, _columns[i].Width);
             }
         }
 
