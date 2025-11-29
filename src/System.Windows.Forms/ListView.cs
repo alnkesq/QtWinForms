@@ -444,6 +444,14 @@ namespace System.Windows.Forms
                 return column;
             }
 
+            public void AddRange(ColumnHeader[] columns)
+            {
+                foreach (var col in columns)
+                {
+                    Add(col);
+                }
+            }
+
             public int Add(ColumnHeader column)
             {
                 column.Index = _items.Count;
