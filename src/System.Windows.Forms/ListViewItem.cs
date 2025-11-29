@@ -9,6 +9,8 @@ namespace System.Windows.Forms
         private ListViewSubItemCollection _subItems;
         internal IntPtr _nativeItem = IntPtr.Zero;
 
+        public object? Tag { get; set; }
+
         public ListViewItem()
         {
             _subItems = new ListViewSubItemCollection(this);
@@ -16,7 +18,7 @@ namespace System.Windows.Forms
 
         public ListViewItem(string text) : this()
         {
-            _text = text;
+            Text = text;
         }
 
         public ListViewItem(string[] items) : this()
@@ -36,7 +38,7 @@ namespace System.Windows.Forms
             get => _text;
             set
             {
-                _text = value;
+                _text = value ?? string.Empty;
                 _listView?.UpdateItem(this);
             }
         }

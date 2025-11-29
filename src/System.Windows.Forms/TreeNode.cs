@@ -155,8 +155,16 @@ namespace System.Windows.Forms
 
         public TreeNode(string text)
         {
-            _text = text;
+            Text = text;
         }
+
+        public TreeNode(string text, TreeNode[] children)
+            : this(text)
+        {
+            Nodes.AddRange(children);
+        }
+
+        public string? Name { get; set; }
 
         public string Text
         {
@@ -332,6 +340,13 @@ namespace System.Windows.Forms
                 throw new ArgumentException("Value must be a TreeNode");
             }
 
+            public void AddRange(params TreeNode[] nodes)
+            {
+                foreach (var node in nodes)
+                {
+                    Add(node);
+                }
+            }
             public void Clear()
             {
                 foreach (TreeNode node in _innerList)

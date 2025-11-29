@@ -42,5 +42,7 @@ namespace System.Windows.Forms
             get => _listView;
             set => _listView = value;
         }
+
+        public string? Name { get; set; }
     }
 }

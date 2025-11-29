@@ -269,6 +269,9 @@ namespace System.Windows.Forms
             }
         }
 
+        [Obsolete(NotImplementedWarning)] public bool HideSelection { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool UseCompatibleStateImageBehavior { get; set; }
+
         public class ListViewItemCollection : IList
         {
             private readonly ListView _owner;
