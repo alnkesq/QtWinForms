@@ -101,24 +101,7 @@ namespace System.Windows.Forms
             for (int r = 0; r < _rows.Count; r++)
             {
                 var row = _rows[r];
-
-                while (row.Cells.Count > ColumnCount)
-                {
-                    row.Cells._cells.RemoveAt(row.Cells.Count - 1);
-                }
-                
-
-                
-                for (int c = row.Cells.Count; c < ColumnCount; c++)
-                {
-                    var cell = new DataGridViewCell
-                    {
-                        _owner = this,
-                        _rowIndex = r,
-                        _columnIndex = c
-                    };
-                    row.Cells._cells.Add(cell);
-                }
+                row.UpdateCellsStructure();
             }
         }
 

@@ -24,6 +24,24 @@ namespace System.Windows.Forms
             }
         }
 
+        internal void UpdateCellsStructure()
+        {
+            while (Cells.Count > _owner!.ColumnCount)
+            {
+                Cells._cells.RemoveAt(Cells.Count - 1);
+            }
 
+            while (Cells.Count < _owner!.ColumnCount)
+            {
+                var cell = new DataGridViewCell
+                {
+                    _owner = _owner!,
+                    _rowIndex = Index,
+                    _columnIndex = Cells.Count - 1,
+                };
+                Cells._cells.Add(cell);
+            }
+
+        }
     }
 }

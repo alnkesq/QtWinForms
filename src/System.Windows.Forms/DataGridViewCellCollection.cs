@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using System.Reflection;
 
 namespace System.Windows.Forms
 {
@@ -42,6 +43,9 @@ namespace System.Windows.Forms
 
         public void Add(DataGridViewCell cell)
         {
+            cell._rowIndex = this._ownerRow.Index;
+            cell._columnIndex = _cells.Count;
+            cell._owner = Owner;
             _cells.Add(cell);
         }
 

@@ -29,24 +29,16 @@ namespace System.Windows.Forms
             row._owner = _owner;
             row.Index = _rows.Count;
             _rows.Add(row);
-
+            row.UpdateCellsStructure();
+            foreach (var cell in row.Cells)
+            {
+                cell._rowIndex = row.Index;
+                cell._owner = _owner;
+            }
  
             if (_owner.IsHandleCreated)
             {
                 NativeMethods.QTableWidget_SetRowCount(_owner.QtHandle, _rows.Count);
-            }
-
-
-
-            for (int c = 0; c < _owner.Columns.Count; c++)
-            {
-                var cell = new DataGridViewCell
-                {
-                    _owner = _owner,
-                    _rowIndex = row.Index,
-                    _columnIndex = c
-                };
-                row.Cells._cells.Add(cell);
             }
 
         }
