@@ -23,6 +23,15 @@ namespace System.Windows.Forms
             Add(row);
             return _rows.Count - 1;
         }
+        public int Add(params object[] values)
+        {
+            var row = new DataGridViewRow();
+            foreach (var val in values)
+            {
+                row.Cells.Add(new DataGridViewTextBoxCell() { Value = val });
+            }
+            return _rows.Count - 1;
+        }
         public void Add(DataGridViewRow row)
         {
          
@@ -39,6 +48,10 @@ namespace System.Windows.Forms
             if (_owner.IsHandleCreated)
             {
                 NativeMethods.QTableWidget_SetRowCount(_owner.QtHandle, _rows.Count);
+                foreach (var cell in row.Cells)
+                {
+                    cell.ApplyValue();
+                }
             }
 
         }
