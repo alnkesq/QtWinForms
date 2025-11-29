@@ -24,10 +24,10 @@ namespace System.Windows.Forms
                 if (_selectedImageIndex == -1 && !string.IsNullOrEmpty(_selectedImageKey))
                 {
                     TreeView? tv = GetTreeView();
-                    if (tv?.ImageList?.Images.nameToIndex != null &&
-                        tv.ImageList.Images.nameToIndex.TryGetValue(_selectedImageKey, out int index))
+                    var index = tv?.ImageList?.Images.IndexOfKey(_selectedImageKey);
+                    if (index != null && index != -1)
                     {
-                        return index;
+                        return index.Value;
                     }
                 }
                 return _selectedImageIndex;

@@ -2821,11 +2821,61 @@ namespace TestApp
             form.Text = "ListView Test";
             form.Size = new Size(700, 500);
 
+            // Create ImageLists
+            var smallImageList = new ImageList();
+            smallImageList.ImageSize = new Size(16, 16);
+            smallImageList.ColorDepth = ColorDepth.Depth32Bit;
+
+            var largeImageList = new ImageList();
+            largeImageList.ImageSize = new Size(32, 32);
+            largeImageList.ColorDepth = ColorDepth.Depth32Bit;
+
+            // Create some simple colored icons as placeholders
+            // In a real app, you'd load actual icon files
+            for (int i = 0; i < 5; i++)
+            {
+                // Create small icon
+                var smallBmp = new Bitmap(16, 16);
+                using (var g = Graphics.FromImage(smallBmp))
+                {
+                    Color color = i switch
+                    {
+                        0 => Color.Red,
+                        1 => Color.Green,
+                        2 => Color.Blue,
+                        3 => Color.Yellow,
+                        _ => Color.Purple
+                    };
+                    g.Clear(color);
+                    g.DrawRectangle(Pens.Black, 0, 0, 15, 15);
+                }
+                smallImageList.Images.Add($"icon{i}", smallBmp);
+
+                // Create large icon
+                var largeBmp = new Bitmap(32, 32);
+                using (var g = Graphics.FromImage(largeBmp))
+                {
+                    Color color = i switch
+                    {
+                        0 => Color.Red,
+                        1 => Color.Green,
+                        2 => Color.Blue,
+                        3 => Color.Yellow,
+                        _ => Color.Purple
+                    };
+                    g.Clear(color);
+                    g.DrawRectangle(Pens.Black, 0, 0, 31, 31);
+                }
+                largeImageList.Images.Add($"icon{i}", largeBmp);
+            }
+
             // Create ListView
             var listView = new ListView();
             listView.Location = new Point(20, 50);
             listView.Size = new Size(650, 300);
             listView.View = View.Details;
+            listView.SmallImageList = smallImageList;
+            listView.LargeImageList = largeImageList;
 
             // Add columns for Details view
             listView.Columns.Add("Name", 150);
@@ -2833,12 +2883,26 @@ namespace TestApp
             listView.Columns.Add("Size", 80);
             listView.Columns.Add("Modified", 150);
 
-            // Add some sample items
-            listView.Items.Add(new ListViewItem(new[] { "Document1.txt", "Text File", "2 KB", "2024-01-15" }));
-            listView.Items.Add(new ListViewItem(new[] { "Image.png", "PNG Image", "156 KB", "2024-02-20" }));
-            listView.Items.Add(new ListViewItem(new[] { "Report.pdf", "PDF Document", "1.2 MB", "2024-03-10" }));
-            listView.Items.Add(new ListViewItem(new[] { "Spreadsheet.xlsx", "Excel File", "45 KB", "2024-03-25" }));
-            listView.Items.Add(new ListViewItem(new[] { "Presentation.pptx", "PowerPoint", "3.5 MB", "2024-04-01" }));
+            // Add some sample items with icons
+            var item1 = new ListViewItem(new[] { "Document1.txt", "Text File", "2 KB", "2024-01-15" });
+            item1.ImageIndex = 0;
+            listView.Items.Add(item1);
+
+            var item2 = new ListViewItem(new[] { "Image.png", "PNG Image", "156 KB", "2024-02-20" });
+            item2.ImageKey = "icon1";
+            listView.Items.Add(item2);
+
+            var item3 = new ListViewItem(new[] { "Report.pdf", "PDF Document", "1.2 MB", "2024-03-10" });
+            item3.ImageIndex = 2;
+            listView.Items.Add(item3);
+
+            var item4 = new ListViewItem(new[] { "Spreadsheet.xlsx", "Excel File", "45 KB", "2024-03-25" });
+            item4.ImageKey = "icon3";
+            listView.Items.Add(item4);
+
+            var item5 = new ListViewItem(new[] { "Presentation.pptx", "PowerPoint", "3.5 MB", "2024-04-01" });
+            item5.ImageIndex = 4;
+            listView.Items.Add(item5);
 
             form.Controls.Add(listView);
 
@@ -2902,6 +2966,7 @@ namespace TestApp
                     $"{itemCount} KB", 
                     DateTime.Now.ToString("yyyy-MM-dd") 
                 });
+                newItem.ImageIndex = itemCount % 5; // Cycle through available icons
                 listView.Items.Add(newItem);
                 itemCount++;
                 Console.WriteLine($"Added item: NewFile{itemCount - 1}.txt");
@@ -2922,7 +2987,7 @@ namespace TestApp
 
             // Info label
             var lblInfo = new Label();
-            lblInfo.Text = "Switch between different view modes and add/remove items";
+            lblInfo.Text = "ListView with icons - switch between different view modes";
             lblInfo.Location = new Point(20, 400);
             lblInfo.Size = new Size(650, 30);
             form.Controls.Add(lblInfo);

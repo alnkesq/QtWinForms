@@ -371,6 +371,9 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QListWidget_SetViewMode(IntPtr listWidget, int mode);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QListWidgetItem_SetIcon(IntPtr listWidget, int index, IntPtr icon);
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr QDateTimeEdit_Create(IntPtr parent);
 

@@ -40,6 +40,7 @@ namespace System.Windows.Forms
         [Obsolete(Control.NotImplementedWarning)] public Color TransparentColor { get; set; }
         public ImageCollection Images { get; set; } = [];
         [Obsolete(Control.NotImplementedWarning)] public ColorDepth ColorDepth { get; set; } = ColorDepth.Depth32Bit;
+        [Obsolete(Control.NotImplementedWarning)] public Size ImageSize { get; set; }
         public ISite? Site { get; set; }
 
         public event EventHandler? Disposed;
@@ -56,11 +57,24 @@ namespace System.Windows.Forms
         public class ImageCollection : List<Image>
         {
             internal Dictionary<string, int>? nameToIndex;
-            [Obsolete(Control.NotImplementedWarning)]
+
+            public void Add(string name, Image image)
+            {
+                SetKeyName(Count, name);
+                Add(image);
+            }
+
             public void SetKeyName(int index, string name)
             {
                 nameToIndex ??= new();
                 nameToIndex[name] = index;
+            }
+
+            public int IndexOfKey(string name)
+            {
+                if (string.IsNullOrEmpty(name) || nameToIndex == null) return -1;
+                if (nameToIndex.TryGetValue(name, out var n)) return n;
+                return -1;
             }
         }
     }

@@ -59,6 +59,51 @@ namespace System.Windows.Forms
             }
         }
 
+        private int _imageIndex = -1;
+        public int ImageIndex
+        {
+            get => _imageIndex;
+            set
+            {
+                _imageIndex = value;
+                _imageKey = null; // Clear key when index is set
+                _listView?.UpdateItemIcon(this);
+            }
+        }
+
+        private string? _imageKey;
+        public string? ImageKey
+        {
+            get => _imageKey;
+            set
+            {
+                _imageKey = value;
+                _imageIndex = -1; // Clear index when key is set
+                _listView?.UpdateItemIcon(this);
+            }
+        }
+
+        internal int GetResolvedImageIndex(ListView listView)
+        {
+            // If ImageKey is set, resolve it to an index
+            if (!string.IsNullOrEmpty(_imageKey))
+            {
+                ImageList? imageList = listView.View == View.LargeIcon 
+                    ? listView.LargeImageList 
+                    : listView.SmallImageList;
+
+                if (imageList != null)
+                {
+                    int index = imageList.Images.IndexOfKey(_imageKey);
+                    if (index >= 0)
+                        return index;
+                }
+            }
+
+            // Otherwise use ImageIndex
+            return _imageIndex;
+        }
+
         public class ListViewSubItemCollection : IList
         {
             private readonly ListViewItem _owner;

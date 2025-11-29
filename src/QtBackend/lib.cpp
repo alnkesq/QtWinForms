@@ -1034,6 +1034,19 @@ extern "C" {
         }
     }
 
+    EXPORT void QListWidgetItem_SetIcon(void* listWidget, int index, void* icon) {
+        QListWidget* lw = (QListWidget*)listWidget;
+        QListWidgetItem* item = lw->item(index);
+        if (item != nullptr) {
+            QIcon* qIcon = (QIcon*)icon;
+            if (qIcon != nullptr) {
+                item->setIcon(*qIcon);
+            } else {
+                item->setIcon(QIcon());
+            }
+        }
+    }
+
     EXPORT void* QDateTimeEdit_Create(void* parent) {
         QDateTimeEdit* widget = new QDateTimeEdit((QWidget*)parent);
         return widget;

@@ -76,6 +76,75 @@ namespace System.Windows.Forms
 
         public ColumnHeaderCollection Columns => _columns;
 
+        private ImageList? _smallImageList;
+        public ImageList? SmallImageList
+        {
+            get => _smallImageList;
+            set
+            {
+                _smallImageList = value;
+                if (IsHandleCreated)
+                {
+                    UpdateAllItemIcons();
+                }
+            }
+        }
+
+        private ImageList? _largeImageList;
+        public ImageList? LargeImageList
+        {
+            get => _largeImageList;
+            set
+            {
+                _largeImageList = value;
+                if (IsHandleCreated)
+                {
+                    UpdateAllItemIcons();
+                }
+            }
+        }
+
+        private void UpdateAllItemIcons()
+        {
+            foreach (ListViewItem item in _items)
+            {
+                UpdateItemIcon(item);
+            }
+        }
+
+        internal IntPtr GetQIconFromImageList(int imageIndex)
+        {
+            ImageList? imageList = _view == View.LargeIcon ? _largeImageList : _smallImageList;
+            
+            if (imageList == null || imageIndex < 0 || imageIndex >= imageList.Images.Count)
+                return IntPtr.Zero;
+
+            var image = imageList.Images[imageIndex];
+            return image.GetQIcon();
+        }
+
+        internal void UpdateItemIcon(ListViewItem item)
+        {
+            if (!IsHandleCreated || item._nativeItem == IntPtr.Zero)
+                return;
+
+            int imageIndex = item.GetResolvedImageIndex(this);
+            IntPtr icon = GetQIconFromImageList(imageIndex);
+
+            if (_isDetailsView)
+            {
+                NativeMethods.QTreeWidgetItem_SetIcon(item._nativeItem, 0, icon);
+            }
+            else
+            {
+                // For QListWidget, we need to set icon on the item
+                if (imageIndex >= 0)
+                {
+                    NativeMethods.QListWidgetItem_SetIcon(QtHandle, item.Index, icon);
+                }
+            }
+        }
+
         private void RecreateHandle()
         {
             // Save parent and visibility state
@@ -128,6 +197,9 @@ namespace System.Windows.Forms
                 {
                     NativeMethods.QTreeWidgetItem_SetText(item._nativeItem, i + 1, item.SubItems[i].Text);
                 }
+
+                // Set icon
+                UpdateItemIcon(item);
             }
             else
             {
@@ -135,6 +207,9 @@ namespace System.Windows.Forms
                 NativeMethods.QListWidget_AddItem(QtHandle, item.Text);
                 // Note: QListWidget doesn't return item pointer, so we track by index
                 item._nativeItem = (IntPtr)(item.Index + 1); // Use index+1 as a pseudo-handle
+
+                // Set icon
+                UpdateItemIcon(item);
             }
         }
 
