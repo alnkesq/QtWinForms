@@ -111,6 +111,11 @@ namespace System.Windows.Forms
         }
 
         [Obsolete(NotImplementedWarning)] public Color ImageTransparentColor { get; set; }
+
+        public void PerformClick()
+        { 
+            if(Enabled) OnClick(EventArgs.Empty); 
+        }
     }
 }
 

@@ -211,5 +211,13 @@ namespace System.Windows.Forms
         }
 
         public DataGridViewSelectedCellCollection SelectedCells => _selectedCells;
+
+        public HitTestInfo HitTest(int x, int y) => throw new NotImplementedException();
+
+        public class HitTestInfo 
+        {
+            public int ColumnIndex { get; set; }
+            public int RowIndex { get; set; }
+        }
     }
 }

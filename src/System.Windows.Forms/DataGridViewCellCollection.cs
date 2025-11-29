@@ -40,6 +40,11 @@ namespace System.Windows.Forms
             }
         }
 
+        public void Add(DataGridViewCell cell)
+        {
+            _cells.Add(cell);
+        }
+
         internal DataGridView? Owner => _ownerRow._owner;
 
         public DataGridViewCell this[string columnName]

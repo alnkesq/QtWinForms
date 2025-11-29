@@ -16,5 +16,7 @@ namespace System.Windows.Forms
 
         public abstract ToolStripItem Add(string text);
 
+        public void Clear() => throw new NotImplementedException();
+
     }
 }

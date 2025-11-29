@@ -124,7 +124,7 @@ namespace System.Windows.Forms
                 {
                     return NativeMethods.QTabWidget_GetCurrentIndex(QtHandle);
                 }
-                return -1;
+                return _tabPages.Count != 0 ? 0 : -1;
             }
             set
             {

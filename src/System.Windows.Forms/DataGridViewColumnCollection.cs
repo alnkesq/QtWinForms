@@ -70,6 +70,11 @@ namespace System.Windows.Forms
             return _columns.GetEnumerator();
         }
 
+        public void Remove(DataGridViewColumn column)
+        {
+            var index = _columns.IndexOf(column);
+            if (index != -1) RemoveAt(index);
+        }
         public void RemoveAt(int index)
         {
             _columns.RemoveAt(index);

@@ -34,5 +34,6 @@ namespace System.Windows.Forms
         {
             return new ToolStripDropDownMenu();
         }
+        [Obsolete(NotImplementedWarning)] public event EventHandler? DropDownOpening;
     }
 }

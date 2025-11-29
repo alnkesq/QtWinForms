@@ -9,6 +9,8 @@ namespace System.Windows.Forms
         private string _text = string.Empty;
         private bool _multiline;
 
+        [Obsolete(NotImplementedWarning)] public EventHandler? TextChanged;
+
         public bool Multiline
         {
             get => _multiline;
@@ -39,6 +41,9 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+
+        [Obsolete(NotImplementedWarning)] public void SelectAll() { }
 
         protected override void CreateHandle()
         {
