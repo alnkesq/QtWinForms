@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -42,6 +43,7 @@ namespace System.Windows.Forms
 
         [Obsolete(NotImplementedWarning)] public ToolStripGripStyle GripStyle { get; set; }
         [Obsolete(NotImplementedWarning)] public ToolStripRenderMode RenderMode { get; set; }
+        [Obsolete(NotImplementedWarning)] public Size ImageScalingSize { get; set; }
 
         public ToolStripItemCollection Items => new ToolStripItemCollectionImpl(this);
 
