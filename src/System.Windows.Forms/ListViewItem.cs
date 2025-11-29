@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -122,6 +123,9 @@ namespace System.Windows.Forms
             }
         }
 
+        [Obsolete(Control.NotImplementedWarning)] public Color BackColor { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public Color ForeColor { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public void EnsureVisible() { }
         internal int GetResolvedImageIndex(ListView listView)
         {
             // If ImageKey is set, resolve it to an index
@@ -241,7 +245,7 @@ namespace System.Windows.Forms
         public ListViewSubItem(ListViewItem owner, string text)
         {
             _owner = owner;
-            _text = text;
+            Text = text;
         }
 
         public string Text
@@ -249,7 +253,7 @@ namespace System.Windows.Forms
             get => _text;
             set
             {
-                _text = value;
+                _text = value ?? string.Empty;
                 _owner?.ListView?.UpdateItem(_owner);
             }
         }
