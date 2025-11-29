@@ -588,5 +588,14 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetAcceptCancelButtons(IntPtr form, IntPtr acceptButton, IntPtr cancelButton);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QClipboard_SetText([MarshalAs(UnmanagedType.LPWStr)] string text);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QClipboard_GetText_Invoke(delegate* unmanaged[Cdecl]<void*, int, nint*, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QClipboard_Clear();
     }
 }

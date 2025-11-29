@@ -43,6 +43,7 @@
 #include <QMap>
 #include <QEventLoop>
 #include <QStyledItemDelegate>
+#include <QClipboard>
 
 #include <iostream>
 using namespace std;
@@ -1713,5 +1714,21 @@ extern "C" {
     EXPORT void QTreeWidgetItem_ClearBackColor(void* item, int column) {
         QTreeWidgetItem* i = (QTreeWidgetItem*)item;
         i->setData(column, Qt::BackgroundRole, QVariant());
+    }
+
+    EXPORT void QClipboard_SetText(const char16_t* text) {
+        QClipboard* clipboard = QApplication::clipboard();
+        clipboard->setText(QString::fromUtf16(text));
+    }
+
+    EXPORT void QClipboard_GetText_Invoke(ReadQStringCallback cb, void* userData) {
+        QClipboard* clipboard = QApplication::clipboard();
+        QString text = clipboard->text();
+        cb((const void*)text.constData(), text.size(), userData);
+    }
+
+    EXPORT void QClipboard_Clear() {
+        QClipboard* clipboard = QApplication::clipboard();
+        clipboard->clear();
     }
 }
