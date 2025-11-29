@@ -78,7 +78,9 @@ namespace System.Windows.Forms
 
         private void RecreateHandle()
         {
-            // Save current state - no need to save, items are already in collections
+            // Save parent and visibility state
+            var parent = Parent;
+            var wasVisible = Visible;
             
             // Destroy old handle
             if (QtHandle != IntPtr.Zero)
@@ -95,6 +97,20 @@ namespace System.Windows.Forms
 
             // Create new handle
             CreateHandle();
+
+            // Restore parent relationship
+            if (parent != null && parent.IsHandleCreated)
+            {
+                NativeMethods.QWidget_SetParent(QtHandle, parent.QtHandle);
+                NativeMethods.QWidget_Move(QtHandle, Location.X, Location.Y);
+                NativeMethods.QWidget_Resize(QtHandle, Size.Width, Size.Height);
+            }
+
+            // Restore visibility
+            if (wasVisible)
+            {
+                NativeMethods.QWidget_Show(QtHandle);
+            }
         }
 
         internal void CreateNativeItem(ListViewItem item)
