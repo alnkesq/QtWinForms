@@ -26,6 +26,11 @@ namespace System.Windows.Forms
                 QtHandle = NativeMethods.QAction_Create(Text);
                 ConnectClickEvent();
             }
+
+            if (!_enabled)
+            {
+                NativeMethods.QAction_SetEnabled(QtHandle, _enabled);
+            }
         }
 
         public override string Text
@@ -41,6 +46,19 @@ namespace System.Windows.Forms
             }
         }
         private string _text = string.Empty;
+
+        public override bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                _enabled = value;
+                if (IsHandleCreated)
+                {
+                    NativeMethods.QAction_SetEnabled(QtHandle, value);
+                }
+            }
+        }
 
         // Public properties to expose menu state
         public bool HasMenu => _hasChildren;

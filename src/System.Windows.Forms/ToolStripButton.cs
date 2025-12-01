@@ -15,8 +15,26 @@ namespace System.Windows.Forms
             QtHandle = NativeMethods.QAction_Create(string.Empty);
             UpdateImage();
             UpdateTextAndTooltip();
+            if (!_enabled)
+            {
+                NativeMethods.QAction_SetEnabled(QtHandle, _enabled);
+            }
             ConnectClickEvent();
         }
+
+        public override bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                _enabled = value;
+                if (IsHandleCreated)
+                {
+                    NativeMethods.QAction_SetEnabled(QtHandle, value);
+                }
+            }
+        }
+        
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
         [Obsolete(NotImplementedWarning)] public bool Checked { get; set; }
 

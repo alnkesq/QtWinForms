@@ -240,6 +240,9 @@ namespace System.Windows.Forms
         public static extern void QAction_SetVisible(IntPtr action, bool visible);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QAction_SetEnabled(IntPtr action, bool enabled);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QWidget_SetMenuBar(IntPtr widget, IntPtr menuBar);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]

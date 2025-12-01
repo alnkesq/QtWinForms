@@ -394,7 +394,7 @@ namespace System.Windows.Forms
         }
         private Color _backColor = Color.Empty;
 
-        public bool Enabled
+        public virtual bool Enabled
         {
             get => _enabled;
             set
@@ -406,7 +406,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        private bool _enabled = true;
+        protected bool _enabled = true;
 
         // Dock and Anchor properties
         private DockStyle _dock = DockStyle.None;

@@ -867,6 +867,28 @@ namespace TestApp
             };
             form.Controls.Add(button);
 
+            var btnToggleSave = new Button();
+            btnToggleSave.Text = "Toggle Save Enabled";
+            btnToggleSave.Location = new Point(220, 150);
+            btnToggleSave.Size = new Size(150, 30);
+            btnToggleSave.Click += (s, e) =>
+            {
+                saveItem.Enabled = !saveItem.Enabled;
+                label.Text = $"Save menu item is now {(saveItem.Enabled ? "enabled" : "disabled")}";
+            };
+            form.Controls.Add(btnToggleSave);
+
+            var btnToggleRecent = new Button();
+            btnToggleRecent.Text = "Toggle Recent Enabled";
+            btnToggleRecent.Location = new Point(50, 190);
+            btnToggleRecent.Size = new Size(150, 30);
+            btnToggleRecent.Click += (s, e) =>
+            {
+                recentMenu.Enabled = !recentMenu.Enabled;
+                label.Text = $"Recent submenu is now {(recentMenu.Enabled ? "enabled" : "disabled")}";
+            };
+            form.Controls.Add(btnToggleRecent);
+
             return form;
         }
 
@@ -1892,6 +1914,28 @@ namespace TestApp
             };
             toolStrip.Items.Add(btnHelp);
 
+            var btnToggleSave = new Button();
+            btnToggleSave.Text = "Toggle Save Button";
+            btnToggleSave.Location = new Point(20, 360);
+            btnToggleSave.Size = new Size(150, 30);
+            btnToggleSave.Click += (s, e) =>
+            {
+                btnSave.Enabled = !btnSave.Enabled;
+                label.Text = $"Save button is now {(btnSave.Enabled ? "enabled" : "disabled")}";
+            };
+            form.Controls.Add(btnToggleSave);
+
+            var btnToggleCopy = new Button();
+            btnToggleCopy.Text = "Toggle Copy Button";
+            btnToggleCopy.Location = new Point(180, 360);
+            btnToggleCopy.Size = new Size(150, 30);
+            btnToggleCopy.Click += (s, e) =>
+            {
+                btnCopy.Enabled = !btnCopy.Enabled;
+                label.Text = $"Copy button is now {(btnCopy.Enabled ? "enabled" : "disabled")}";
+            };
+            form.Controls.Add(btnToggleCopy);
+
             return form;
         }
 
@@ -1965,6 +2009,30 @@ namespace TestApp
             {
                 subItem2.Visible = chkShowSubItem2.Checked;
                 Console.WriteLine($"SubMenu Opening: SubItem 2 Visible = {subItem2.Visible}");
+            };
+
+            var chkEnableItem1 = new CheckBox();
+            chkEnableItem1.Text = "Enable Item 1";
+            chkEnableItem1.Location = new Point(50, 230);
+            chkEnableItem1.Checked = true;
+            form.Controls.Add(chkEnableItem1);
+
+            chkEnableItem1.CheckedChanged += (s, e) =>
+            {
+                item1.Enabled = chkEnableItem1.Checked;
+                Console.WriteLine($"Item 1 Enabled = {item1.Enabled}");
+            };
+
+            var chkEnableSubMenu = new CheckBox();
+            chkEnableSubMenu.Text = "Enable SubMenu";
+            chkEnableSubMenu.Location = new Point(50, 270);
+            chkEnableSubMenu.Checked = true;
+            form.Controls.Add(chkEnableSubMenu);
+
+            chkEnableSubMenu.CheckedChanged += (s, e) =>
+            {
+                subMenu.Enabled = chkEnableSubMenu.Checked;
+                Console.WriteLine($"SubMenu Enabled = {subMenu.Enabled}");
             };
 
             return form;

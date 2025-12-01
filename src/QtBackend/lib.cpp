@@ -742,6 +742,10 @@ extern "C" {
         ((QAction*)action)->setVisible(visible);
     }
 
+    EXPORT void QAction_SetEnabled(void* action, bool enabled) {
+        ((QAction*)action)->setEnabled(enabled);
+    }
+
 
 
     EXPORT void QWidget_SetMenuBar(void* widget, void* menuBar) {
