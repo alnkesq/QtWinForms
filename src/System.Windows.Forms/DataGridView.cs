@@ -17,6 +17,7 @@ namespace System.Windows.Forms
         private DataGridViewSelectedColumnCollection _selectedColumns;
         private bool _virtualMode;
         private int _virtualRowCount;
+        private DataGridViewSelectionMode _selectionMode = DataGridViewSelectionMode.FullRowSelect;
         
         public DataGridView()
         {
@@ -72,6 +73,9 @@ namespace System.Windows.Forms
             
             // Connect to selection changed signal
             ConnectSelectionChanged();
+            
+            // Set selection mode
+            UpdateSelectionMode();
         }
         
         private void ConnectCellDataNeeded()
@@ -189,6 +193,42 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public bool StandardTab { get; set; }
         [Obsolete(NotImplementedWarning)] public int RowHeadersWidth { get; set; }
         [Obsolete(NotImplementedWarning)] public DataGridViewColumnHeadersHeightSizeMode ColumnHeadersHeightSizeMode { get; set; }
+
+        public DataGridViewSelectionMode SelectionMode
+        {
+            get => _selectionMode;
+            set
+            {
+                if (_selectionMode != value)
+                {
+                    _selectionMode = value;
+                    if (IsHandleCreated)
+                    {
+                        UpdateSelectionMode();
+                    }
+                }
+            }
+        }
+
+        private void UpdateSelectionMode()
+        {
+            // Map WinForms SelectionMode to Qt SelectionBehavior
+            // CellSelect = 0 -> SelectItems
+            // FullRowSelect = 1 -> SelectRows
+            // FullColumnSelect = 2 -> SelectColumns
+            // RowHeaderSelect = 3 -> SelectRows (Qt doesn't distinguish)
+            // ColumnHeaderSelect = 4 -> SelectColumns (Qt doesn't distinguish)
+            int qtMode = _selectionMode switch
+            {
+                DataGridViewSelectionMode.CellSelect => 0, // SelectItems
+                DataGridViewSelectionMode.FullRowSelect => 1, // SelectRows
+                DataGridViewSelectionMode.FullColumnSelect => 2, // SelectColumns
+                DataGridViewSelectionMode.RowHeaderSelect => 1, // SelectRows (approximation)
+                DataGridViewSelectionMode.ColumnHeaderSelect => 2, // SelectColumns (approximation)
+                _ => 1 // Default to SelectRows
+            };
+            NativeMethods.QTableWidget_SetSelectionBehavior(QtHandle, qtMode);
+        }
 
         public void ClearSelection()
         {

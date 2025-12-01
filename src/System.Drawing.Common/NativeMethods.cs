@@ -648,5 +648,8 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTableWidget_ClearSelection(IntPtr table);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_SetSelectionBehavior(IntPtr table, int behavior);
     }
 }

@@ -2676,6 +2676,28 @@ namespace TestApp
             };
             form.Controls.Add(btnClearSelection);
 
+            var btnToggleMode = new Button();
+            btnToggleMode.Text = grid.SelectionMode.ToString();
+            btnToggleMode.Location = new Point(580, 480);
+            btnToggleMode.Size = new Size(150, 30);
+            btnToggleMode.Click += (s, e) =>
+            {
+                var current = grid.SelectionMode;
+                var next = current switch
+                {
+                    DataGridViewSelectionMode.CellSelect => DataGridViewSelectionMode.FullRowSelect,
+                    DataGridViewSelectionMode.FullRowSelect => DataGridViewSelectionMode.FullColumnSelect,
+                    DataGridViewSelectionMode.FullColumnSelect => DataGridViewSelectionMode.RowHeaderSelect,
+                    DataGridViewSelectionMode.RowHeaderSelect => DataGridViewSelectionMode.ColumnHeaderSelect,
+                    DataGridViewSelectionMode.ColumnHeaderSelect => DataGridViewSelectionMode.CellSelect,
+                    _ => DataGridViewSelectionMode.FullRowSelect
+                };
+                grid.SelectionMode = next;
+                btnToggleMode.Text = grid.SelectionMode.ToString();
+                Console.WriteLine($"Switched SelectionMode to {next}");
+            };
+            form.Controls.Add(btnToggleMode);
+
             return form;
         }
 

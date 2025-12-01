@@ -1894,4 +1894,9 @@ extern "C" {
     EXPORT void QTableWidget_ClearSelection(void* table) {
         ((QTableWidget*)table)->clearSelection();
     }
+
+    EXPORT void QTableWidget_SetSelectionBehavior(void* table, int behavior) {
+        // behavior: 0 = SelectItems, 1 = SelectRows, 2 = SelectColumns
+        ((QTableWidget*)table)->setSelectionBehavior((QAbstractItemView::SelectionBehavior)behavior);
+    }
 }
