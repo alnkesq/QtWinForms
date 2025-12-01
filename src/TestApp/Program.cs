@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -2614,6 +2614,67 @@ namespace TestApp
                 }
             };
             form.Controls.Add(btnRemoveSecondRow);
+
+            // Label to show selection info
+            var lblSelection = new Label();
+            lblSelection.Text = "Selection: None";
+            lblSelection.Location = new Point(20, 520);
+            lblSelection.Size = new Size(750, 30);
+            lblSelection.ForeColor = Color.Blue;
+            form.Controls.Add(lblSelection);
+
+            // SelectionChanged event handler
+            grid.SelectionChanged += (s, e) =>
+            {
+                lblSelection.Text = $"Selection: {grid.SelectedCells.Count} cells, {grid.SelectedRows.Count} rows, {grid.SelectedColumns.Count} columns";
+                Console.WriteLine($"SelectionChanged: {grid.SelectedCells.Count} cells, {grid.SelectedRows.Count} rows, {grid.SelectedColumns.Count} columns");
+            };
+
+            // Print Selection button
+            var btnPrintSelection = new Button();
+            btnPrintSelection.Text = "Print Selection";
+            btnPrintSelection.Location = new Point(320, 480);
+            btnPrintSelection.Size = new Size(120, 30);
+            btnPrintSelection.Click += (s, e) =>
+            {
+                Console.WriteLine("=== Selected Items ===");
+                Console.WriteLine($"Selected Cells: {grid.SelectedCells.Count}");
+                foreach (var cell in grid.SelectedCells)
+                {
+                    Console.WriteLine($"  Cell[{cell.RowIndex}, {cell.ColumnIndex}] = {cell.Value}");
+                }
+                
+                Console.WriteLine($"Selected Rows: {grid.SelectedRows.Count}");
+                foreach (var row in grid.SelectedRows)
+                {
+                    Console.Write($"  Row {row.Index}: ");
+                    for (int c = 0; c < grid.Columns.Count; c++)
+                    {
+                        Console.Write(row.Cells[c].Value + "\\t");
+                    }
+                    Console.WriteLine();
+                }
+                
+                Console.WriteLine($"Selected Columns: {grid.SelectedColumns.Count}");
+                foreach (var col in grid.SelectedColumns)
+                {
+                    Console.WriteLine($"  Column {col.Index}: {col.HeaderText}");
+                }
+                Console.WriteLine("======================");
+            };
+            form.Controls.Add(btnPrintSelection);
+
+            // Clear Selection button
+            var btnClearSelection = new Button();
+            btnClearSelection.Text = "Clear Selection";
+            btnClearSelection.Location = new Point(450, 480);
+            btnClearSelection.Size = new Size(120, 30);
+            btnClearSelection.Click += (s, e) =>
+            {
+                grid.ClearSelection();
+                Console.WriteLine("Cleared selection");
+            };
+            form.Controls.Add(btnClearSelection);
 
             return form;
         }

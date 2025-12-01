@@ -633,5 +633,20 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QClipboard_Clear();
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTableWidget_GetSelectedCells(IntPtr table, delegate* unmanaged[Cdecl]<int*, int*, int, IntPtr, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTableWidget_GetSelectedRows(IntPtr table, delegate* unmanaged[Cdecl]<int*, int, IntPtr, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern void QTableWidget_GetSelectedColumns(IntPtr table, delegate* unmanaged[Cdecl]<int*, int, IntPtr, void> callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_ConnectSelectionChanged(IntPtr table, IntPtr callback, IntPtr userData);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QTableWidget_ClearSelection(IntPtr table);
     }
 }

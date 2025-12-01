@@ -13,6 +13,8 @@ namespace System.Windows.Forms
         private DataGridViewColumnCollection _columns;
         private DataGridViewRowCollection _rows;
         private DataGridViewSelectedCellCollection _selectedCells;
+        private DataGridViewSelectedRowCollection _selectedRows;
+        private DataGridViewSelectedColumnCollection _selectedColumns;
         private bool _virtualMode;
         private int _virtualRowCount;
         
@@ -21,6 +23,8 @@ namespace System.Windows.Forms
             _columns = new DataGridViewColumnCollection { _owner = this };
             _rows = new DataGridViewRowCollection { _owner = this };
             _selectedCells = new DataGridViewSelectedCellCollection { _owner = this };
+            _selectedRows = new DataGridViewSelectedRowCollection { _owner = this };
+            _selectedColumns = new DataGridViewSelectedColumnCollection { _owner = this };
         }
 
         protected override void CreateHandle()
@@ -65,6 +69,9 @@ namespace System.Windows.Forms
                     }
                 }
             }
+            
+            // Connect to selection changed signal
+            ConnectSelectionChanged();
         }
         
         private void ConnectCellDataNeeded()
@@ -93,6 +100,27 @@ namespace System.Windows.Forms
                 NativeMethods.QTableWidget_SetCellText(QtHandle, rowIndex, columnIndex, DataGridViewCell.ValueToString(args.Value));
             }
         }
+        
+        private void ConnectSelectionChanged()
+        {
+            unsafe
+            {
+                var callback = (delegate* unmanaged[Cdecl]<IntPtr, void>)&OnSelectionChangedCallback;
+                NativeMethods.QTableWidget_ConnectSelectionChanged(QtHandle, (IntPtr)callback, GCHandlePtr);
+            }
+        }
+
+        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
+        private static unsafe void OnSelectionChangedCallback(IntPtr userData)
+        {
+            var grid = ObjectFromGCHandle<DataGridView>(userData);
+            grid.OnSelectionChanged(EventArgs.Empty);
+        }
+
+        protected virtual void OnSelectionChanged(EventArgs e)
+        {
+            SelectionChanged?.Invoke(this, e);
+        }
 
         internal void UpdateCellsStructure()
         {
@@ -109,7 +137,7 @@ namespace System.Windows.Forms
         public DataGridViewRowCollection Rows => _rows;
 
         [Obsolete(NotImplementedWarning)] public DataGridViewRow RowTemplate { get; set; } = new();
-        [Obsolete(NotImplementedWarning)] public event EventHandler? SelectionChanged;
+        public event EventHandler? SelectionChanged;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellContentClick;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellEventHandler? CellDoubleClick;
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellFormattingEventHandler? CellFormatting;
@@ -164,7 +192,10 @@ namespace System.Windows.Forms
 
         public void ClearSelection()
         {
-            throw new NotImplementedException();
+            if (IsHandleCreated)
+            {
+                NativeMethods.QTableWidget_ClearSelection(QtHandle);
+            }
         }
 
         internal DataGridViewColumn GetColumnByName(string name) => Columns.Single(x => x.Name == name);
@@ -194,6 +225,8 @@ namespace System.Windows.Forms
         }
 
         public DataGridViewSelectedCellCollection SelectedCells => _selectedCells;
+        public DataGridViewSelectedRowCollection SelectedRows => _selectedRows;
+        public DataGridViewSelectedColumnCollection SelectedColumns => _selectedColumns;
 
         public HitTestInfo HitTest(int x, int y) => throw new NotImplementedException();
 

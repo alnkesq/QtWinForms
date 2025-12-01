@@ -1832,4 +1832,66 @@ extern "C" {
         QClipboard* clipboard = QApplication::clipboard();
         clipboard->clear();
     }
+
+    EXPORT void QTableWidget_GetSelectedCells(void* table, void (*callback)(int*, int*, int, void*), void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        QList<QTableWidgetItem*> selectedItems = t->selectedItems();
+        
+        if (selectedItems.isEmpty()) {
+            callback(nullptr, nullptr, 0, userData);
+        } else {
+            QVector<int> rows;
+            QVector<int> columns;
+            for (QTableWidgetItem* item : selectedItems) {
+                rows.append(item->row());
+                columns.append(item->column());
+            }
+            callback(rows.data(), columns.data(), rows.size(), userData);
+        }
+    }
+
+    EXPORT void QTableWidget_GetSelectedRows(void* table, void (*callback)(int*, int, void*), void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        QList<QTableWidgetItem*> selectedItems = t->selectedItems();
+        
+        if (selectedItems.isEmpty()) {
+            callback(nullptr, 0, userData);
+        } else {
+            QSet<int> uniqueRows;
+            for (QTableWidgetItem* item : selectedItems) {
+                uniqueRows.insert(item->row());
+            }
+            QVector<int> rows = uniqueRows.values().toVector();
+            std::sort(rows.begin(), rows.end());
+            callback(rows.data(), rows.size(), userData);
+        }
+    }
+
+    EXPORT void QTableWidget_GetSelectedColumns(void* table, void (*callback)(int*, int, void*), void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        QList<QTableWidgetItem*> selectedItems = t->selectedItems();
+        
+        if (selectedItems.isEmpty()) {
+            callback(nullptr, 0, userData);
+        } else {
+            QSet<int> uniqueColumns;
+            for (QTableWidgetItem* item : selectedItems) {
+                uniqueColumns.insert(item->column());
+            }
+            QVector<int> columns = uniqueColumns.values().toVector();
+            std::sort(columns.begin(), columns.end());
+            callback(columns.data(), columns.size(), userData);
+        }
+    }
+
+    EXPORT void QTableWidget_ConnectSelectionChanged(void* table, void (*callback)(void*), void* userData) {
+        QTableWidget* t = (QTableWidget*)table;
+        QObject::connect(t, &QTableWidget::itemSelectionChanged, [callback, userData]() {
+            callback(userData);
+        });
+    }
+
+    EXPORT void QTableWidget_ClearSelection(void* table) {
+        ((QTableWidget*)table)->clearSelection();
+    }
 }
