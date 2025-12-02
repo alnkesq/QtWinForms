@@ -3177,48 +3177,42 @@ namespace TestApp
             tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 30));
 
             // Add controls to specific cells
-            // Row 0
+            // Row 0 - Title spanning 3 columns
             var lblTitle = new Label();
             lblTitle.Text = "Title (Spans 3 columns)";
             lblTitle.BackColor = Color.LightBlue;
-            tableLayoutPanel.Controls.Add(lblTitle);
-            tableLayoutPanel.SetCellPosition(lblTitle, new TableLayoutPanelCellPosition(0, 0));
+            tableLayoutPanel.Controls.Add(lblTitle, 0, 0);
             tableLayoutPanel.SetColumnSpan(lblTitle, 3);
 
-            // Row 1
+            // Row 1 - Three controls in separate columns
             var btnLeft = new Button();
             btnLeft.Text = "Left\nButton";
             btnLeft.BackColor = Color.LightGreen;
             btnLeft.Click += (s, e) => MessageBox.Show("Left button clicked!");
-            tableLayoutPanel.Controls.Add(btnLeft);
-            tableLayoutPanel.SetCellPosition(btnLeft, new TableLayoutPanelCellPosition(1, 0));
+            tableLayoutPanel.Controls.Add(btnLeft, 0, 1);
 
             var txtCenter = new TextBox();
             txtCenter.Text = "Center TextBox";
             txtCenter.Multiline = true;
-            tableLayoutPanel.Controls.Add(txtCenter);
-            tableLayoutPanel.SetCellPosition(txtCenter, new TableLayoutPanelCellPosition(1, 1));
+            tableLayoutPanel.Controls.Add(txtCenter, 1, 1);
 
             var btnRight = new Button();
             btnRight.Text = "Right\nButton";
             btnRight.BackColor = Color.LightCoral;
             btnRight.Click += (s, e) => MessageBox.Show("Right button clicked!");
-            tableLayoutPanel.Controls.Add(btnRight);
-            tableLayoutPanel.SetCellPosition(btnRight, new TableLayoutPanelCellPosition(1, 2));
+            tableLayoutPanel.Controls.Add(btnRight, 2, 1);
 
-            // Row 2
+            // Row 2 - Bottom label spanning 2 columns and a checkbox
             var lblBottom = new Label();
             lblBottom.Text = "Bottom Label (Spans 2 columns)";
             lblBottom.BackColor = Color.LightYellow;
-            tableLayoutPanel.Controls.Add(lblBottom);
-            tableLayoutPanel.SetCellPosition(lblBottom, new TableLayoutPanelCellPosition(2, 0));
+            tableLayoutPanel.Controls.Add(lblBottom, 0, 2);
             tableLayoutPanel.SetColumnSpan(lblBottom, 2);
 
             var chkOption = new CheckBox();
             chkOption.Text = "Option";
             chkOption.BackColor = Color.LightPink;
-            tableLayoutPanel.Controls.Add(chkOption);
-            tableLayoutPanel.SetCellPosition(chkOption, new TableLayoutPanelCellPosition(2, 2));
+            tableLayoutPanel.Controls.Add(chkOption, 2, 2);
 
             form.Controls.Add(tableLayoutPanel);
 
