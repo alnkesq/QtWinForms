@@ -6,6 +6,10 @@ namespace System.Drawing
 {
     public class Font(FontFamily fontFamily, float emSize, FontStyle style) : IDisposable
     {
+        public Font(FontFamily fontFamily, float emSize)
+            : this(fontFamily, emSize, FontStyle.Regular)
+        {
+        }
         public Font(string fontFamily, float emSize, FontStyle style)
             : this(new FontFamily(fontFamily), emSize, style)
         {

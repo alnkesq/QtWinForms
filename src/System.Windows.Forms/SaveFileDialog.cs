@@ -6,6 +6,8 @@ namespace System.Windows.Forms
 {
     public class SaveFileDialog : FileDialog
     {
+        [Obsolete(Control.NotImplementedWarning)] public bool OverwritePrompt { get; set; }
+
         public unsafe override DialogResult ShowDialog(IWin32Window? owner)
         {
             Utils.EnsureSTAThread();

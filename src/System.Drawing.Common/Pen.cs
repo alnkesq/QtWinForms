@@ -13,6 +13,10 @@ namespace System.Drawing
             this.Color = color;
             this.ImageSharpPen = new SixLabors.ImageSharp.Drawing.Processing.SolidPen(Helpers.ImageSharpColorFromDrawingColor(color));
         }
+        public Pen(Color color, float size)
+            : this(color)
+        { 
+        }
 
         public void Dispose()
         {

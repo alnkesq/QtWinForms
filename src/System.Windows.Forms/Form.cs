@@ -10,6 +10,7 @@ namespace System.Windows.Forms
         private MenuStrip? _mainMenuStrip;
 
         [Obsolete(NotImplementedWarning)] public bool KeyPreview { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool ControlBox { get; set; }
 
         public Form() : base()
         {

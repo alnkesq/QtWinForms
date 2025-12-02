@@ -10,6 +10,9 @@ namespace System.Windows.Forms
         public string Filter { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         [Obsolete(Control.NotImplementedWarning)] public int FilterIndex { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public bool CheckFileExists { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public bool CheckPathExists { get; set; }
+        [Obsolete(Control.NotImplementedWarning)] public bool ValidateNames { get; set; }
 
         public override void Reset()
         {

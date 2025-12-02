@@ -657,6 +657,11 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public int TabIndex { get; set; } = 0;
         [Obsolete(NotImplementedWarning)] public bool AutoSize { get; set; }
         [Obsolete(NotImplementedWarning)] public bool Focused { get; set; }
+        [Obsolete(NotImplementedWarning)] public Image? BackgroundImage { get; set; }
+        [Obsolete(NotImplementedWarning)] public Cursor? Cursor { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool AllowDrop { get; set; }
+        public event DragEventHandler? DragEnter;
+        public event DragEventHandler? DragDrop;
 
         internal const string NotImplementedWarning = "Not implemented, NOP";
 
