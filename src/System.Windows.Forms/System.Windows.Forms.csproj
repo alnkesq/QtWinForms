@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\System.Drawing.Common\System.Drawing.Common.csproj" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.0" />
     <PackageReference Include="System.Resources.Extensions" Version="10.0.0" />
   </ItemGroup>
 
