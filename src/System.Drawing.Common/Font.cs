@@ -22,6 +22,30 @@ namespace System.Drawing
             : this(prototype.FontFamily, prototype.Size, style)
         {
         }
+
+        public Font(FontFamily family, float emSize, FontStyle style, GraphicsUnit unit, byte gdiCharSet)
+            : this(family, emSize, style)
+        {
+        }
+
+
+        public Font(FontFamily family, float emSize, FontStyle style, GraphicsUnit unit, byte gdiCharSet, bool gdiVerticalFont)
+            : this(family, emSize, style)
+        {
+        }
+
+        public Font(string familyName, float emSize, FontStyle style, GraphicsUnit unit, byte gdiCharSet)
+            : this(familyName, emSize, style)
+        {
+        }
+
+        public Font(string familyName, float emSize, FontStyle style, GraphicsUnit unit, byte gdiCharSet, bool gdiVerticalFont)
+            : this(familyName, emSize, style)
+        {
+        }
+
+
+
         public float SizeInPoints => Size;
         public FontFamily FontFamily => fontFamily;
         public string Name => fontFamily.Name;

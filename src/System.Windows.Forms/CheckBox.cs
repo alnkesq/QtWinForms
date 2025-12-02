@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -74,5 +75,7 @@ namespace System.Windows.Forms
             checkBox._checked = (state != 0);
             checkBox.CheckedChanged?.Invoke(checkBox, EventArgs.Empty);
         }
+
+        [Obsolete(NotImplementedWarning)] public ContentAlignment CheckAlign { get; set; }
     }
 }

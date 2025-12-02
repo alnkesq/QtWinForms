@@ -33,5 +33,6 @@ namespace System.Windows.Forms
         }
 
         [Obsolete(NotImplementedWarning)] public Image? Image { get; set; }
+        [Obsolete(NotImplementedWarning)] public ContentAlignment ImageAlign { get; set; }
     }
 }
