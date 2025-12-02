@@ -44,6 +44,7 @@
 #include <QEventLoop>
 #include <QStyledItemDelegate>
 #include <QClipboard>
+#include <QGridLayout>
 
 #include <iostream>
 using namespace std;
@@ -1898,5 +1899,41 @@ extern "C" {
     EXPORT void QTableWidget_SetSelectionBehavior(void* table, int behavior) {
         // behavior: 0 = SelectItems, 1 = SelectRows, 2 = SelectColumns
         ((QTableWidget*)table)->setSelectionBehavior((QAbstractItemView::SelectionBehavior)behavior);
+    }
+
+    // QGridLayout functions for TableLayoutPanel
+    EXPORT void* QGridLayout_Create(void* parent) {
+        QWidget* parentWidget = (QWidget*)parent;
+        QGridLayout* layout = new QGridLayout(parentWidget);
+        layout->setSpacing(0);
+        layout->setContentsMargins(0, 0, 0, 0);
+        parentWidget->setLayout(layout);
+        return layout;
+    }
+
+    EXPORT void QGridLayout_AddWidget(void* layout, void* widget, int row, int column, int rowSpan, int columnSpan) {
+        QGridLayout* gridLayout = (QGridLayout*)layout;
+        QWidget* w = (QWidget*)widget;
+        gridLayout->addWidget(w, row, column, rowSpan, columnSpan);
+    }
+
+    EXPORT void QGridLayout_SetRowStretch(void* layout, int row, int stretch) {
+        ((QGridLayout*)layout)->setRowStretch(row, stretch);
+    }
+
+    EXPORT void QGridLayout_SetColumnStretch(void* layout, int column, int stretch) {
+        ((QGridLayout*)layout)->setColumnStretch(column, stretch);
+    }
+
+    EXPORT void QGridLayout_SetRowMinimumHeight(void* layout, int row, int minHeight) {
+        ((QGridLayout*)layout)->setRowMinimumHeight(row, minHeight);
+    }
+
+    EXPORT void QGridLayout_SetColumnMinimumWidth(void* layout, int column, int minWidth) {
+        ((QGridLayout*)layout)->setColumnMinimumWidth(column, minWidth);
+    }
+
+    EXPORT void QGridLayout_SetSpacing(void* layout, int spacing) {
+        ((QGridLayout*)layout)->setSpacing(spacing);
     }
 }

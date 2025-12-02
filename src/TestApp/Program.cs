@@ -49,6 +49,7 @@ namespace TestApp
                 Console.WriteLine("28. Z-Order Test");
                 Console.WriteLine("29. Accept/Cancel button Test");
                 Console.WriteLine("30. ListView Test");
+                Console.WriteLine("31. TableLayoutPanel Test");
                 Console.WriteLine();
                 Console.Write("Enter choice (default=1): ");
 
@@ -207,6 +208,11 @@ namespace TestApp
                     case "30":
                         Console.WriteLine("Running ListView Test...");
                         testForm = CreateListViewTest();
+                        break;
+
+                    case "31":
+                        Console.WriteLine("Running TableLayoutPanel Test...");
+                        testForm = CreateTableLayoutPanelTest();
                         break;
 
                     default:
@@ -3140,6 +3146,86 @@ namespace TestApp
             var lblInfo = new Label();
             lblInfo.Text = "ListView with icons - switch between different view modes";
             lblInfo.Location = new Point(20, 400);
+            lblInfo.Size = new Size(650, 30);
+            form.Controls.Add(lblInfo);
+
+            return form;
+        }
+
+        static Form CreateTableLayoutPanelTest()
+        {
+            var form = new Form();
+            form.Text = "TableLayoutPanel Test";
+            form.Size = new Size(700, 500);
+
+            // Create TableLayoutPanel
+            var tableLayoutPanel = new TableLayoutPanel();
+            tableLayoutPanel.Location = new Point(20, 20);
+            tableLayoutPanel.Size = new Size(650, 400);
+            tableLayoutPanel.BackColor = Color.LightGray;
+            tableLayoutPanel.RowCount = 3;
+            tableLayoutPanel.ColumnCount = 3;
+
+            // Set column styles
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+
+            // Set row styles
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 70));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 30));
+
+            // Add controls to specific cells
+            // Row 0
+            var lblTitle = new Label();
+            lblTitle.Text = "Title (Spans 3 columns)";
+            lblTitle.BackColor = Color.LightBlue;
+            tableLayoutPanel.Controls.Add(lblTitle);
+            tableLayoutPanel.SetCellPosition(lblTitle, new TableLayoutPanelCellPosition(0, 0));
+            tableLayoutPanel.SetColumnSpan(lblTitle, 3);
+
+            // Row 1
+            var btnLeft = new Button();
+            btnLeft.Text = "Left\nButton";
+            btnLeft.BackColor = Color.LightGreen;
+            btnLeft.Click += (s, e) => MessageBox.Show("Left button clicked!");
+            tableLayoutPanel.Controls.Add(btnLeft);
+            tableLayoutPanel.SetCellPosition(btnLeft, new TableLayoutPanelCellPosition(1, 0));
+
+            var txtCenter = new TextBox();
+            txtCenter.Text = "Center TextBox";
+            txtCenter.Multiline = true;
+            tableLayoutPanel.Controls.Add(txtCenter);
+            tableLayoutPanel.SetCellPosition(txtCenter, new TableLayoutPanelCellPosition(1, 1));
+
+            var btnRight = new Button();
+            btnRight.Text = "Right\nButton";
+            btnRight.BackColor = Color.LightCoral;
+            btnRight.Click += (s, e) => MessageBox.Show("Right button clicked!");
+            tableLayoutPanel.Controls.Add(btnRight);
+            tableLayoutPanel.SetCellPosition(btnRight, new TableLayoutPanelCellPosition(1, 2));
+
+            // Row 2
+            var lblBottom = new Label();
+            lblBottom.Text = "Bottom Label (Spans 2 columns)";
+            lblBottom.BackColor = Color.LightYellow;
+            tableLayoutPanel.Controls.Add(lblBottom);
+            tableLayoutPanel.SetCellPosition(lblBottom, new TableLayoutPanelCellPosition(2, 0));
+            tableLayoutPanel.SetColumnSpan(lblBottom, 2);
+
+            var chkOption = new CheckBox();
+            chkOption.Text = "Option";
+            chkOption.BackColor = Color.LightPink;
+            tableLayoutPanel.Controls.Add(chkOption);
+            tableLayoutPanel.SetCellPosition(chkOption, new TableLayoutPanelCellPosition(2, 2));
+
+            form.Controls.Add(tableLayoutPanel);
+
+            // Info label
+            var lblInfo = new Label();
+            lblInfo.Text = "TableLayoutPanel with 3x3 grid, different column/row styles, and cell spanning";
+            lblInfo.Location = new Point(20, 430);
             lblInfo.Size = new Size(650, 30);
             form.Controls.Add(lblInfo);
 

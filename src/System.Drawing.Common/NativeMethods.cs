@@ -651,5 +651,27 @@ namespace System.Windows.Forms
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QTableWidget_SetSelectionBehavior(IntPtr table, int behavior);
+
+        // QGridLayout functions for TableLayoutPanel
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr QGridLayout_Create(IntPtr parent);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QGridLayout_AddWidget(IntPtr layout, IntPtr widget, int row, int column, int rowSpan, int columnSpan);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QGridLayout_SetRowStretch(IntPtr layout, int row, int stretch);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QGridLayout_SetColumnStretch(IntPtr layout, int column, int stretch);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QGridLayout_SetRowMinimumHeight(IntPtr layout, int row, int minHeight);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QGridLayout_SetColumnMinimumWidth(IntPtr layout, int column, int minWidth);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QGridLayout_SetSpacing(IntPtr layout, int spacing);
     }
 }
