@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Runtime.CompilerServices;
 
 namespace System.Drawing
 {
@@ -213,7 +214,125 @@ namespace System.Drawing
         {
             DrawImage(image, x, y);
         }
+        public void DrawEllipse(Pen pen, RectangleF rect)
+        {
+            DrawEllipse(pen, rect.X, rect.Y, rect.Width, rect.Height);
+        }
 
+        public unsafe void DrawEllipse(Pen pen, float x, float y, float width, float height)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DrawEllipse(Pen pen, Rectangle rect)
+        {
+            DrawEllipse(pen, (float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
+        }
+
+        public void DrawEllipse(Pen pen, int x, int y, int width, int height)
+        {
+            DrawEllipse(pen, (float)x, (float)y, (float)width, (float)height);
+        }
+
+        public void DrawString(ReadOnlySpan<char> s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat? format)
+        {
+            DrawStringInternal(s, font, brush, layoutRectangle, format);
+        }
+        public void DrawString(string? s, Font font, Brush brush, float x, float y)
+        {
+            DrawString(s, font, brush, new RectangleF(x, y, 0f, 0f), null);
+        }
+
+        public void DrawString(ReadOnlySpan<char> s, Font font, Brush brush, float x, float y)
+        {
+            DrawString(s, font, brush, new RectangleF(x, y, 0f, 0f), null);
+        }
+        public void DrawString(string? s, Font font, Brush brush, PointF point)
+        {
+            DrawString(s, font, brush, new RectangleF(point.X, point.Y, 0f, 0f), null);
+        }
+        public void DrawString(ReadOnlySpan<char> s, Font font, Brush brush, PointF point)
+        {
+            DrawString(s, font, brush, new RectangleF(point.X, point.Y, 0f, 0f), null);
+        }
+        public void DrawString(string? s, Font font, Brush brush, float x, float y, StringFormat? format)
+        {
+            DrawString(s, font, brush, new RectangleF(x, y, 0f, 0f), format);
+        }
+        public void DrawString(ReadOnlySpan<char> s, Font font, Brush brush, float x, float y, StringFormat? format)
+        {
+            DrawString(s, font, brush, new RectangleF(x, y, 0f, 0f), format);
+        }
+        public void DrawString(string? s, Font font, Brush brush, PointF point, StringFormat? format)
+        {
+            DrawString(s, font, brush, new RectangleF(point.X, point.Y, 0f, 0f), format);
+        }
+        public void DrawString(ReadOnlySpan<char> s, Font font, Brush brush, PointF point, StringFormat? format)
+        {
+            DrawString(s, font, brush, new RectangleF(point.X, point.Y, 0f, 0f), format);
+        }
+        public void DrawString(string? s, Font font, Brush brush, RectangleF layoutRectangle)
+        {
+            DrawString(s, font, brush, layoutRectangle, null);
+        }
+        public void DrawString(ReadOnlySpan<char> s, Font font, Brush brush, RectangleF layoutRectangle)
+        {
+            DrawString(s, font, brush, layoutRectangle, null);
+        }
+        public void DrawString(string? s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat? format)
+        {
+            DrawStringInternal(s.AsSpan(), font, brush, layoutRectangle, format);
+        }
+        private void DrawStringInternal(ReadOnlySpan<char> s, Font font, Brush brush, RectangleF layoutRectangle, StringFormat? format)
+        {
+            if (!s.IsEmpty)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public unsafe void FillRectangles(Brush brush, scoped ReadOnlySpan<Rectangle> rects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void FillRectangle(Brush brush, RectangleF rect)
+        {
+            FillRectangle(brush, rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
+
+        public unsafe void FillRectangle(Brush brush, float x, float y, float width, float height)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void FillRectangle(Brush brush, Rectangle rect)
+        {
+            FillRectangle(brush, (float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height);
+        }
+
+        public void FillRectangle(Brush brush, int x, int y, int width, int height)
+        {
+            FillRectangle(brush, (float)x, (float)y, (float)width, (float)height);
+        }
+
+        public void FillRectangles(Brush brush, params RectangleF[] rects)
+        {
+            ArgumentNullException.ThrowIfNull(rects, "rects");
+            FillRectangles(brush, rects.AsSpan());
+        }
+
+
+        public unsafe void FillRectangles(Brush brush, scoped ReadOnlySpan<RectangleF> rects)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void FillRectangles(Brush brush, params Rectangle[] rects)
+        {
+            FillRectangles(brush, rects.AsSpan());
+        }
 
         public void Dispose()
         {
