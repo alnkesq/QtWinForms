@@ -115,5 +115,8 @@ namespace System.Windows.Forms
         {
             NativeMethods.QPictureBox_SetSizeMode(QtHandle, (int)_sizeMode);
         }
+
+
+        [Obsolete(NotImplementedWarning)] public BorderStyle BorderStyle { get; set; }
     }
 }

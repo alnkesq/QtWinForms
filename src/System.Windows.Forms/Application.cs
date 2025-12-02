@@ -83,5 +83,10 @@ namespace System.Windows.Forms
         public static void SetHighDpiMode(HighDpiMode mode)
         {
         }
+
+        public static void OnThreadException(Exception e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -121,5 +121,8 @@ namespace System.Windows.Forms
                 }
             }
         }
+
+        public void AppendText(string? text) => Text += text;
+        [Obsolete(NotImplementedWarning)] public BorderStyle BorderStyle { get; set; }
     }
 }

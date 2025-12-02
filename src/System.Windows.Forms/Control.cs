@@ -658,6 +658,7 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public bool AutoSize { get; set; }
         [Obsolete(NotImplementedWarning)] public bool Focused { get; set; }
         [Obsolete(NotImplementedWarning)] public Image? BackgroundImage { get; set; }
+        [Obsolete(NotImplementedWarning)] public ImageLayout BackgroundImageLayout { get; set; }
         [Obsolete(NotImplementedWarning)] public Cursor? Cursor { get; set; }
         [Obsolete(NotImplementedWarning)] public bool AllowDrop { get; set; }
         public event DragEventHandler? DragEnter;
