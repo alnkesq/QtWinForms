@@ -851,6 +851,10 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public event KeyPressEventHandler? KeyPress;
         [Obsolete(NotImplementedWarning)] public event MouseEventHandler? MouseUp;
         [Obsolete(NotImplementedWarning)] public event MouseEventHandler? MouseDown;
+        [Obsolete(NotImplementedWarning)] public event MouseEventHandler? MouseMove;
+        [Obsolete(NotImplementedWarning)] public event EventHandler? MouseEnter;
+        [Obsolete(NotImplementedWarning)] public event EventHandler? MouseLeave;
+        [Obsolete(NotImplementedWarning)] public event PaintEventHandler? Paint;
         [Obsolete(NotImplementedWarning)] protected void SetStyle(ControlStyles flag, bool value) { }
 
         public IntPtr Handle
