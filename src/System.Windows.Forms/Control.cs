@@ -334,10 +334,14 @@ namespace System.Windows.Forms
             get => _size;
             set
             {
-                _size = value;
-                if (IsQWidgetCreated)
+                if (value != _size)
                 {
-                    NativeMethods.QWidget_Resize(QtHandle, value.Width, value.Height);
+                    _size = value;
+                    if (IsQWidgetCreated)
+                    {
+                        NativeMethods.QWidget_Resize(QtHandle, value.Width, value.Height);
+                    }
+                    OnResize(EventArgs.Empty);
                 }
             }
         }
