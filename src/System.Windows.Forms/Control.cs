@@ -530,8 +530,12 @@ namespace System.Windows.Forms
         {
             if (!IsHandleCreated) return;
 
-            // Track remaining client area
-            Rectangle clientRect = new Rectangle(0, 0, Width, Height);
+            // Track remaining client area, accounting for padding
+            Rectangle clientRect = new Rectangle(
+                Padding.Left,
+                Padding.Top,
+                Width - Padding.Left - Padding.Right,
+                Height - Padding.Top - Padding.Bottom);
 
             // Process docked controls in Z-order (order they were added)
             // We need to process them in the order: Top, Bottom, Left, Right, Fill
