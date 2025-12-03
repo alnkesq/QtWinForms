@@ -12,6 +12,8 @@ namespace System.Windows.Forms
         }
         private readonly List<ToolStripItem> _items = new List<ToolStripItem>();
         protected override Size DefaultSize => new Size(100, 25);
+        protected override Padding DefaultMargin => Padding.Empty;
+
         protected override void CreateHandle()
         {
             QtHandle = CreateNativeControlCore();

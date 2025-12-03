@@ -14,6 +14,7 @@ namespace System.Windows.Forms
             SetCommonProperties();
         }
         protected override Size DefaultSize => new Size(100, 23);
+        protected override Padding DefaultMargin => new Padding(3, 0, 3, 0);
 
         public override string Text
         {

@@ -9,6 +9,7 @@ namespace System.Windows.Forms
         private string _text = string.Empty;
 
         protected override Size DefaultSize => new Size(200, 100);
+        protected override Padding DefaultPadding => new Padding(3);
 
         protected override void CreateHandle()
         {

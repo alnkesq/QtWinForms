@@ -12,6 +12,6 @@ namespace System.Windows.Forms
         }
 
         protected override Size DefaultSize => new Size(6, 6);
-
+        protected override Padding DefaultMargin => Padding.Empty;
     }
 }

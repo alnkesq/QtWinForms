@@ -34,7 +34,7 @@ namespace System.Windows.Forms
                 NativeMethods.QAction_SetEnabled(QtHandle, _enabled);
             }
         }
-
+        protected override Padding DefaultMargin => Padding.Empty;
         public override string Text
         {
             get => _text;

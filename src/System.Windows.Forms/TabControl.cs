@@ -15,6 +15,7 @@ namespace System.Windows.Forms
         }
 
         protected override Size DefaultSize => new Size(200, 100);
+        //protected override Padding DefaultPadding => new Point(6, 3);
 
         protected override void CreateHandle()
         {

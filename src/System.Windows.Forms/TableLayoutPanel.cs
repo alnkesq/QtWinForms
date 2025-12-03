@@ -17,7 +17,6 @@ namespace System.Windows.Forms
             base.Controls = new TableLayoutControlCollection(this);
             RowStyles = new TableLayoutRowStyleCollection(this);
             ColumnStyles = new TableLayoutColumnStyleCollection(this);
-            Size = new Size(200, 100);
         }
 
         public new TableLayoutControlCollection Controls => (TableLayoutControlCollection)base.Controls;

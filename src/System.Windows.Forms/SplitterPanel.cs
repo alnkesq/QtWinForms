@@ -10,5 +10,6 @@ namespace System.Windows.Forms
         {
             _owner = owner;
         }
+        protected override Padding DefaultMargin => new Padding(0, 0, 0, 0);
     }
 }

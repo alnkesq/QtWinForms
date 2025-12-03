@@ -353,7 +353,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        private Size _size = new Size(100, 30); // Default button size
+        private Size _size;
 
         public int Left
         {
