@@ -138,7 +138,23 @@ extern "C" {
     }
     
     EXPORT void QWidget_Resize(void* widget, int width, int height) {
-        ((QWidget*)widget)->resize(width, height);
+        QWidget* w = (QWidget*)widget;
+        if (w->isWindow()) {
+            // For top-level windows, we need to account for frame decorations
+            // Get current frame geometry to calculate decoration sizes
+            QRect frameGeom = w->frameGeometry();
+            QRect clientGeom = w->geometry();
+            
+            // Calculate decoration sizes
+            int frameWidth = frameGeom.width() - clientGeom.width();
+            int frameHeight = frameGeom.height() - clientGeom.height();
+            //cout << "QWidget_Resize(Window): desired total: " << width << "x" << height << ", actual total: " << frameGeom.width() << "x" << frameGeom.height() << ", decoration: " << frameWidth << "x" << frameHeight << ", actual client: " << clientGeom.width() << "x" << clientGeom.height() << endl;
+            // Set client area size to achieve desired frame size
+            w->resize(width - frameWidth, height - frameHeight);
+        } else {
+            // For child widgets, just use regular resize
+            w->resize(width, height);
+        }
     }
 
     EXPORT void QWidget_Raise(void* widget) {
@@ -317,17 +333,26 @@ extern "C" {
     protected:
         bool eventFilter(QObject* obj, QEvent* event) override {
             if (event->type() == QEvent::Resize && resizeCallback) {
-                QResizeEvent* resizeEvent = static_cast<QResizeEvent*>(event);
-                resizeCallback(userData, resizeEvent->size().width(), resizeEvent->size().height());
+                QWidget* widget = qobject_cast<QWidget*>(obj);
+                if(widget->isWindow()){
+                    QRect frameGeom = widget->frameGeometry();
+                    resizeCallback(userData, frameGeom.width(), frameGeom.height());
+                }else{
+                    QResizeEvent* resizeEvent = static_cast<QResizeEvent*>(event);
+                    resizeCallback(userData, resizeEvent->size().width(), resizeEvent->size().height());
+                }
             }
             else if (event->type() == QEvent::Move && moveCallback) {
                 // For top-level windows, QMoveEvent::pos() returns the client area position,
                 // but QWidget::move() expects the frame position (including title bar).
                 // Use frameGeometry() to get the correct position including the window frame.
                 QWidget* widget = qobject_cast<QWidget*>(obj);
-                if (widget) {
+                if (widget->isWindow()) {
                     QPoint framePos = widget->frameGeometry().topLeft();
                     moveCallback(userData, framePos.x(), framePos.y());
+                }else{
+                    QMoveEvent* moveEvent = static_cast<QMoveEvent*>(event);
+                    moveCallback(userData, moveEvent->pos().x(), moveEvent->pos().y());
                 }
             }
             return QObject::eventFilter(obj, event);
@@ -1607,9 +1632,14 @@ extern "C" {
 
     EXPORT void QWidget_GetSize(void* widget, int* width, int* height) {
         QWidget* w = (QWidget*)widget;
-        QSize size = w->size();
-        *width = size.width();
-        *height = size.height();
+        if (w->isWindow()) {
+            QRect frameGeom = w->frameGeometry();
+            *width = frameGeom.width();
+            *height = frameGeom.height();
+        } else {
+            *width = w->width();
+            *height = w->height();
+        }
     }
 
     // Form Modal Dialog Support
