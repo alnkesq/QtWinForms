@@ -275,5 +275,16 @@ namespace System.Windows.Forms
             }
             return 1;
         }
+
+        public override void PerformLayout()
+        {
+            if (!IsHandleCreated) return;
+
+            // Is this necessary?
+            //foreach (var child in this.Controls)
+            //{
+            //    child.PerformLayout();
+            //}
+        }
     }
 }

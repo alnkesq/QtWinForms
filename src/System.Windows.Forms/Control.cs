@@ -509,7 +509,7 @@ namespace System.Windows.Forms
         public void ResumeLayout(bool performLayout) { }
         public void ResumeLayout() => ResumeLayout(true);
 
-        public void PerformLayout()
+        public virtual void PerformLayout()
         {
             if (!IsHandleCreated) return;
 
