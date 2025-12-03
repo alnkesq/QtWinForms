@@ -453,7 +453,7 @@ namespace System.Windows.Forms
                         _dock = DockStyle.None;
                     }
                     // Store current bounds for anchor calculations
-                    if (Parent != null)
+                    if (Parent != null && !_anchorBounds.IsEmpty)
                     {
                         _anchorBounds = new Rectangle(Location, Size);
                     }
