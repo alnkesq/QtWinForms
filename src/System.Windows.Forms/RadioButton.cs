@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
@@ -7,6 +8,8 @@ namespace System.Windows.Forms
     {
         private string _text = string.Empty;
         private bool _checked;
+
+        protected override Size DefaultSize => new Size(104, 24);
 
         protected override void CreateHandle()
         {

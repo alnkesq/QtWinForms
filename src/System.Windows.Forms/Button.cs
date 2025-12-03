@@ -5,12 +5,8 @@ using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
-    public class Button : Control
+    public class Button : ButtonBase
     {
-        public Button()
-        {
-            Size = new Size(75, 23);
-        }
 
         protected override void CreateHandle()
         {

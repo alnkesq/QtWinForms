@@ -20,7 +20,7 @@ namespace System.Windows.Forms
             }
             ConnectStateChangedEvent();
         }
-
+        protected override Size DefaultSize => new Size(104, 24);
         public override string Text
         {
             get => _text;

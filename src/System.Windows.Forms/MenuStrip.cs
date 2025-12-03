@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -10,6 +11,7 @@ namespace System.Windows.Forms
             Dock = DockStyle.Top;
         }
         private readonly List<ToolStripMenuItem> _items = new List<ToolStripMenuItem>();
+        protected override Size DefaultSize => new Size(200, 24);
 
         protected override void CreateHandle()
         {

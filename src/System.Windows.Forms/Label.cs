@@ -13,6 +13,7 @@ namespace System.Windows.Forms
             QtHandle = NativeMethods.QLabel_Create(IntPtr.Zero, Text);
             SetCommonProperties();
         }
+        protected override Size DefaultSize => new Size(100, 23);
 
         public override string Text
         {

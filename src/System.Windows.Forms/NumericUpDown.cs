@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -26,6 +27,7 @@ namespace System.Windows.Forms
             NativeMethods.QDoubleSpinBox_ConnectValueChanged(QtHandle, &OnValueChangedCallback, GCHandlePtr);
 
         }
+        protected override Size DefaultSize => new Size(120, 23);
 
         [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvCdecl) })]
         private static void OnValueChangedCallback(IntPtr userData, double value)

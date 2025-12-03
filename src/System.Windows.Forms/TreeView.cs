@@ -14,6 +14,8 @@ namespace System.Windows.Forms
             _nodes = new TreeNode.TreeNodeCollection(this);
         }
 
+        protected override Size DefaultSize => new Size(121, 97);
+
         protected override void CreateHandle()
         {
 

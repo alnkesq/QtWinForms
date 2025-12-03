@@ -19,6 +19,7 @@ namespace System.Windows.Forms
         private int _virtualRowCount;
         private DataGridViewSelectionMode _selectionMode = DataGridViewSelectionMode.FullRowSelect;
         
+        protected override Size DefaultSize => new Size(240, 150);
         public DataGridView()
         {
             _columns = new DataGridViewColumnCollection { _owner = this };

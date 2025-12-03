@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -18,6 +19,7 @@ namespace System.Windows.Forms
             _items = new ObjectCollection(this);
         }
 
+        protected override Size DefaultSize => new Size(121, 23);
         protected override void CreateHandle()
         {
             QtHandle = NativeMethods.QComboBox_Create(IntPtr.Zero);

@@ -11,7 +11,7 @@ namespace System.Windows.Forms
             Dock = DockStyle.Top;
         }
         private readonly List<ToolStripItem> _items = new List<ToolStripItem>();
-
+        protected override Size DefaultSize => new Size(100, 25);
         protected override void CreateHandle()
         {
             QtHandle = CreateNativeControlCore();

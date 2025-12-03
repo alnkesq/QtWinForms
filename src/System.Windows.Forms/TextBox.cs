@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -15,6 +16,9 @@ namespace System.Windows.Forms
             var control = ObjectFromGCHandle<TextBox>(userData);
             control.OnTextChanged(EventArgs.Empty);
         }
+
+        protected override Size DefaultSize => new Size(100, 23);
+
 
         public bool Multiline
         {

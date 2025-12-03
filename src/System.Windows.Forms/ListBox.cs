@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,6 +11,7 @@ namespace System.Windows.Forms
         private SelectionMode _selectionMode = SelectionMode.One;
         private EventHandler? _selectedIndexChanged;
 
+        protected override Size DefaultSize => new Size(120, 96);
 
         [Obsolete(NotImplementedWarning)] public bool FormattingEnabled { get; set; }
 

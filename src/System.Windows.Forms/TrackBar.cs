@@ -12,8 +12,8 @@ namespace System.Windows.Forms
 
         public TrackBar()
         {
-            Size = new Size(104, 45); // Default size
         }
+        protected override Size DefaultSize => new Size(104, 45);
 
         protected unsafe override void CreateHandle()
         {

@@ -23,10 +23,8 @@ namespace System.Windows.Forms
             // Add panels to Controls collection so they are created and parented correctly
             Controls.Add(_panel1);
             Controls.Add(_panel2);
-
-            // Default size
-            Size = new Size(150, 100);
         }
+        protected override Size DefaultSize => new Size(150, 100);
 
         public SplitterPanel Panel1 => _panel1;
         public SplitterPanel Panel2 => _panel2;

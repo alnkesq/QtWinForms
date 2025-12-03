@@ -15,9 +15,8 @@ namespace System.Windows.Forms
         public Form() : base()
         {
             Visible = false;
-            Size = new Size(300, 300);
         }
-
+        protected override Size DefaultSize => new Size(300, 300);
 
         public event EventHandler? Load;
         public event EventHandler? Shown;

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -14,6 +15,8 @@ namespace System.Windows.Forms
         private NativeCallback? _onSelectedIndexChangedCallback;
 
         public event EventHandler? SelectedIndexChanged;
+
+        protected override Size DefaultSize => new Size(121, 97);
 
         protected virtual void OnSelectedIndexChanged(EventArgs e)
         {

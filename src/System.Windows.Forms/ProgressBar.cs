@@ -8,11 +8,7 @@ namespace System.Windows.Forms
         private int _maximum = 100;
         private int _value = 0;
         private ProgressBarStyle _style = ProgressBarStyle.Blocks;
-
-        public ProgressBar()
-        {
-            Size = new Size(100, 23); // Default size
-        }
+        protected override Size DefaultSize => new Size(100, 23);
 
         protected override void CreateHandle()
         {

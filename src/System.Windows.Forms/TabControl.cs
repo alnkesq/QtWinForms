@@ -12,8 +12,9 @@ namespace System.Windows.Forms
         {
             _tabPages = new TabPageCollection(this);
             base.Controls = _tabPages;
-            Size = new Size(300, 200);
         }
+
+        protected override Size DefaultSize => new Size(200, 100);
 
         protected override void CreateHandle()
         {

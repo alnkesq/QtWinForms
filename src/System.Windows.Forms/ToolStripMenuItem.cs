@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -10,6 +11,7 @@ namespace System.Windows.Forms
     {
         private bool _hasChildren = false;
 
+        protected override Size DefaultSize => new Size(32, 19);
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
         internal override bool IsQWidgetCreated => false;
         protected override void CreateHandle()

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -9,5 +10,8 @@ namespace System.Windows.Forms
         {
             QtHandle = NativeMethods.QAction_CreateSeparator();
         }
+
+        protected override Size DefaultSize => new Size(6, 6);
+
     }
 }

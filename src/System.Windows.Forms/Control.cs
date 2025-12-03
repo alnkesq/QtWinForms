@@ -6,11 +6,16 @@ namespace System.Windows.Forms
 {
     public class Control : Component, IWin32Window, IDisposable, IComponent, ISupportInitialize, ISynchronizeInvoke
     {
+
         internal IntPtr QtHandle;
         internal GCHandle<Control>? gcHandle;
 
         internal IntPtr GCHandlePtr => GCHandle<Control>.ToIntPtr((gcHandle ??= new GCHandle<Control>(this)));
         internal static T ObjectFromGCHandle<T>(IntPtr gcHandle) where T : class => GCHandle<T>.FromIntPtr(gcHandle).Target;
+
+        protected virtual Size DefaultSize => Size.Empty;
+        protected virtual Padding DefaultPadding => Padding.Empty;
+        protected virtual Padding DefaultMargin => new Padding(3);
 
         public bool InvokeRequired => Environment.CurrentManagedThreadId != Application._mainThreadId;
         [Obsolete(NotImplementedWarning)] public static bool CheckForIllegalCrossThreadCalls { get; set; }
@@ -101,6 +106,9 @@ namespace System.Windows.Forms
         public Control()
         {
             Application.InitializeQt();
+            _size = DefaultSize;
+            Margin = DefaultMargin;
+            Padding = DefaultPadding;
             Controls = new ControlCollection(this);
         }
 

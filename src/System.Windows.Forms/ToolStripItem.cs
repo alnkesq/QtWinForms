@@ -12,7 +12,7 @@ namespace System.Windows.Forms
         private string _text = string.Empty;
         private string? _toolTipText = null; // null means use Text automatically
         private ToolStripItemDisplayStyle _displayStyle = ToolStripItemDisplayStyle.ImageAndText;
-
+        protected override Size DefaultSize => new Size(23, 23);
         public Image? Image
         {
             get => _image;

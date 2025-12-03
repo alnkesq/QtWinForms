@@ -15,6 +15,8 @@ namespace System.Windows.Forms
         {
         }
 
+        protected override Size DefaultSize => new Size(100, 50);
+
         protected override void CreateHandle()
         {
 

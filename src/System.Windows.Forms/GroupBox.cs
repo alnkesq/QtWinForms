@@ -8,11 +8,7 @@ namespace System.Windows.Forms
     {
         private string _text = string.Empty;
 
-        public GroupBox() : base()
-        {
-            Size = new Size(200, 100);
-            Padding = new Padding(3);
-        }
+        protected override Size DefaultSize => new Size(200, 100);
 
         protected override void CreateHandle()
         {

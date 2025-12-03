@@ -11,11 +11,8 @@ namespace System.Windows.Forms
 
         public event EventHandler? ValueChanged;
 
-        public DateTimePicker()
-        {
-            Size = new Size(200, 20);
-        }
-
+        
+        protected override Size DefaultSize => new Size(200, 23);
         protected unsafe override void CreateHandle()
         {
             QtHandle = NativeMethods.QDateTimeEdit_Create(Parent?.QtHandle ?? IntPtr.Zero);

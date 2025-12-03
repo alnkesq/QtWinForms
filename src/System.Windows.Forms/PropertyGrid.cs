@@ -7,10 +7,7 @@ namespace System.Windows.Forms
     public class PropertyGrid : Control
     {
         private object _selectedObject;
-
-        public PropertyGrid()
-        {
-        }
+        protected override Size DefaultSize => new Size(130, 130);
 
         public object SelectedObject
         {

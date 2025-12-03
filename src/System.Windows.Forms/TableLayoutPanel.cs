@@ -5,7 +5,7 @@ using System.Text;
 
 namespace System.Windows.Forms
 {
-    public class TableLayoutPanel : Control
+    public class TableLayoutPanel : Panel
     {
         private IntPtr _gridLayout;
         private int _rowCount = 0;
