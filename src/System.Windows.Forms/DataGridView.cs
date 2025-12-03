@@ -17,7 +17,7 @@ namespace System.Windows.Forms
         private DataGridViewSelectedColumnCollection _selectedColumns;
         private bool _virtualMode;
         private int _virtualRowCount;
-        private DataGridViewSelectionMode _selectionMode = DataGridViewSelectionMode.FullRowSelect;
+        private DataGridViewSelectionMode _selectionMode = DataGridViewSelectionMode.RowHeaderSelect;
         
         protected override Size DefaultSize => new Size(240, 150);
         public DataGridView()
@@ -213,20 +213,14 @@ namespace System.Windows.Forms
 
         private void UpdateSelectionMode()
         {
-            // Map WinForms SelectionMode to Qt SelectionBehavior
-            // CellSelect = 0 -> SelectItems
-            // FullRowSelect = 1 -> SelectRows
-            // FullColumnSelect = 2 -> SelectColumns
-            // RowHeaderSelect = 3 -> SelectRows (Qt doesn't distinguish)
-            // ColumnHeaderSelect = 4 -> SelectColumns (Qt doesn't distinguish)
             int qtMode = _selectionMode switch
             {
                 DataGridViewSelectionMode.CellSelect => 0, // SelectItems
                 DataGridViewSelectionMode.FullRowSelect => 1, // SelectRows
                 DataGridViewSelectionMode.FullColumnSelect => 2, // SelectColumns
-                DataGridViewSelectionMode.RowHeaderSelect => 1, // SelectRows (approximation)
-                DataGridViewSelectionMode.ColumnHeaderSelect => 2, // SelectColumns (approximation)
-                _ => 1 // Default to SelectRows
+                DataGridViewSelectionMode.RowHeaderSelect => 0, 
+                DataGridViewSelectionMode.ColumnHeaderSelect => 0,
+                _ => throw new NotSupportedException()
             };
             NativeMethods.QTableWidget_SetSelectionBehavior(QtHandle, qtMode);
         }
@@ -245,6 +239,19 @@ namespace System.Windows.Forms
         {
             get
             {
+                if (VirtualMode)
+                {
+                    var args = new DataGridViewCellValueEventArgs(columnIndex, rowIndex);
+                    CellValueNeeded?.Invoke(this, args);
+                    var cell = new DataGridViewCell
+                    {
+                        _owner = this,
+                        _rowIndex = rowIndex,
+                        _columnIndex = columnIndex,
+                        Value = args.Value
+                    };
+                    return cell;
+                }
                 return Rows[rowIndex].Cells[columnIndex];
             }
             set

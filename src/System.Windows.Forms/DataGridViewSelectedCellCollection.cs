@@ -66,7 +66,10 @@ namespace System.Windows.Forms
             
             for (int i = 0; i < count; i++)
             {
-                cells.Add(grid.Rows[rows[i]].Cells[columns[i]]);
+                var rowIndex = rows[i];
+                var colIndex = columns[i];
+                var cell = grid[colIndex, rowIndex];
+                cells.Add(cell);
             }
         }
         
