@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,6 +7,10 @@ namespace System.Windows.Forms
 {
     public class Button : Control
     {
+        public Button()
+        {
+            Size = new Size(75, 23);
+        }
 
         protected override void CreateHandle()
         {

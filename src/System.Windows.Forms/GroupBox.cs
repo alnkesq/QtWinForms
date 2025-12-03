@@ -11,6 +11,7 @@ namespace System.Windows.Forms
         public GroupBox() : base()
         {
             Size = new Size(200, 100);
+            Padding = new Padding(3);
         }
 
         protected override void CreateHandle()
