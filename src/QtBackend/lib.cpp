@@ -216,13 +216,41 @@ extern "C" {
         ((QCheckBox*)widget)->setText(QString::fromUtf16(text));
     }
     
-    EXPORT void QCheckBox_SetChecked(void* widget, bool isChecked) {
-        ((QCheckBox*)widget)->setChecked(isChecked);
+    EXPORT void QCheckBox_SetCheckState(void* widget, int state) {
+        Qt::CheckState qtState;
+        switch (state) {
+            case 0: qtState = Qt::Unchecked; break;
+            case 1: qtState = Qt::Checked; break;
+            case 2: qtState = Qt::PartiallyChecked; break;
+            default: qtState = Qt::Unchecked; break;
+        }
+        ((QCheckBox*)widget)->setCheckState(qtState);
+    }
+    
+    EXPORT int QCheckBox_GetCheckState(void* widget) {
+        Qt::CheckState qtState = ((QCheckBox*)widget)->checkState();
+        switch (qtState) {
+            case Qt::Unchecked: return 0;
+            case Qt::Checked: return 1;
+            case Qt::PartiallyChecked: return 2;
+            default: return 0;
+        }
+    }
+    
+    EXPORT void QCheckBox_SetThreeState(void* widget, bool threeState) {
+        ((QCheckBox*)widget)->setTristate(threeState);
     }
     
     EXPORT void QCheckBox_ConnectStateChanged(void* widget, void (*callback)(void*, int), void* userData) {
-        QObject::connect((QCheckBox*)widget, &QCheckBox::stateChanged, [callback, userData](int state) {
-            callback(userData, state);
+        QObject::connect((QCheckBox*)widget, &QCheckBox::stateChanged, [callback, userData](int qtState) {
+            int clrState;
+            switch (qtState) {
+                case Qt::Unchecked: clrState = 0; break;
+                case Qt::Checked: clrState = 1; break;
+                case Qt::PartiallyChecked: clrState = 2; break;
+                default: clrState = 0; break;
+            }
+            callback(userData, clrState);
         });
     }
 

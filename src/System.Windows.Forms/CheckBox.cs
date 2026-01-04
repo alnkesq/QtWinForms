@@ -7,16 +7,20 @@ namespace System.Windows.Forms
     public class CheckBox : Control
     {
         private string _text = string.Empty;
-        private bool _checked;
+        private CheckState _checkState;
+        private bool _threeState;
 
         protected override void CreateHandle()
         {
             QtHandle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
             SetCommonProperties();
 
-            if (_checked)
+            if (_threeState)
+                NativeMethods.QCheckBox_SetThreeState(QtHandle, _threeState);
+
+            if (_checkState != CheckState.Unchecked)
             {
-                NativeMethods.QCheckBox_SetChecked(QtHandle, _checked);
+                NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)_checkState);
             }
             ConnectStateChangedEvent();
         }
@@ -36,26 +40,42 @@ namespace System.Windows.Forms
 
         public bool Checked
         {
-            get => _checked;
+            get => _checkState == CheckState.Checked;
             set
             {
-                _checked = value;
-                if (IsHandleCreated)
-                {
-                    NativeMethods.QCheckBox_SetChecked(QtHandle, value);
-                }
+                CheckState = value ? CheckState.Checked : CheckState.Unchecked;
             }
         }
 
         public CheckState CheckState
         {
-            get
-            {
-                return Checked ? CheckState.Checked : CheckState.Unchecked;
-            }
+            get => _checkState;
             set
             {
-                Checked = value == CheckState.Checked;
+                if (_checkState != value)
+                {
+                    _checkState = value;
+                    if (IsHandleCreated)
+                    {
+                        NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)value);
+                    }
+                }
+            }
+        }
+
+        public bool ThreeState
+        {
+            get => _threeState;
+            set
+            {
+                if (_threeState != value)
+                {
+                    _threeState = value;
+                    if (IsHandleCreated)
+                    {
+                        NativeMethods.QCheckBox_SetThreeState(QtHandle, value);
+                    }
+                }
             }
         }
 
@@ -72,7 +92,7 @@ namespace System.Windows.Forms
         {
             var checkBox = ObjectFromGCHandle<CheckBox>(userData);
 
-            checkBox._checked = (state != 0);
+            checkBox._checkState = (CheckState)state;
             checkBox.CheckedChanged?.Invoke(checkBox, EventArgs.Empty);
         }
 

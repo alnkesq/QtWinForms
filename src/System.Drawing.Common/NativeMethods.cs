@@ -82,7 +82,13 @@ namespace System.Windows.Forms
         public static extern void QCheckBox_SetText(IntPtr checkBox, [MarshalAs(UnmanagedType.LPWStr)] string text);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void QCheckBox_SetChecked(IntPtr checkBox, bool isChecked);
+        public static extern void QCheckBox_SetCheckState(IntPtr checkBox, int state);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int QCheckBox_GetCheckState(IntPtr checkBox);
+
+        [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void QCheckBox_SetThreeState(IntPtr checkBox, bool threeState);
 
         [DllImport(LibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void QCheckBox_ConnectStateChanged(IntPtr checkBox, IntPtr callback, IntPtr userData);
