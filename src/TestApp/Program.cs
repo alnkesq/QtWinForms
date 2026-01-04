@@ -336,7 +336,7 @@ namespace TestApp
             chkVisible.Text = "Toggle Button2 Visible";
             chkVisible.Location = new Point(220, 130);
             chkVisible.Size = new Size(150, 30);
-            chkVisible.Checked = true;
+            chkVisible.CheckState = CheckState.Indeterminate;
             chkVisible.CheckedChanged += (s, e) =>
             {
                 button2.Visible = chkVisible.Checked;

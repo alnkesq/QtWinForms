@@ -15,12 +15,9 @@ namespace System.Windows.Forms
             QtHandle = NativeMethods.QCheckBox_Create(IntPtr.Zero, Text);
             SetCommonProperties();
 
-            if (_threeState)
-                NativeMethods.QCheckBox_SetThreeState(QtHandle, _threeState);
-
-            if (_checkState != CheckState.Unchecked)
+            if (_checkState != CheckState.Unchecked || _threeState)
             {
-                NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)_checkState);
+                NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)_checkState, _threeState);
             }
             ConnectStateChangedEvent();
         }
@@ -57,7 +54,7 @@ namespace System.Windows.Forms
                     _checkState = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)value);
+                        NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)_checkState, _threeState);
                     }
                 }
             }
@@ -73,7 +70,7 @@ namespace System.Windows.Forms
                     _threeState = value;
                     if (IsHandleCreated)
                     {
-                        NativeMethods.QCheckBox_SetThreeState(QtHandle, value);
+                        NativeMethods.QCheckBox_SetCheckState(QtHandle, (int)_checkState, _threeState);
                     }
                 }
             }
@@ -91,9 +88,16 @@ namespace System.Windows.Forms
         private static void OnStateChangedCallback(nint userData, int state)
         {
             var checkBox = ObjectFromGCHandle<CheckBox>(userData);
+            var newState = (CheckState)state;
+            var prevState = checkBox._checkState;
+            if (prevState != newState)
+            {
+                checkBox._checkState = newState;
+                if (prevState == CheckState.Indeterminate)
+                    NativeMethods.QCheckBox_SetCheckState(checkBox.QtHandle, (int)newState, false);
 
-            checkBox._checkState = (CheckState)state;
-            checkBox.CheckedChanged?.Invoke(checkBox, EventArgs.Empty);
+                checkBox.CheckedChanged?.Invoke(checkBox, EventArgs.Empty);
+            }
         }
 
         [Obsolete(NotImplementedWarning)] public ContentAlignment CheckAlign { get; set; }

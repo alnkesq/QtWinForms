@@ -216,7 +216,7 @@ extern "C" {
         ((QCheckBox*)widget)->setText(QString::fromUtf16(text));
     }
     
-    EXPORT void QCheckBox_SetCheckState(void* widget, int state) {
+    EXPORT void QCheckBox_SetCheckState(void* widget, int state, bool threeState) {
         Qt::CheckState qtState;
         switch (state) {
             case 0: qtState = Qt::Unchecked; break;
@@ -225,6 +225,7 @@ extern "C" {
             default: qtState = Qt::Unchecked; break;
         }
         ((QCheckBox*)widget)->setCheckState(qtState);
+        ((QCheckBox*)widget)->setTristate(threeState || state == 2);
     }
     
     EXPORT int QCheckBox_GetCheckState(void* widget) {
@@ -235,10 +236,6 @@ extern "C" {
             case Qt::PartiallyChecked: return 2;
             default: return 0;
         }
-    }
-    
-    EXPORT void QCheckBox_SetThreeState(void* widget, bool threeState) {
-        ((QCheckBox*)widget)->setTristate(threeState);
     }
     
     EXPORT void QCheckBox_ConnectStateChanged(void* widget, void (*callback)(void*, int), void* userData) {
