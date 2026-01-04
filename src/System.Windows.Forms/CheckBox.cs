@@ -93,7 +93,7 @@ namespace System.Windows.Forms
             if (prevState != newState)
             {
                 checkBox._checkState = newState;
-                if (prevState == CheckState.Indeterminate)
+                if (prevState == CheckState.Indeterminate && !checkBox._threeState)
                     NativeMethods.QCheckBox_SetCheckState(checkBox.QtHandle, (int)newState, false);
 
                 checkBox.CheckedChanged?.Invoke(checkBox, EventArgs.Empty);
