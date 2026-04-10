@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections;
 
 namespace System.Windows.Forms
 {
@@ -32,7 +29,7 @@ namespace System.Windows.Forms
                     NativeMethods.QTableWidget_SetColumnHeaderText(_owner.QtHandle, col._index, col.HeaderText);
                 }
             }
-                
+
             for (int r = 0; r < _owner.Rows.Count; r++)
             {
                 var row = _owner.Rows[r];
@@ -44,7 +41,7 @@ namespace System.Windows.Forms
                 };
                 row.Cells._cells.Add(newCell);
             }
-            
+
         }
 
         public void Clear()
@@ -55,12 +52,12 @@ namespace System.Windows.Forms
             {
                 NativeMethods.QTableWidget_SetColumnCount(_owner.QtHandle, 0);
             }
-                
+
             for (int r = 0; r < _owner.Rows.Count; r++)
             {
                 _owner.Rows[r].Cells._cells.Clear();
             }
-            
+
         }
 
         public IEnumerator<DataGridViewColumn> GetEnumerator()
@@ -76,7 +73,7 @@ namespace System.Windows.Forms
         public void RemoveAt(int index)
         {
             _columns.RemoveAt(index);
-            
+
             for (int i = index; i < _columns.Count; i++)
             {
                 _columns[i]._index = i;
@@ -92,13 +89,13 @@ namespace System.Windows.Forms
             {
                 var row = _owner.Rows[r];
                 row.Cells._cells.RemoveAt(index);
-                    
+
                 for (int c = index; c < row.Cells._cells.Count; c++)
                 {
                     row.Cells._cells[c]._columnIndex = c;
                 }
             }
-            
+
         }
 
         IEnumerator IEnumerable.GetEnumerator()

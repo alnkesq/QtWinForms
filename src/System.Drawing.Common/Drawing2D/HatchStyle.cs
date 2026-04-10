@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.Drawing.Drawing2D
+﻿namespace System.Drawing.Drawing2D
 {
     // System.Drawing.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
     // System.Drawing.Drawing2D.HatchStyle

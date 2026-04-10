@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-
-namespace System.Windows.Forms
+﻿namespace System.Windows.Forms
 {
     public class TableLayoutPanel : Panel
     {
@@ -64,7 +59,7 @@ namespace System.Windows.Forms
 
                 if (_controlPositions.TryGetValue(child, out var position))
                 {
-                    NativeMethods.QGridLayout_AddWidget(_gridLayout, child.QtHandle, 
+                    NativeMethods.QGridLayout_AddWidget(_gridLayout, child.QtHandle,
                         position.row, position.column, position.rowSpan, position.columnSpan);
                 }
                 else

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using System.Drawing;
 
 namespace System.Windows.Forms
 {
@@ -114,8 +110,8 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public Color ImageTransparentColor { get; set; }
 
         public void PerformClick()
-        { 
-            if(Enabled) OnClick(EventArgs.Empty); 
+        {
+            if (Enabled) OnClick(EventArgs.Empty);
         }
     }
 }

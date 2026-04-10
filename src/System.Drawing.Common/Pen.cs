@@ -15,7 +15,7 @@ namespace System.Drawing
         }
         public Pen(Color color, float size)
             : this(color)
-        { 
+        {
         }
 
         public void Dispose()

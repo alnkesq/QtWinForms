@@ -30,7 +30,7 @@ namespace System.Windows.Forms
 
             ConnectItemSelectionChanged();
             ConnectItemExpanded();
-            
+
         }
 
         public void ExpandAll()

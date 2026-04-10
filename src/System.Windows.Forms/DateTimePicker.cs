@@ -11,7 +11,7 @@ namespace System.Windows.Forms
 
         public event EventHandler? ValueChanged;
 
-        
+
         protected override Size DefaultSize => new Size(200, 23);
         protected unsafe override void CreateHandle()
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.Drawing
+﻿namespace System.Drawing
 {
     public class Font(FontFamily fontFamily, float emSize, FontStyle style) : IDisposable
     {

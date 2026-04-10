@@ -1,7 +1,3 @@
-using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-
 namespace System.Windows.Forms
 {
     public class TabPage : Panel
@@ -61,7 +57,7 @@ namespace System.Windows.Forms
 
             // Trigger layout to handle docking/anchoring
             PerformLayout();
-            
+
         }
     }
 }

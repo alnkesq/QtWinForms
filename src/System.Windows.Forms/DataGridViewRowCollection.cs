@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections;
 
 namespace System.Windows.Forms
 {
@@ -34,7 +31,7 @@ namespace System.Windows.Forms
         }
         public void Add(DataGridViewRow row)
         {
-         
+
             row._owner = _owner;
             row.Index = _rows.Count;
             _rows.Add(row);
@@ -44,7 +41,7 @@ namespace System.Windows.Forms
                 cell._rowIndex = row.Index;
                 cell._owner = _owner;
             }
- 
+
             if (_owner.IsHandleCreated)
             {
                 NativeMethods.QTableWidget_SetRowCount(_owner.QtHandle, _rows.Count);
@@ -60,11 +57,11 @@ namespace System.Windows.Forms
         {
             _rows[index].ClearIndexes();
             _rows.RemoveAt(index);
-            
+
             for (int i = index; i < _rows.Count; i++)
             {
                 _rows[i].Index = i;
-                
+
                 for (int c = 0; c < _rows[i].Cells._cells.Count; c++)
                 {
                     _rows[i].Cells._cells[c]._rowIndex = i;

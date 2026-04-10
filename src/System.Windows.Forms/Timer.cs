@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms;
 
@@ -41,7 +39,7 @@ public class Timer : Component
         base.Dispose(disposing);
     }
 
-  public virtual bool Enabled
+    public virtual bool Enabled
     {
         get => _coreTimer.Enabled;
         set => _coreTimer.Enabled = value;
@@ -62,5 +60,5 @@ public class Timer : Component
     public void Start() => Enabled = true;
     public void Stop() => Enabled = false;
 
-    
+
 }

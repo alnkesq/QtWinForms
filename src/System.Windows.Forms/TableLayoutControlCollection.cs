@@ -1,5 +1,3 @@
-using System;
-
 namespace System.Windows.Forms
 {
     public class TableLayoutControlCollection : ControlCollection
@@ -25,7 +23,7 @@ namespace System.Windows.Forms
             // For TableLayoutPanel, we don't use the standard parenting
             // because QGridLayout handles the parenting and positioning
             // The actual Qt parenting is done in TableLayoutPanel.CreateChildren()
-            
+
             // Just ensure the control is created
             item.CreateControl();
         }

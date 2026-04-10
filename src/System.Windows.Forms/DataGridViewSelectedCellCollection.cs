@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
     public class DataGridViewSelectedCellCollection : IEnumerable<DataGridViewCell>
     {
         internal DataGridView _owner = null!;
-        
+
         public int Count
         {
             get
             {
                 if (!_owner.IsHandleCreated)
                     return 0;
-                
+
                 return GetSelectedCells().Count;
             }
         }
-        
+
         public DataGridViewCell this[int index]
         {
             get
@@ -29,16 +25,16 @@ namespace System.Windows.Forms
                 var cells = GetSelectedCells();
                 if (index < 0 || index >= cells.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
-                
+
                 return cells[index];
             }
         }
-        
+
         private List<DataGridViewCell> GetSelectedCells()
         {
             if (!_owner.IsHandleCreated)
                 return new List<DataGridViewCell>();
-            
+
             var cells = new List<DataGridViewCell>();
             var data = (_owner, cells);
             var handle = GCHandle.Alloc(data);
@@ -63,7 +59,7 @@ namespace System.Windows.Forms
             var data = ((DataGridView, List<DataGridViewCell>))GCHandle.FromIntPtr(userData).Target!;
             var grid = data.Item1;
             var cells = data.Item2;
-            
+
             for (int i = 0; i < count; i++)
             {
                 var rowIndex = rows[i];
@@ -72,7 +68,7 @@ namespace System.Windows.Forms
                 cells.Add(cell);
             }
         }
-        
+
         public IEnumerator<DataGridViewCell> GetEnumerator()
         {
             return GetSelectedCells().GetEnumerator();

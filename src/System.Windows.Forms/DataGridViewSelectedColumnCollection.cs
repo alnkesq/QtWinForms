@@ -1,27 +1,23 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
 
 namespace System.Windows.Forms
 {
     public class DataGridViewSelectedColumnCollection : IEnumerable<DataGridViewColumn>
     {
         internal DataGridView _owner = null!;
-        
+
         public int Count
         {
             get
             {
                 if (!_owner.IsHandleCreated)
                     return 0;
-                
+
                 return GetSelectedColumnIndices().Count;
             }
         }
-        
+
         public DataGridViewColumn this[int index]
         {
             get
@@ -29,16 +25,16 @@ namespace System.Windows.Forms
                 var indices = GetSelectedColumnIndices();
                 if (index < 0 || index >= indices.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
-                
+
                 return _owner.Columns[indices[index]];
             }
         }
-        
+
         private List<int> GetSelectedColumnIndices()
         {
             if (!_owner.IsHandleCreated)
                 return new List<int>();
-            
+
             var indices = new List<int>();
             var data = (_owner, indices);
             var handle = GCHandle.Alloc(data);
@@ -62,13 +58,13 @@ namespace System.Windows.Forms
         {
             var data = ((DataGridView, List<int>))GCHandle.FromIntPtr(userData).Target!;
             var indices = data.Item2;
-            
+
             for (int i = 0; i < count; i++)
             {
                 indices.Add(columns[i]);
             }
         }
-        
+
         public IEnumerator<DataGridViewColumn> GetEnumerator()
         {
             var indices = GetSelectedColumnIndices();

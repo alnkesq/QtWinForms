@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
@@ -18,7 +14,7 @@ namespace System.Windows.Forms
         private bool _virtualMode;
         private int _virtualRowCount;
         private DataGridViewSelectionMode _selectionMode = DataGridViewSelectionMode.RowHeaderSelect;
-        
+
         protected override Size DefaultSize => new Size(240, 150);
         public DataGridView()
         {
@@ -71,14 +67,14 @@ namespace System.Windows.Forms
                     }
                 }
             }
-            
+
             // Connect to selection changed signal
             ConnectSelectionChanged();
-            
+
             // Set selection mode
             UpdateSelectionMode();
         }
-        
+
         private void ConnectCellDataNeeded()
         {
             unsafe
@@ -105,7 +101,7 @@ namespace System.Windows.Forms
                 NativeMethods.QTableWidget_SetCellText(QtHandle, rowIndex, columnIndex, DataGridViewCell.ValueToString(args.Value));
             }
         }
-        
+
         private void ConnectSelectionChanged()
         {
             unsafe
@@ -148,9 +144,9 @@ namespace System.Windows.Forms
         [Obsolete(NotImplementedWarning)] public event DataGridViewCellFormattingEventHandler? CellFormatting;
         public event DataGridViewCellValueEventHandler? CellValueNeeded;
         [Obsolete(NotImplementedWarning)] public DataGridViewCell? CurrentCell { get; set; }
-        
-        public bool VirtualMode 
-        { 
+
+        public bool VirtualMode
+        {
             get => _virtualMode;
             set
             {
@@ -162,7 +158,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        
+
         public int RowCount
         {
             get
@@ -171,9 +167,9 @@ namespace System.Windows.Forms
             }
             set
             {
-                if (!VirtualMode) 
+                if (!VirtualMode)
                     throw new InvalidOperationException("RowCount can only be set when VirtualMode is true.");
-                
+
                 _virtualRowCount = value;
                 if (IsHandleCreated)
                 {
@@ -218,7 +214,7 @@ namespace System.Windows.Forms
                 DataGridViewSelectionMode.CellSelect => 0, // SelectItems
                 DataGridViewSelectionMode.FullRowSelect => 1, // SelectRows
                 DataGridViewSelectionMode.FullColumnSelect => 2, // SelectColumns
-                DataGridViewSelectionMode.RowHeaderSelect => 0, 
+                DataGridViewSelectionMode.RowHeaderSelect => 0,
                 DataGridViewSelectionMode.ColumnHeaderSelect => 0,
                 _ => throw new NotSupportedException()
             };
@@ -278,7 +274,7 @@ namespace System.Windows.Forms
 
         public HitTestInfo HitTest(int x, int y) => throw new NotImplementedException();
 
-        public class HitTestInfo 
+        public class HitTestInfo
         {
             public int ColumnIndex { get; set; }
             public int RowIndex { get; set; }

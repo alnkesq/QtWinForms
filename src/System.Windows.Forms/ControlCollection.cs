@@ -1,4 +1,3 @@
-using System;
 using System.Collections.ObjectModel;
 
 namespace System.Windows.Forms
@@ -17,12 +16,12 @@ namespace System.Windows.Forms
         public void SetChildIndex(Control child, int newIndex)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
-            
+
             int oldIndex = IndexOf(child);
             if (oldIndex == -1) throw new ArgumentException("Control not found in the collection.", nameof(child));
 
             if (newIndex < 0) throw new ArgumentOutOfRangeException(nameof(newIndex), "Index must be non-negative.");
-            
+
             if (newIndex >= Count) newIndex = Count - 1;
 
             if (oldIndex == newIndex) return;
@@ -49,11 +48,11 @@ namespace System.Windows.Forms
 
             // In WinForms, index 0 is top-most (front), index Count-1 is bottom-most (back).
             // In Qt, raise() brings to front.
-            
+
             // Strategy:
             // 1. Bring the first control (index 0) to the front.
             // 2. Stack subsequent controls under the previous one.
-            
+
             var first = this[0];
             if (first.IsQWidgetCreated)
             {
@@ -64,7 +63,7 @@ namespace System.Windows.Forms
             {
                 var current = this[i];
                 var previous = this[i - 1];
-                
+
                 if (current.IsQWidgetCreated && previous.IsQWidgetCreated)
                 {
                     NativeMethods.QWidget_StackUnder(current.QtHandle, previous.QtHandle);

@@ -1,6 +1,5 @@
-using System;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace System.Windows.Forms
 {
@@ -34,7 +33,7 @@ namespace System.Windows.Forms
                 }
             }
         }
-        
+
         [Obsolete(NotImplementedWarning)] public bool CheckOnClick { get; set; }
         [Obsolete(NotImplementedWarning)] public bool Checked { get; set; }
 

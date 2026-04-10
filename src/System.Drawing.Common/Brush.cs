@@ -1,7 +1,4 @@
-﻿
-using SixLabors.ImageSharp.Drawing.Processing;
-
-namespace System.Drawing
+﻿namespace System.Drawing
 {
     public class Brush : IDisposable
     {

@@ -29,12 +29,8 @@
 //   Dennis Hayes (dennish@Raytek.com)
 //   Aleksey Ryabchuk (ryabchuk@yahoo.com)
 
-using System.IO;
 using System.Drawing;
-using System.Collections;
-using System.Drawing.Imaging;
 using System.Runtime.Serialization;
-using System.Runtime.InteropServices;
 
 #nullable disable
 

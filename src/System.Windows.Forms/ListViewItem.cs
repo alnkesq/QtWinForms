@@ -45,7 +45,7 @@ namespace System.Windows.Forms
         }
 
         public ListViewSubItemCollection SubItems => _subItems;
-        
+
         private bool _selected;
         public bool Selected
         {
@@ -131,8 +131,8 @@ namespace System.Windows.Forms
             // If ImageKey is set, resolve it to an index
             if (!string.IsNullOrEmpty(_imageKey))
             {
-                ImageList? imageList = listView.View == View.LargeIcon 
-                    ? listView.LargeImageList 
+                ImageList? imageList = listView.View == View.LargeIcon
+                    ? listView.LargeImageList
                     : listView.SmallImageList;
 
                 if (imageList != null)

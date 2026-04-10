@@ -1,6 +1,4 @@
-using System;
 using System.Runtime.InteropServices;
-using Cdecl = System.Runtime.CompilerServices.CallConvCdecl;
 
 namespace System.Windows.Forms
 {

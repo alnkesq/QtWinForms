@@ -65,7 +65,7 @@ namespace System.Windows.Forms
             {
                 // Use QListWidget for LargeIcon/SmallIcon/List views
                 QtHandle = NativeMethods.QListWidget_Create(IntPtr.Zero);
-                
+
                 // Set view mode
                 int viewMode = _view == View.LargeIcon ? 1 : 0; // 1 = IconMode, 0 = ListMode
                 NativeMethods.QListWidget_SetViewMode(QtHandle, viewMode);
@@ -74,7 +74,7 @@ namespace System.Windows.Forms
             // Connect selection changed signal
             _onSelectedIndexChangedCallback = OnNativeSelectedIndexChanged;
             var callbackPtr = Marshal.GetFunctionPointerForDelegate(_onSelectedIndexChangedCallback);
-            
+
             if (_isDetailsView)
             {
                 NativeMethods.QTreeWidget_ConnectItemSelectionChanged(QtHandle, callbackPtr, IntPtr.Zero);
@@ -122,7 +122,7 @@ namespace System.Windows.Forms
                 if (_view != value)
                 {
                     _view = value;
-                    
+
                     // If handle is already created, we need to recreate it with the correct widget type
                     if (IsHandleCreated)
                     {
@@ -151,15 +151,15 @@ namespace System.Windows.Forms
 
         private void UpdateSelectionMode()
         {
-             int mode = _multiSelect ? 3 : 1; // 3 = MultiExtended, 1 = Single
-             if (_isDetailsView)
-             {
-                 NativeMethods.QTreeWidget_SetSelectionMode(QtHandle, mode);
-             }
-             else
-             {
-                 NativeMethods.QListWidget_SetSelectionMode(QtHandle, mode);
-             }
+            int mode = _multiSelect ? 3 : 1; // 3 = MultiExtended, 1 = Single
+            if (_isDetailsView)
+            {
+                NativeMethods.QTreeWidget_SetSelectionMode(QtHandle, mode);
+            }
+            else
+            {
+                NativeMethods.QListWidget_SetSelectionMode(QtHandle, mode);
+            }
         }
 
         private unsafe List<int> GetSelectedIndicesFromNative()
@@ -183,7 +183,7 @@ namespace System.Windows.Forms
             {
                 handle.Free();
             }
-            
+
             return indices;
         }
 
@@ -192,7 +192,7 @@ namespace System.Windows.Forms
         {
             var handle = GCHandle.FromIntPtr((IntPtr)userData);
             var indices = (List<int>)handle.Target!;
-            
+
             for (int i = 0; i < count; i++)
             {
                 indices.Add(rows[i]);
@@ -206,29 +206,29 @@ namespace System.Windows.Forms
         {
             private ListView _owner;
             public SelectedIndexCollection(ListView owner) { _owner = owner; }
-            
+
             public int Count => _owner.GetSelectedIndicesFromNative().Count;
             public bool IsReadOnly => true;
             public bool IsFixedSize => true;
             public object SyncRoot => this;
             public bool IsSynchronized => false;
-            
+
             public int this[int index]
             {
-                get 
+                get
                 {
                     var indices = _owner.GetSelectedIndicesFromNative();
                     return indices[index];
                 }
                 set => throw new NotSupportedException();
             }
-            
+
             public bool Contains(int index) => _owner.GetSelectedIndicesFromNative().Contains(index);
             public int IndexOf(int index) => _owner.GetSelectedIndicesFromNative().IndexOf(index);
             public IEnumerator GetEnumerator() => _owner.GetSelectedIndicesFromNative().GetEnumerator();
-            
+
             public void CopyTo(Array array, int index) => ((ICollection)_owner.GetSelectedIndicesFromNative()).CopyTo(array, index);
-            
+
             int IList.Add(object? value) => throw new NotSupportedException();
             void IList.Clear() => throw new NotSupportedException();
             bool IList.Contains(object? value) => value is int i && Contains(i);
@@ -243,12 +243,12 @@ namespace System.Windows.Forms
         {
             private ListView _owner;
             public SelectedListViewItemCollection(ListView owner) { _owner = owner; }
-            
+
             private List<ListViewItem> GetItems()
             {
                 var indices = _owner.GetSelectedIndicesFromNative();
                 var items = new List<ListViewItem>();
-                foreach(var index in indices)
+                foreach (var index in indices)
                 {
                     if (index >= 0 && index < _owner.Items.Count)
                         items.Add(_owner.Items[index]);
@@ -261,18 +261,18 @@ namespace System.Windows.Forms
             public bool IsFixedSize => true;
             public object SyncRoot => this;
             public bool IsSynchronized => false;
-            
+
             public ListViewItem this[int index]
             {
                 get => GetItems()[index];
                 set => throw new NotSupportedException();
             }
-            
+
             public bool Contains(ListViewItem item) => GetItems().Contains(item);
             public int IndexOf(ListViewItem item) => GetItems().IndexOf(item);
             public IEnumerator GetEnumerator() => GetItems().GetEnumerator();
             public void CopyTo(Array array, int index) => ((ICollection)GetItems()).CopyTo(array, index);
-            
+
             int IList.Add(object? value) => throw new NotSupportedException();
             void IList.Clear() => throw new NotSupportedException();
             bool IList.Contains(object? value) => value is ListViewItem i && Contains(i);
@@ -326,7 +326,7 @@ namespace System.Windows.Forms
         internal IntPtr GetQIconFromImageList(int imageIndex)
         {
             ImageList? imageList = _view == View.LargeIcon ? _largeImageList : _smallImageList;
-            
+
             if (imageList == null || imageIndex < 0 || imageIndex >= imageList.Images.Count)
                 return IntPtr.Zero;
 
@@ -361,7 +361,7 @@ namespace System.Windows.Forms
             // Save parent and visibility state
             var parent = Parent;
             var wasVisible = Visible;
-            
+
             // Destroy old handle
             if (QtHandle != IntPtr.Zero)
             {
@@ -402,7 +402,7 @@ namespace System.Windows.Forms
             {
                 // Create tree widget item
                 item._nativeItem = NativeMethods.QTreeWidget_AddTopLevelItem(QtHandle, item.Text);
-                
+
                 // Set subitems
                 for (int i = 0; i < item.SubItems.Count; i++)
                 {
@@ -442,7 +442,7 @@ namespace System.Windows.Forms
             if (_isDetailsView)
             {
                 NativeMethods.QTreeWidgetItem_SetText(item._nativeItem, 0, item.Text);
-                
+
                 for (int i = 0; i < item.SubItems.Count; i++)
                 {
                     NativeMethods.QTreeWidgetItem_SetText(item._nativeItem, i + 1, item.SubItems[i].Text);
@@ -476,7 +476,7 @@ namespace System.Windows.Forms
             NativeMethods.QTreeWidget_SetColumnCount(QtHandle, _columns.Count);
 
             string[] labels = new string[_columns.Count];
-            
+
             for (int i = 0; i < _columns.Count; i++)
             {
                 labels[i] = _columns[i].Text;
@@ -537,12 +537,12 @@ namespace System.Windows.Forms
                 item.Index = _items.Count;
                 item.ListView = _owner;
                 _items.Add(item);
-                
+
                 if (_owner.IsHandleCreated)
                 {
                     _owner.CreateNativeItem(item);
                 }
-                
+
                 return item;
             }
 
@@ -576,7 +576,7 @@ namespace System.Windows.Forms
             public void RemoveAt(int index)
             {
                 var item = _items[index];
-                
+
                 if (_owner.IsHandleCreated && item._nativeItem != IntPtr.Zero)
                 {
                     if (_owner._isDetailsView)
@@ -678,12 +678,12 @@ namespace System.Windows.Forms
                 column.Index = _items.Count;
                 column.ListView = _owner;
                 _items.Add(column);
-                
+
                 if (_owner.IsHandleCreated && _owner._isDetailsView)
                 {
                     _owner.UpdateColumns();
                 }
-                
+
                 return _items.Count - 1;
             }
 
