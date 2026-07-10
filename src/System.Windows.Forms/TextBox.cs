@@ -16,7 +16,7 @@ namespace System.Windows.Forms
             control.OnTextChanged(EventArgs.Empty);
         }
 
-        protected override Size DefaultSize => new Size(100, 23);
+        protected override Size DefaultSize => new(100, 23);
 
 
         public bool Multiline
@@ -127,5 +127,9 @@ namespace System.Windows.Forms
 
         public void AppendText(string? text) => Text += text;
         [Obsolete(NotImplementedWarning)] public BorderStyle BorderStyle { get; set; }
+        [Obsolete(NotImplementedWarning)] public int SelectionStart { get; set; }
+        [Obsolete(NotImplementedWarning)] public int SelectionLength { get; set; }
+        [Obsolete(NotImplementedWarning)] public int TextLength { get; set; }
+        [Obsolete(NotImplementedWarning)] public bool AcceptsReturn { get; set; }
     }
 }

@@ -75,6 +75,11 @@ namespace System.Windows.Forms
             Focus();
         }
 
+        public void Show(IWin32Window? owner)
+        {
+            Show();
+        }
+
         protected override void CreateHandle()
         {
             var prevVisible = Visible;

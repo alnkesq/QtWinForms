@@ -9,13 +9,13 @@
     <AssemblyOriginatorKeyFile>..\ECMA.snk</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>
     <AssemblyVersion>10.0</AssemblyVersion>
-	  <NoWarn>CS0618;CS0067</NoWarn>
+	<NoWarn>CS0618;CS0067;IDE0031</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\System.Drawing.Common\System.Drawing.Common.csproj" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.5" />
-    <PackageReference Include="System.Resources.Extensions" Version="10.0.5" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.9" />
+    <PackageReference Include="System.Resources.Extensions" Version="10.0.9" />
   </ItemGroup>
 
 </Project>

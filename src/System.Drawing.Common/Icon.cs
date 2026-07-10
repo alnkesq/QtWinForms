@@ -18,7 +18,23 @@ namespace System.Drawing
             if (bytes.Length == 0) throw new ArgumentNullException();
             Bytes = bytes.ToArray();
         }
+        public Icon(Stream stream)
+            : this(Helpers.StreamToArray(stream), owned: true)
+        {
 
+        }
+        public Icon(Stream stream, Size size)
+            : this(stream)
+        {
+        }
+        public Icon(Stream stream, int width, int height)
+            : this(stream)
+        {
+        }
+        public Icon(Type type, string resource)
+        {
+            throw new NotImplementedException();
+        }
         public IntPtr _nativeQIcon;
 
         public IntPtr GetQIcon()

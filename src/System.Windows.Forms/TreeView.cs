@@ -6,7 +6,7 @@ namespace System.Windows.Forms
 {
     public class TreeView : Control, ITreeNodeOrTreeView
     {
-        private TreeNode.TreeNodeCollection _nodes;
+        private readonly TreeNode.TreeNodeCollection _nodes;
         private TreeNode? _selectedNode;
 
         public TreeView()
@@ -14,7 +14,7 @@ namespace System.Windows.Forms
             _nodes = new TreeNode.TreeNodeCollection(this);
         }
 
-        protected override Size DefaultSize => new Size(121, 97);
+        protected override Size DefaultSize => new(121, 97);
 
         protected override void CreateHandle()
         {
@@ -49,8 +49,12 @@ namespace System.Windows.Forms
             }
         }
 
+#pragma warning disable CA1822 // can be made static
         public void BeginUpdate() { }
         public void EndUpdate() { }
+#pragma warning restore CA1822
+
+
         [Obsolete(NotImplementedWarning)] public TreeNodeMouseClickEventHandler? NodeMouseClick;
 
         public TreeViewCancelEventHandler? BeforeExpand;
@@ -245,5 +249,7 @@ namespace System.Windows.Forms
 
         [Obsolete(NotImplementedWarning)]
         public TreeNode? GetNodeAt(int x, int y) => throw new NotImplementedException();
+
+        [Obsolete(NotImplementedWarning)] public bool ShowNodeToolTips { get; set; }
     }
 }
