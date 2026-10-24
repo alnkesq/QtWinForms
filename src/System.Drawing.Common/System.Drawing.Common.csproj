@@ -8,13 +8,14 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Open.snk</AssemblyOriginatorKeyFile>
     <AssemblyVersion>10.0</AssemblyVersion>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<NoWarn>CS0618</NoWarn>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <NoWarn>CS0618</NoWarn>
+    <DefineConstants>MINIMAL_IMAGESHARP_COMPAT;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.7" />
-  </ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.153.1" />
+   </ItemGroup>
 
 </Project>

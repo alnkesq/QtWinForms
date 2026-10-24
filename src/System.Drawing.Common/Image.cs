@@ -1,5 +1,4 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+﻿using SkiaSharp;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -8,14 +7,14 @@ namespace System.Drawing
     [TypeConverter(typeof(ImageConverter))]
     public abstract class Image : IDisposable
     {
-        private SixLabors.ImageSharp.Image<Rgba32>? _imageSharpImage;
+        private SKBitmap? _skiaBitmap;
         private byte[]? _bytes;
         private IntPtr _nativeQIcon;
         private IntPtr _nativeQPixmap;
 
-        public Image(SixLabors.ImageSharp.Image<Rgba32> image)
+        public Image(SKBitmap bitmap)
         {
-            this._imageSharpImage = image;
+            this._skiaBitmap = bitmap;
         }
         internal Image(byte[] bytes, bool isOwned = false)
         {
@@ -30,7 +29,8 @@ namespace System.Drawing
 
         public void Dispose()
         {
-            _imageSharpImage?.Dispose();
+            _skiaBitmap?.Dispose();
+            _skiaBitmap = null;
             _bytes = null;
             if (_nativeQIcon != default)
             {
@@ -45,15 +45,19 @@ namespace System.Drawing
         }
 
 
-        public SixLabors.ImageSharp.Image<Rgba32> ImageSharpImage
+        public SKBitmap SkiaBitmap
         {
             get
             {
-                if (_imageSharpImage == null)
+                if (_skiaBitmap == null)
                 {
-                    _imageSharpImage = SixLabors.ImageSharp.Image.Load<Rgba32>(_bytes);
+                    _skiaBitmap = SKBitmap.Decode(_bytes);
+                    if (_skiaBitmap == null)
+                    {
+                        throw new InvalidDataException("Image could not be parsed.");
+                    }
                 }
-                return _imageSharpImage;
+                return _skiaBitmap;
             }
         }
 
@@ -64,7 +68,12 @@ namespace System.Drawing
                 if (_bytes == null)
                 {
                     using var ms = new MemoryStream();
-                    _imageSharpImage.SaveAsPng(ms);
+                    using var data = SkiaBitmap.Encode(SKEncodedImageFormat.Png, 100);
+                    if (data == null)
+                    {
+                        throw new InvalidOperationException("Image could not be encoded.");
+                    }
+                    ms.Write(data.AsSpan());
                     _bytes = ms.ToArray();
                 }
                 return _bytes;
@@ -73,15 +82,20 @@ namespace System.Drawing
 
         public void Save(Stream destination, ImageFormat format)
         {
-            if (format == ImageFormat.Png)
-                ImageSharpImage.SaveAsPng(destination);
-            else if (format == ImageFormat.Jpeg)
-                ImageSharpImage.SaveAsJpeg(destination);
-            else if (format == ImageFormat.Bmp)
-                ImageSharpImage.SaveAsBmp(destination);
-            else if (format == ImageFormat.Webp)
-                ImageSharpImage.SaveAsWebp(destination);
-            else throw new NotSupportedException();
+            var encoding = format == ImageFormat.Png ? SKEncodedImageFormat.Png
+                : format == ImageFormat.Jpeg ? SKEncodedImageFormat.Jpeg
+                : format == ImageFormat.Bmp ? SKEncodedImageFormat.Bmp
+                : format == ImageFormat.Webp ? SKEncodedImageFormat.Webp
+                : throw new NotSupportedException();
+            var quality = format == ImageFormat.Jpeg ? ImageSharpCompat.DefaultJpegQuality
+                : format == ImageFormat.Webp ? ImageSharpCompat.DefaultWebpQuality
+                : 100;
+            using var data = SkiaBitmap.Encode(encoding, quality);
+            if (data == null)
+            {
+                throw new InvalidOperationException("Image could not be encoded.");
+            }
+            data.SaveTo(destination);
         }
 
         public static Image FromFile(string path)
@@ -94,7 +108,7 @@ namespace System.Drawing
             return new Bitmap(stream);
         }
 
-        public Size Size => new Size(ImageSharpImage.Width, ImageSharpImage.Height);
+        public Size Size => new Size(SkiaBitmap.Width, SkiaBitmap.Height);
 
         public int Width => Size.Width;
         public int Height => Size.Height;
@@ -121,7 +135,7 @@ namespace System.Drawing
 
         public void InvalidateCompressedImageBytes()
         {
-            if (_imageSharpImage == null) throw new InvalidOperationException();
+            if (_skiaBitmap == null) throw new InvalidOperationException();
             _bytes = null;
         }
     }

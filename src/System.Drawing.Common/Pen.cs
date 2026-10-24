@@ -1,17 +1,17 @@
 ﻿
-using SixLabors.ImageSharp.Drawing.Processing;
+﻿using SkiaSharp;
 
 namespace System.Drawing
 {
     public class Pen : IDisposable
     {
         public Color Color { get; }
-        public SolidPen ImageSharpPen { get; set; }
+        public SKColor SkiaColor { get; }
 
         public Pen(Color color)
         {
             this.Color = color;
-            this.ImageSharpPen = new SixLabors.ImageSharp.Drawing.Processing.SolidPen(Helpers.ImageSharpColorFromDrawingColor(color));
+            this.SkiaColor = Helpers.SkiaColorFromDrawingColor(color);
         }
         public Pen(Color color, float size)
             : this(color)

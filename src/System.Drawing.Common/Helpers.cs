@@ -1,21 +1,16 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using SkiaSharp;
 
 namespace System.Drawing
 {
     internal static class Helpers
     {
-        public static SixLabors.ImageSharp.Color ImageSharpColorFromDrawingColor(Color color)
+        public static SKColor SkiaColorFromDrawingColor(Color color)
         {
-            return SixLabors.ImageSharp.Color.FromRgba(color.R, color.G, color.B, color.A);
+            return new SKColor(color.R, color.G, color.B, color.A);
         }
-        public static Color ImageSharpColorFromRgba32(Rgba32 c)
+        public static Color DrawingColorFromSkiaColor(SKColor color)
         {
-            return Color.FromArgb(c.A, c.R, c.G, c.B);
-        }
-
-        public static Rgba32 Rgba32FromDrawingColor(Color color)
-        {
-            return new Rgba32(color.R, color.G, color.B, color.A);
+            return Color.FromArgb(color.Alpha, color.Red, color.Green, color.Blue);
         }
 
         public static byte[] StreamToArray(Stream stream)

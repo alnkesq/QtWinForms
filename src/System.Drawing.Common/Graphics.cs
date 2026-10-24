@@ -1,8 +1,4 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
+﻿using SkiaSharp;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -11,23 +7,23 @@ namespace System.Drawing
     public class Graphics : IDisposable
     {
         public SmoothingMode SmoothingMode { get; set; }
-        private SixLabors.ImageSharp.Image<Rgba32> ImageSharpImage;
+        private readonly SKCanvas _canvas;
 
-        public Graphics(Image<Rgba32> imageSharpImage)
+        public Graphics(SKBitmap bitmap)
         {
-            ImageSharpImage = imageSharpImage;
+            _canvas = new SKCanvas(bitmap);
         }
 
         public static Graphics FromImage(Image image)
         {
-            var img = image.ImageSharpImage;
+            var bitmap = image.SkiaBitmap;
             image.InvalidateCompressedImageBytes();
-            return new Graphics(img);
+            return new Graphics(bitmap);
         }
 
         public void Clear(Color color)
         {
-            ImageSharpImage.Mutate(ctx => ctx.BackgroundColor(Helpers.ImageSharpColorFromDrawingColor(color)));
+            _canvas.Clear(Helpers.SkiaColorFromDrawingColor(color));
         }
 
 
@@ -48,8 +44,13 @@ namespace System.Drawing
 
         public void DrawLine(Pen pen, float x1, float y1, float x2, float y2)
         {
-            ImageSharpImage.Mutate(ctx =>
-                       ctx.DrawLine(pen.ImageSharpPen, new SixLabors.ImageSharp.PointF(x1, y1), new SixLabors.ImageSharp.PointF(x2, y2)));
+            using var paint = new SKPaint
+            {
+                Color = pen.SkiaColor,
+                StrokeWidth = 1,
+                Style = SKPaintStyle.Stroke
+            };
+            _canvas.DrawLine(x1, y1, x2, y2, paint);
         }
         public void FillEllipse(Brush brush, RectangleF rect)
         {
@@ -66,13 +67,12 @@ namespace System.Drawing
 
         public void FillEllipse(Brush brush, float x, float y, float width, float height)
         {
-            var ellipse = new EllipsePolygon(
-             x + width / 2f,
-             y + height / 2f,
-             width,
-             height);
-
-            ImageSharpImage.Mutate(ctx => ctx.Fill(brush.ImageSharpBrush, ellipse));
+            using var paint = new SKPaint
+            {
+                Color = brush.SkiaColor,
+                Style = SKPaintStyle.Fill
+            };
+            _canvas.DrawOval(new SKRect(x, y, x + width, y + height), paint);
         }
         public void DrawRectangle(Pen pen, RectangleF rect)
         {
@@ -88,9 +88,13 @@ namespace System.Drawing
 
         public void DrawRectangle(Pen pen, float x, float y, float width, float height)
         {
-            var rect = new RectangularPolygon(x, y, width, height);
-
-            ImageSharpImage.Mutate(ctx => ctx.Draw(pen.ImageSharpPen, rect));
+            using var paint = new SKPaint
+            {
+                Color = pen.SkiaColor,
+                StrokeWidth = 1,
+                Style = SKPaintStyle.Stroke
+            };
+            _canvas.DrawRect(new SKRect(x, y, x + width, y + height), paint);
         }
 
         public void DrawRectangle(Pen pen, int x, int y, int width, int height)
@@ -104,7 +108,7 @@ namespace System.Drawing
         }
         public unsafe void DrawImage(Image image, float x, float y)
         {
-            ImageSharpImage.Mutate(ctx => ctx.DrawImage(image.ImageSharpImage, new SixLabors.ImageSharp.Point((int)x, (int)y), 1f));
+            _canvas.DrawBitmap(image.SkiaBitmap, (int)x, (int)y);
         }
         public void DrawImage(Image image, RectangleF rect)
         {
@@ -112,8 +116,8 @@ namespace System.Drawing
         }
         public unsafe void DrawImage(Image image, float x, float y, float width, float height)
         {
-            using var scaled = image.ImageSharpImage.Clone(ctx => ctx.Resize((int)width, (int)height));
-            ImageSharpImage.Mutate(ctx => ctx.DrawImage(scaled, new SixLabors.ImageSharp.Point((int)x, (int)y), 1f));
+            var destination = new SKRect(x, y, x + width, y + height);
+            _canvas.DrawBitmap(image.SkiaBitmap, destination, SKSamplingOptions.Medium);
         }
 
         public void DrawImage(Image image, Point point)
@@ -147,11 +151,9 @@ namespace System.Drawing
         {
             if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
 
-            using var processed = image.ImageSharpImage.Clone(ctx => ctx
-                .Crop(new SixLabors.ImageSharp.Rectangle((int)srcRect.X, (int)srcRect.Y, (int)srcRect.Width, (int)srcRect.Height))
-                .Resize((int)destRect.Width, (int)destRect.Height));
-
-            ImageSharpImage.Mutate(ctx => ctx.DrawImage(processed, new SixLabors.ImageSharp.Point((int)destRect.X, (int)destRect.Y), 1f));
+            var source = new SKRect(srcRect.X, srcRect.Y, srcRect.Right, srcRect.Bottom);
+            var destination = new SKRect(destRect.X, destRect.Y, destRect.Right, destRect.Bottom);
+            _canvas.DrawBitmap(image.SkiaBitmap, source, destination, SKSamplingOptions.Medium);
         }
         public void DrawImage(Image image, Rectangle destRect, Rectangle srcRect, GraphicsUnit srcUnit)
         {
@@ -173,11 +175,9 @@ namespace System.Drawing
         {
             if (srcUnit != GraphicsUnit.Pixel) throw new NotSupportedException();
 
-            using var processed = image.ImageSharpImage.Clone(ctx => ctx
-                .Crop(new SixLabors.ImageSharp.Rectangle((int)srcX, (int)srcY, (int)srcWidth, (int)srcHeight))
-                .Resize(destRect.Width, destRect.Height));
-
-            ImageSharpImage.Mutate(ctx => ctx.DrawImage(processed, new SixLabors.ImageSharp.Point(destRect.X, destRect.Y), 1f));
+            var source = new SKRect(srcX, srcY, srcX + srcWidth, srcY + srcHeight);
+            var destination = new SKRect(destRect.X, destRect.Y, destRect.Right, destRect.Bottom);
+            _canvas.DrawBitmap(image.SkiaBitmap, source, destination, SKSamplingOptions.Medium);
         }
         public void DrawImage(Image image, Rectangle destRect, int srcX, int srcY, int srcWidth, int srcHeight, GraphicsUnit srcUnit)
         {
@@ -335,6 +335,7 @@ namespace System.Drawing
 
         public void Dispose()
         {
+            _canvas.Dispose();
         }
         public delegate bool DrawImageAbort(nint callbackdata);
 

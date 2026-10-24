@@ -1,4 +1,4 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using SkiaSharp;
 
 namespace System.Drawing
 {
@@ -14,28 +14,28 @@ namespace System.Drawing
 
         }
 
-        public Bitmap(SixLabors.ImageSharp.Image<Rgba32> image)
-            : base(image)
+        public Bitmap(SKBitmap bitmap)
+            : base(bitmap)
         {
         }
 
         public Bitmap(int width, int height)
-            : base(new SixLabors.ImageSharp.Image<Rgba32>(width, height))
+            : base(new SKBitmap(width, height, ImageSharpCompat.BlittableSKColorType, SKAlphaType.Unpremul))
         {
         }
 
         public Bitmap(Image copyFrom)
-            : this(copyFrom.ImageSharpImage.Clone())
+            : this(copyFrom.SkiaBitmap.Copy())
         {
         }
 
         public Color GetPixel(int x, int y)
         {
-            return Helpers.ImageSharpColorFromRgba32(ImageSharpImage[x, y]);
+            return Helpers.DrawingColorFromSkiaColor(SkiaBitmap.GetPixel(x, y));
         }
         public void SetPixel(int x, int y, Color color)
         {
-            ImageSharpImage[x, y] = Helpers.Rgba32FromDrawingColor(color);
+            SkiaBitmap.SetPixel(x, y, Helpers.SkiaColorFromDrawingColor(color));
             InvalidateCompressedImageBytes();
         }
 
